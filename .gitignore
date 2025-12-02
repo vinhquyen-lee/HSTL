@@ -1,3 +1,4 @@
 /datasets/CASIA-B
 /datasets/CASIA-B-pkl
 /venv
+**/__pycache__
