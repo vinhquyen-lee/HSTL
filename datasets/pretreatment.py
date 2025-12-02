@@ -250,7 +250,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='OpenGait dataset pretreatment module.')
     parser.add_argument('-i', '--input_path', default='', type=str, help='Root path of raw dataset.')
     parser.add_argument('-o', '--output_path', default='', type=str, help='Output path of pickled dataset.')
-    parser.add_argument('-l', '--log_file', default='./pretreatment.log', type=str, help='Log file path. Default: ./pretreatment.log')
+    parser.add_argument('-l', '--log_file', default='./logs/pretreatment.log', type=str, help='Log file path. Default: ./logs/pretreatment.log')
     parser.add_argument('-n', '--n_workers', default=4, type=int, help='Number of thread workers. Default: 4')
     parser.add_argument('-r', '--img_size', default=64, type=int, help='Image resizing size. Default 64')
     parser.add_argument('-d', '--dataset', default='CASIAB', type=str, help='Dataset for pretreatment.')
@@ -260,7 +260,8 @@ if __name__ == '__main__':
                         help='Path of the directory containing all index files for extracting oumvlp pose pkl, which is necessary to promise the temporal consistency of extracted pose sequence. ' 
                         + 'Note: this argument is only used when extracting oumvlp pose pkl, more info please refer to Step4-2 in datasets/OUMVLP/README.md. ')
     args = parser.parse_args()
-
+    # check if the log file directory exists
+    os.makedirs(os.path.dirname(args.log_file), exist_ok=True)
     logging.basicConfig(level=logging.INFO, filename=args.log_file, filemode='w', format='[%(asctime)s - %(levelname)s]: %(message)s')
     
     if args.verbose:
