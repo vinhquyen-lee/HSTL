@@ -1,16 +1,15 @@
-# HSTL
+# Future Research based on HSTL
 
-This is the code for the paper [Hierarchical Spatio-Temporal Representation Learning for Gait Recognition](https://openaccess.thecvf.com/content/ICCV2023/papers/Wang_Hierarchical_Spatio-Temporal_Representation_Learning_for_Gait_Recognition_ICCV_2023_paper.pdf).
+This is the code based on the paper [Hierarchical Spatio-Temporal Representation Learning for Gait Recognition](https://openaccess.thecvf.com/content/ICCV2023/papers/Wang_Hierarchical_Spatio-Temporal_Representation_Learning_for_Gait_Recognition_ICCV_2023_paper.pdf).
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/hierarchical-spatio-temporal-representation/gait-recognition-in-the-wild-on-gait3d)](https://paperswithcode.com/sota/gait-recognition-in-the-wild-on-gait3d?p=hierarchical-spatio-temporal-representation)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/hierarchical-spatio-temporal-representation/gait-recognition-on-gait3d)](https://paperswithcode.com/sota/gait-recognition-on-gait3d?p=hierarchical-spatio-temporal-representation)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/hierarchical-spatio-temporal-representation/gait-recognition-on-oumvlp)](https://paperswithcode.com/sota/gait-recognition-on-oumvlp?p=hierarchical-spatio-temporal-representation)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/hierarchical-spatio-temporal-representation/multiview-gait-recognition-on-casia-b)](https://paperswithcode.com/sota/multiview-gait-recognition-on-casia-b?p=hierarchical-spatio-temporal-representation)
+The goal is improving this research to overcome the SOTA researches (in 2025).
 
 # Operating Environments
 ## Hardware Environment
-Our code is running on a server with 8 GeForce RTX 3090 GPUs 
-and a CPU model Intel(R) Core(TM) i7-9800X @ 3.80GHz.
+Original code is running on a server with 8 GeForce RTX 3090 GPUs and a CPU model Intel(R) Core(TM) i7-9800X @ 3.80GHz.
+
+Our configuration for new research: up-to-date
+
 ## Software Environment
 - pytorch = 1.10
 - torchvision
@@ -18,6 +17,14 @@ and a CPU model Intel(R) Core(TM) i7-9800X @ 3.80GHz.
 - tensorboard
 - opencv-python
 - tqdm
+
+## Configuration
+
+1. Conda
+
+Create conda env using [env.yaml](./config/env.yaml)
+
+2. venv
 
 # Checkpoints
 * The checkpoints for CASIA-B [link](https://drive.google.com/file/d/1keZBtWr9O8gfeqBB9qHNbZ-96Eh6LggB/view?usp=sharing)
@@ -64,3 +71,11 @@ You can run commands in [test.sh](test.sh) for testing different models.
     pages     = {19639-19649}
 }
 ```
+---
+## Công việc cho seminar
+
+1. Thắc mắc
+
+- [ ] Tại sao lại tồn tại 2 tập tin giống hệt nhau [default.yaml](./config/default.yaml) và [hstl.yaml](./config/hstl.yaml) ?
+
+- [ ] Tại sao lại lưu checkpoint `HSTL-80000.pt` của tập CASIA-B tại đường dẫn `bị dư thừa` như `output\CASIA-B\HSTL\HSTL\checkpoints` ?
