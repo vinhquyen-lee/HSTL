@@ -1,6 +1,6 @@
 data_cfg:
   dataset_name: CASIA-B
-  dataset_root: D:/HCMUS/HK7/Biometric/Project/HSTL/datasets/CASIA-B-pkl
+  dataset_root: D:/biometrics/gait-reg/dataset/CASIA-B-pkl # D:/HCMUS/HK7/Biometric/Project/HSTL/datasets/CASIA-B-pkl
   dataset_partition: ./misc/partitions/CASIA-B_include_005.json
   num_workers: 0
   remove_no_gallery: false
