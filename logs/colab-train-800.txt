@@ -1,0 +1,478 @@
+Process group destroyed
+Process group initialized with nccl backend
+World size: 1
+Rank: 0
+Running with arguments: --local_rank 0 --cfgs ./config/hstl.yaml --phase train --log_to_file
+
+[2025-12-03 09:31:37] [INFO]: {'enable_float16': True, 'fix_BN': False, 'log_iter': 100, 'with_test': True, 'optimizer_reset': True, 'scheduler_reset': True, 'restore_ckpt_strict': True, 'restore_hint': 0, 'save_iter': 100, 'save_name': 'colab', 'sync_BN': True, 'total_iter': 800, 'sampler': {'batch_size': [4, 4], 'sample_type': 'fixed_ordered', 'frames_num_fixed': 30, 'frames_skip_num_fixed': 0, 'sample_method': 'random_ordered', 'type': 'TripletSampler', 'frames_skip_num': 0}}
+[2025-12-03 09:31:37] [INFO]: {'enable_float16': True, 'fix_BN': False, 'log_iter': 100, 'with_test': True, 'optimizer_reset': True, 'scheduler_reset': True, 'restore_ckpt_strict': True, 'restore_hint': 0, 'save_iter': 100, 'save_name': 'colab', 'sync_BN': True, 'total_iter': 800, 'sampler': {'batch_size': [4, 4], 'sample_type': 'fixed_ordered', 'frames_num_fixed': 30, 'frames_skip_num_fixed': 0, 'sample_method': 'random_ordered', 'type': 'TripletSampler', 'frames_skip_num': 0}}
+[2025-12-03 09:31:37] [INFO]: {'enable_float16': True, 'fix_BN': False, 'log_iter': 100, 'with_test': True, 'optimizer_reset': True, 'scheduler_reset': True, 'restore_ckpt_strict': True, 'restore_hint': 0, 'save_iter': 100, 'save_name': 'colab', 'sync_BN': True, 'total_iter': 800, 'sampler': {'batch_size': [4, 4], 'sample_type': 'fixed_ordered', 'frames_num_fixed': 30, 'frames_skip_num_fixed': 0, 'sample_method': 'random_ordered', 'type': 'TripletSampler', 'frames_skip_num': 0}}
+[2025-12-03 09:31:37] [INFO]: {'enable_float16': True, 'fix_BN': False, 'log_iter': 100, 'with_test': True, 'optimizer_reset': True, 'scheduler_reset': True, 'restore_ckpt_strict': True, 'restore_hint': 0, 'save_iter': 100, 'save_name': 'colab', 'sync_BN': True, 'total_iter': 800, 'sampler': {'batch_size': [4, 4], 'sample_type': 'fixed_ordered', 'frames_num_fixed': 30, 'frames_skip_num_fixed': 0, 'sample_method': 'random_ordered', 'type': 'TripletSampler', 'frames_skip_num': 0}}
+[2025-12-03 09:31:37] [INFO]: {'enable_float16': True, 'fix_BN': False, 'log_iter': 100, 'with_test': True, 'optimizer_reset': True, 'scheduler_reset': True, 'restore_ckpt_strict': True, 'restore_hint': 0, 'save_iter': 100, 'save_name': 'colab', 'sync_BN': True, 'total_iter': 800, 'sampler': {'batch_size': [4, 4], 'sample_type': 'fixed_ordered', 'frames_num_fixed': 30, 'frames_skip_num_fixed': 0, 'sample_method': 'random_ordered', 'type': 'TripletSampler', 'frames_skip_num': 0}}
+[2025-12-03 09:31:37] [INFO]: {'model': 'HSTL', 'channels': [32, 64, 128], 'class_num': 74}
+[2025-12-03 09:31:37] [INFO]: {'model': 'HSTL', 'channels': [32, 64, 128], 'class_num': 74}
+[2025-12-03 09:31:37] [INFO]: {'model': 'HSTL', 'channels': [32, 64, 128], 'class_num': 74}
+[2025-12-03 09:31:37] [INFO]: {'model': 'HSTL', 'channels': [32, 64, 128], 'class_num': 74}
+[2025-12-03 09:31:37] [INFO]: {'model': 'HSTL', 'channels': [32, 64, 128], 'class_num': 74}
+Starting initialization...
+
+Running model...
+[2025-12-03 09:31:37] [INFO]: {'dataset_name': 'CASIA-B', 'dataset_root': '/content/drive/MyDrive/Biometrics/CASIA-B-pkl', 'dataset_partition': './misc/partitions/CASIA-B_include_005.json', 'num_workers': 2, 'remove_no_gallery': False, 'test_dataset_name': 'CASIA-B', 'cache': False}
+[2025-12-03 09:31:37] [INFO]: {'dataset_name': 'CASIA-B', 'dataset_root': '/content/drive/MyDrive/Biometrics/CASIA-B-pkl', 'dataset_partition': './misc/partitions/CASIA-B_include_005.json', 'num_workers': 2, 'remove_no_gallery': False, 'test_dataset_name': 'CASIA-B', 'cache': False}
+[2025-12-03 09:31:37] [INFO]: {'dataset_name': 'CASIA-B', 'dataset_root': '/content/drive/MyDrive/Biometrics/CASIA-B-pkl', 'dataset_partition': './misc/partitions/CASIA-B_include_005.json', 'num_workers': 2, 'remove_no_gallery': False, 'test_dataset_name': 'CASIA-B', 'cache': False}
+[2025-12-03 09:31:37] [INFO]: {'dataset_name': 'CASIA-B', 'dataset_root': '/content/drive/MyDrive/Biometrics/CASIA-B-pkl', 'dataset_partition': './misc/partitions/CASIA-B_include_005.json', 'num_workers': 2, 'remove_no_gallery': False, 'test_dataset_name': 'CASIA-B', 'cache': False}
+[2025-12-03 09:31:37] [INFO]: {'dataset_name': 'CASIA-B', 'dataset_root': '/content/drive/MyDrive/Biometrics/CASIA-B-pkl', 'dataset_partition': './misc/partitions/CASIA-B_include_005.json', 'num_workers': 2, 'remove_no_gallery': False, 'test_dataset_name': 'CASIA-B', 'cache': False}
+[2025-12-03 09:31:37] [INFO]: -------- Train Pid List --------
+[2025-12-03 09:31:37] [INFO]: -------- Train Pid List --------
+[2025-12-03 09:31:37] [INFO]: -------- Train Pid List --------
+[2025-12-03 09:31:37] [INFO]: -------- Train Pid List --------
+[2025-12-03 09:31:37] [INFO]: -------- Train Pid List --------
+[2025-12-03 09:31:37] [INFO]: [001, 002, ..., 074]
+[2025-12-03 09:31:37] [INFO]: [001, 002, ..., 074]
+[2025-12-03 09:31:37] [INFO]: [001, 002, ..., 074]
+[2025-12-03 09:31:37] [INFO]: [001, 002, ..., 074]
+[2025-12-03 09:31:37] [INFO]: [001, 002, ..., 074]
+[2025-12-03 09:31:43] [INFO]: -------- Test Pid List --------
+[2025-12-03 09:31:43] [INFO]: -------- Test Pid List --------
+[2025-12-03 09:31:43] [INFO]: -------- Test Pid List --------
+[2025-12-03 09:31:43] [INFO]: -------- Test Pid List --------
+[2025-12-03 09:31:43] [INFO]: -------- Test Pid List --------
+[2025-12-03 09:31:43] [INFO]: [075, 076, ..., 091]
+[2025-12-03 09:31:43] [INFO]: [075, 076, ..., 091]
+[2025-12-03 09:31:43] [INFO]: [075, 076, ..., 091]
+[2025-12-03 09:31:43] [INFO]: [075, 076, ..., 091]
+[2025-12-03 09:31:43] [INFO]: [075, 076, ..., 091]
+[2025-12-03 09:31:44] [INFO]: {'lr': 0.1, 'momentum': 0.9, 'solver': 'SGD', 'weight_decay': 0.0005}
+[2025-12-03 09:31:44] [INFO]: {'lr': 0.1, 'momentum': 0.9, 'solver': 'SGD', 'weight_decay': 0.0005}
+[2025-12-03 09:31:44] [INFO]: {'lr': 0.1, 'momentum': 0.9, 'solver': 'SGD', 'weight_decay': 0.0005}
+[2025-12-03 09:31:44] [INFO]: {'lr': 0.1, 'momentum': 0.9, 'solver': 'SGD', 'weight_decay': 0.0005}
+[2025-12-03 09:31:44] [INFO]: {'lr': 0.1, 'momentum': 0.9, 'solver': 'SGD', 'weight_decay': 0.0005}
+[2025-12-03 09:31:44] [INFO]: {'gamma': 0.1, 'milestones': [100, 200, 300], 'scheduler': 'MultiStepLR'}
+[2025-12-03 09:31:44] [INFO]: {'gamma': 0.1, 'milestones': [100, 200, 300], 'scheduler': 'MultiStepLR'}
+[2025-12-03 09:31:44] [INFO]: {'gamma': 0.1, 'milestones': [100, 200, 300], 'scheduler': 'MultiStepLR'}
+[2025-12-03 09:31:44] [INFO]: {'gamma': 0.1, 'milestones': [100, 200, 300], 'scheduler': 'MultiStepLR'}
+[2025-12-03 09:31:44] [INFO]: {'gamma': 0.1, 'milestones': [100, 200, 300], 'scheduler': 'MultiStepLR'}
+[2025-12-03 09:31:44] [INFO]: Parameters Count: 4.74583M
+[2025-12-03 09:31:44] [INFO]: Parameters Count: 4.74583M
+[2025-12-03 09:31:44] [INFO]: Parameters Count: 4.74583M
+[2025-12-03 09:31:44] [INFO]: Parameters Count: 4.74583M
+[2025-12-03 09:31:44] [INFO]: Parameters Count: 4.74583M
+[2025-12-03 09:31:44] [INFO]: Model Initialization Finished!
+[2025-12-03 09:31:44] [INFO]: Model Initialization Finished!
+[2025-12-03 09:31:44] [INFO]: Model Initialization Finished!
+[2025-12-03 09:31:44] [INFO]: Model Initialization Finished!
+[2025-12-03 09:31:44] [INFO]: Model Initialization Finished!
+/content/drive/MyDrive/Biometrics/HSTL/lib/modeling/base_model.py:377: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=model.engine_cfg["enable_float16"]):
+[2025-12-03 09:49:55] [INFO]: Iteration 00100, Cost 4419.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=753.7518, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0139
+[2025-12-03 09:49:55] [INFO]: Iteration 00100, Cost 4419.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=753.7518, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0139
+[2025-12-03 09:49:55] [INFO]: Iteration 00100, Cost 4419.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=753.7518, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0139
+[2025-12-03 09:49:55] [INFO]: Iteration 00100, Cost 4419.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=753.7518, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0139
+[2025-12-03 09:49:55] [INFO]: Iteration 00100, Cost 4419.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=753.7518, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0139
+[2025-12-03 09:49:55] [INFO]: Running test...
+[2025-12-03 09:49:55] [INFO]: Running test...
+[2025-12-03 09:49:55] [INFO]: Running test...
+[2025-12-03 09:49:55] [INFO]: Running test...
+[2025-12-03 09:49:55] [INFO]: Running test...
+Transforming:   0%|          | 0/1760 [00:00<?, ?it/s]/content/drive/MyDrive/Biometrics/HSTL/lib/modeling/base_model.py:352: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(enabled=self.engine_cfg["enable_float16"]):
+Transforming: 100%|██████████| 1760/1760 [09:23<00:00,  3.12it/s]
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 09:59:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 09:59:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 09:59:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 09:59:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 09:59:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 09:59:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 09:59:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 09:59:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 09:59:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 09:59:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 09:59:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 09:59:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 09:59:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 09:59:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 09:59:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:03:48] [INFO]: Iteration 00200, Cost 262.01s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:03:48] [INFO]: Iteration 00200, Cost 262.01s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:03:48] [INFO]: Iteration 00200, Cost 262.01s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:03:48] [INFO]: Iteration 00200, Cost 262.01s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:03:48] [INFO]: Iteration 00200, Cost 262.01s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:03:48] [INFO]: Running test...
+[2025-12-03 10:03:48] [INFO]: Running test...
+[2025-12-03 10:03:48] [INFO]: Running test...
+[2025-12-03 10:03:48] [INFO]: Running test...
+[2025-12-03 10:03:48] [INFO]: Running test...
+Transforming: 100%|██████████| 1760/1760 [00:52<00:00, 33.46it/s]
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:04:48] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:04:48] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:04:48] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:04:48] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:04:48] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:04:48] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:04:48] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:04:48] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:04:48] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:04:48] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:04:48] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:04:48] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:04:48] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:04:48] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:04:48] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:08:26] [INFO]: Iteration 00300, Cost 217.67s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0250
+[2025-12-03 10:08:26] [INFO]: Iteration 00300, Cost 217.67s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0250
+[2025-12-03 10:08:26] [INFO]: Iteration 00300, Cost 217.67s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0250
+[2025-12-03 10:08:26] [INFO]: Iteration 00300, Cost 217.67s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0250
+[2025-12-03 10:08:26] [INFO]: Iteration 00300, Cost 217.67s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0250
+[2025-12-03 10:08:26] [INFO]: Running test...
+[2025-12-03 10:08:26] [INFO]: Running test...
+[2025-12-03 10:08:26] [INFO]: Running test...
+[2025-12-03 10:08:26] [INFO]: Running test...
+[2025-12-03 10:08:26] [INFO]: Running test...
+Transforming: 100%|██████████| 1760/1760 [00:52<00:00, 33.57it/s]
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:09:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:09:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:09:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:09:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:09:26] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:09:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:09:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:09:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:09:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:09:26] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:09:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:09:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:09:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:09:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:09:26] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:12:23] [INFO]: Iteration 00400, Cost 176.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:12:23] [INFO]: Iteration 00400, Cost 176.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:12:23] [INFO]: Iteration 00400, Cost 176.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:12:23] [INFO]: Iteration 00400, Cost 176.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:12:23] [INFO]: Iteration 00400, Cost 176.96s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:12:23] [INFO]: Running test...
+[2025-12-03 10:12:23] [INFO]: Running test...
+[2025-12-03 10:12:23] [INFO]: Running test...
+[2025-12-03 10:12:23] [INFO]: Running test...
+[2025-12-03 10:12:23] [INFO]: Running test...
+Transforming: 100%|██████████| 1760/1760 [00:52<00:00, 33.55it/s]
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:13:23] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:13:23] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:13:23] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:13:23] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:13:23] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:13:23] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:13:23] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:13:23] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:13:23] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:13:23] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:13:23] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:13:23] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:13:23] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:13:23] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:13:23] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:16:03] [INFO]: Iteration 00500, Cost 159.66s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0200
+[2025-12-03 10:16:03] [INFO]: Iteration 00500, Cost 159.66s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0200
+[2025-12-03 10:16:03] [INFO]: Iteration 00500, Cost 159.66s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0200
+[2025-12-03 10:16:03] [INFO]: Iteration 00500, Cost 159.66s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0200
+[2025-12-03 10:16:03] [INFO]: Iteration 00500, Cost 159.66s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0200
+[2025-12-03 10:16:03] [INFO]: Running test...
+[2025-12-03 10:16:03] [INFO]: Running test...
+[2025-12-03 10:16:03] [INFO]: Running test...
+[2025-12-03 10:16:03] [INFO]: Running test...
+[2025-12-03 10:16:03] [INFO]: Running test...
+Transforming: 100%|██████████| 1760/1760 [00:52<00:00, 33.55it/s]
+[2025-12-03 10:17:03] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:17:03] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:17:03] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:17:03] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:17:03] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:17:03] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:03] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:03] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:03] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:03] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:04] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:04] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:04] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:04] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:17:04] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:17:04] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:17:04] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:17:04] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:17:04] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:17:04] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:17:04] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:17:04] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:17:04] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:17:04] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:17:04] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:17:04] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:17:04] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:17:04] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:17:04] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:19:08] [INFO]: Iteration 00600, Cost 123.99s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:19:08] [INFO]: Iteration 00600, Cost 123.99s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:19:08] [INFO]: Iteration 00600, Cost 123.99s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:19:08] [INFO]: Iteration 00600, Cost 123.99s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:19:08] [INFO]: Iteration 00600, Cost 123.99s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0175
+[2025-12-03 10:19:08] [INFO]: Running test...
+[2025-12-03 10:19:08] [INFO]: Running test...
+[2025-12-03 10:19:08] [INFO]: Running test...
+[2025-12-03 10:19:08] [INFO]: Running test...
+[2025-12-03 10:19:08] [INFO]: Running test...
+Transforming: 100%|██████████| 1760/1760 [00:52<00:00, 33.52it/s]
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:20:08] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:20:08] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:20:08] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:20:08] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:20:08] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:20:08] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:20:08] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:20:08] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:20:08] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:20:08] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:20:08] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:20:08] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:20:08] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:20:08] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:20:08] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:21:52] [INFO]: Iteration 00700, Cost 104.51s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0150
+[2025-12-03 10:21:52] [INFO]: Iteration 00700, Cost 104.51s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0150
+[2025-12-03 10:21:52] [INFO]: Iteration 00700, Cost 104.51s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0150
+[2025-12-03 10:21:52] [INFO]: Iteration 00700, Cost 104.51s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0150
+[2025-12-03 10:21:52] [INFO]: Iteration 00700, Cost 104.51s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0150
+[2025-12-03 10:21:53] [INFO]: Running test...
+[2025-12-03 10:21:53] [INFO]: Running test...
+[2025-12-03 10:21:53] [INFO]: Running test...
+[2025-12-03 10:21:53] [INFO]: Running test...
+[2025-12-03 10:21:53] [INFO]: Running test...
+Transforming: 100%|██████████| 1760/1760 [00:52<00:00, 33.48it/s]
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:22:53] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:22:53] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:22:53] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:22:53] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:22:53] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:22:53] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:22:53] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:22:53] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:22:53] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:22:53] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:22:53] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:22:53] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:22:53] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:22:53] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:22:53] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:24:28] [INFO]: Iteration 00800, Cost 94.74s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:24:28] [INFO]: Iteration 00800, Cost 94.74s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:24:28] [INFO]: Iteration 00800, Cost 94.74s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:24:28] [INFO]: Iteration 00800, Cost 94.74s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:24:28] [INFO]: Iteration 00800, Cost 94.74s, triplet_loss=nan, triplet_hard_loss=nan, triplet_loss_num=768.0000, triplet_mean_dist=nan, softmax_loss=nan, softmax_accuracy=0.0100
+[2025-12-03 10:24:28] [INFO]: Running test...
+[2025-12-03 10:24:28] [INFO]: Running test...
+[2025-12-03 10:24:28] [INFO]: Running test...
+[2025-12-03 10:24:28] [INFO]: Running test...
+[2025-12-03 10:24:28] [INFO]: Running test...
+Transforming: 100%|██████████| 1760/1760 [00:52<00:00, 33.51it/s]
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-03 10:25:29] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:25:29] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:25:29] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:25:29] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:25:29] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:25:29] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:25:29] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:25:29] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:25:29] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:25:29] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-03 10:25:29] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:25:29] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:25:29] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:25:29] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-03 10:25:29] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+
+Completed!
