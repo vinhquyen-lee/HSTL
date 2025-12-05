@@ -1,0 +1,11 @@
+[2025-12-04 11:24:38] [INFO]: {'enable_float16': True, 'fix_BN': False, 'log_iter': 100, 'with_test': True, 'optimizer_reset': True, 'scheduler_reset': True, 'restore_ckpt_strict': True, 'restore_hint': 0, 'save_iter': 5000, 'save_name': 'kaggle', 'sync_BN': False, 'total_iter': 80000, 'sampler': {'batch_size': 8, 'sample_type': 'fixed_ordered', 'frames_num_fixed': 30, 'frames_skip_num_fixed': 0, 'sample_method': 'random_ordered', 'type': 'TripletSampler', 'frames_skip_num': 0}}
+[2025-12-04 11:24:38] [INFO]: {'model': 'HSTL', 'channels': [32, 64, 128], 'class_num': 74}
+[2025-12-04 11:24:38] [INFO]: {'dataset_name': 'CASIA-B', 'dataset_root': '/kaggle/input/casiab', 'dataset_partition': '/kaggle/input/project-hstl/misc/partitions/CASIA-B_include_005.json', 'num_workers': 4, 'remove_no_gallery': False, 'test_dataset_name': 'CASIA-B', 'cache': False}
+[2025-12-04 11:24:38] [INFO]: -------- Train Pid List --------
+[2025-12-04 11:24:38] [INFO]: [001, 002, ..., 074]
+[2025-12-04 11:25:27] [INFO]: -------- Test Pid List --------
+[2025-12-04 11:25:27] [INFO]: [075, 076, ..., 091]
+[2025-12-04 11:25:37] [INFO]: {'lr': 0.1, 'momentum': 0.9, 'solver': 'SGD', 'weight_decay': 0.0005}
+[2025-12-04 11:25:37] [INFO]: {'gamma': 0.1, 'milestones': [10000, 20000, 30000], 'scheduler': 'MultiStepLR'}
+[2025-12-04 11:25:37] [INFO]: Parameters Count: 4.74583M
+[2025-12-04 11:25:37] [INFO]: Model Initialization Finished!
