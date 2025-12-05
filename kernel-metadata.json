@@ -1,0 +1,15 @@
+{
+  "id": "huypt94/improved-hstl",
+  "title": "Improved HSTL",
+  "code_file": "kaggle.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_tpu": "false",
+  "enable_internet": "true",
+  "dataset_sources": [
+    "huypt94/casiab",
+    "huypt94/project-hstl"
+  ]
+}

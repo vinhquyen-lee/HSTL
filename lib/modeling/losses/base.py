@@ -4,6 +4,7 @@ import torch
 from utils import Odict
 import functools
 from utils import ddp_all_gather
+from utils.common import safe_get_world_size, is_distributed  # ADD THIS IMPORT
 
 
 def gather_and_scale_wrapper(func):
@@ -11,12 +12,16 @@ def gather_and_scale_wrapper(func):
     @functools.wraps(func)
     def inner(*args, **kwds):
         try:
-
-            for k, v in kwds.items():
-                kwds[k] = ddp_all_gather(v)
+            # CHANGED: Only gather if distributed
+            if is_distributed():
+                for k, v in kwds.items():
+                    kwds[k] = ddp_all_gather(v)
 
             loss, loss_info = func(*args, **kwds)
-            loss *= torch.distributed.get_world_size()
+                    
+            # CHANGED: Only gather if distributed
+            if is_distributed():
+                loss *= safe_get_world_size()
             return loss, loss_info
         except:
             raise ArgumentError

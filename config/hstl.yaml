@@ -1,8 +1,8 @@
 data_cfg:
   dataset_name: CASIA-B
-  dataset_root: D:/biometrics/gait-reg/dataset/CASIA-B-pkl # D:/HCMUS/HK7/Biometric/Project/HSTL/datasets/CASIA-B-pkl
-  dataset_partition: ./misc/partitions/CASIA-B_include_005.json
-  num_workers: 0
+  dataset_root: D:/biometrics/gait-reg/dataset/CASIA-B-pkl # /kaggle/input/casiab # D:/HCMUS/HK7/Biometric/Project/HSTL/datasets/CASIA-B-pkl
+  dataset_partition: ./misc/partitions/CASIA-B_include_005.json # /kaggle/input/project-hstl/misc/partitions/CASIA-B_include_005.json
+  num_workers: 4
   remove_no_gallery: false
   test_dataset_name: CASIA-B
   cache: false
@@ -10,8 +10,8 @@ data_cfg:
 evaluator_cfg:
   enable_float16: false 
   restore_ckpt_strict: true
-  restore_hint: 80000
-  save_name: HSTL
+  restore_hint: 40000
+  save_name: kaggle # HSTL
   sampler:
     batch_size: 1
     sample_type: all_ordered
@@ -55,19 +55,20 @@ trainer_cfg:
   enable_float16: true
   fix_BN: false
   log_iter: 100
-  with_test: true
+  with_test: true # CHANGE: disable mid-training tests to save time for session
   optimizer_reset: true
   scheduler_reset: true
   restore_ckpt_strict: true
   restore_hint: 0
-  save_iter: 10000
-  save_name: HSTL
-  sync_BN: true
+  save_iter: 5000 # 10000
+  save_name: kaggle # HSTL
+  sync_BN: false # true - CHANGE: no distributed training
   total_iter: 80000
   sampler:
-    batch_size: 8
+    batch_size: [8, 4] # [P,K] - INCREASE: 8 --> 16 subjects (T4 can handle with FP16)
     sample_type: fixed_ordered
     frames_num_fixed: 30
+    frames_skip_num: 0
     frames_skip_num_fixed: 0
     sample_method: random_ordered
     type: TripletSampler

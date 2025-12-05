@@ -1,0 +1,16 @@
+[2025-12-05 14:38:54] [INFO]: {'enable_float16': False, 'restore_ckpt_strict': True, 'restore_hint': 40000, 'save_name': 'kaggle', 'sampler': {'batch_size': 1, 'sample_type': 'all_ordered', 'type': 'InferenceSampler'}}
+[2025-12-05 14:38:54] [INFO]: {'model': 'HSTL', 'channels': [32, 64, 128], 'class_num': 74}
+[2025-12-05 14:38:54] [INFO]: {'dataset_name': 'CASIA-B', 'dataset_root': 'D:/biometrics/gait-reg/dataset/CASIA-B-pkl', 'dataset_partition': './misc/partitions/CASIA-B_include_005.json', 'num_workers': 4, 'remove_no_gallery': False, 'test_dataset_name': 'CASIA-B', 'cache': False}
+[2025-12-05 14:38:54] [INFO]: -------- Test Pid List --------
+[2025-12-05 14:38:54] [INFO]: [075, 076, ..., 091]
+[2025-12-05 14:38:59] [INFO]: Restore Parameters from output/CASIA-B\HSTL\kaggle\checkpoints/kaggle-40000.pt !!!
+[2025-12-05 14:38:59] [INFO]: Parameters Count: 4.74583M
+[2025-12-05 14:38:59] [INFO]: Model Initialization Finished!
+[2025-12-05 14:40:43] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-05 14:40:43] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-05 14:40:43] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-05 14:40:43] [INFO]: NM: 6.2,	BG: 6.1,	CL: 6.2
+[2025-12-05 14:40:43] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-05 14:40:43] [INFO]: NM: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
+[2025-12-05 14:40:43] [INFO]: BG: [6.06 6.06 6.06 6.25 6.06 6.06 6.06 6.06 6.06 6.25 6.06]
+[2025-12-05 14:40:43] [INFO]: CL: [6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25 6.25]
