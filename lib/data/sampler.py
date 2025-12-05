@@ -3,6 +3,8 @@ import torch
 import torch.distributed as dist
 import torch.utils.data as tordata
 
+# Import safe wrappers
+from utils import safe_get_world_size, safe_get_rank, is_distributed
 
 class TripletSampler(tordata.sampler.Sampler):
     def __init__(self, dataset, batch_size, batch_shuffle=False):
@@ -10,8 +12,10 @@ class TripletSampler(tordata.sampler.Sampler):
         self.batch_size = batch_size
         self.batch_shuffle = batch_shuffle
 
-        self.world_size = dist.get_world_size()
-        self.rank = dist.get_rank()
+        # self.world_size = dist.get_world_size() # original code
+        # self.rank = dist.get_rank() # original code
+        self.world_size = safe_get_world_size()  # CHANGED
+        self.rank = safe_get_rank()  # CHANGED        
 
     def __iter__(self):
         while True:
@@ -46,7 +50,9 @@ def sync_random_sample_list(obj_list, k):
     idx = torch.randperm(len(obj_list))[:k]
     if torch.cuda.is_available():
         idx = idx.cuda()
-    torch.distributed.broadcast(idx, src=0)
+    # CHANGED: Only broadcast if distributed
+    if is_distributed():
+        torch.distributed.broadcast(idx, src=0)
     idx = idx.tolist()
     return [obj_list[i] for i in idx]
 
@@ -59,10 +65,13 @@ class InferenceSampler(tordata.sampler.Sampler):
         self.size = len(dataset)
         indices = list(range(self.size))
 
-        world_size = dist.get_world_size()
-        rank = dist.get_rank()
+        # world_size = dist.get_world_size() # original code
+        # rank = dist.get_rank() # original code
+        world_size = safe_get_world_size()  # CHANGED
+        rank = safe_get_rank()  # CHANGED
 
-        if batch_size % world_size != 0:
+        # CHANGED: Skip divisibility check in single-GPU mode
+        if world_size > 1 and batch_size % world_size != 0:
             raise ValueError("World size({}) is not divisible by batch_size({})".format(
                 world_size, batch_size))
 

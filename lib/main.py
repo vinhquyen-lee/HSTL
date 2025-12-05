@@ -4,6 +4,8 @@ import torch
 import torch.nn as nn
 from modeling import models
 from utils import config_loader, get_ddp_module, init_seeds, params_count, get_msg_mgr
+from utils import is_distributed, safe_get_rank  # ADD THIS IMPORT
+
 
 parser = argparse.ArgumentParser(description='Main program ')
 parser.add_argument('--local_rank', type=int, default=0,
@@ -21,7 +23,14 @@ opt = parser.parse_args()
 def initialization(cfgs, training):
     msg_mgr = get_msg_mgr()
     engine_cfg = cfgs['trainer_cfg'] if training else cfgs['evaluator_cfg']
-    output_path = os.path.join('output/', cfgs['data_cfg']['dataset_name'],
+    
+    # CHANGED: Use /kaggle/working/ for output on Kaggle
+    if os.path.exists('/kaggle/input'):
+        output_base = '/kaggle/working/output/'
+    else:
+        output_base = 'output/'
+    
+    output_path = os.path.join(output_base, cfgs['data_cfg']['dataset_name'],
                                cfgs['model_cfg']['model'], engine_cfg['save_name'])
     if training:
         msg_mgr.init_manager(output_path, opt.log_to_file, engine_cfg['log_iter'],
@@ -31,7 +40,8 @@ def initialization(cfgs, training):
 
     msg_mgr.log_info(engine_cfg)
 
-    seed = torch.distributed.get_rank()
+    # seed = torch.distributed.get_rank()
+    seed = safe_get_rank()  # CHANGED: Use safe wrapper
     init_seeds(seed)
 
 
@@ -55,7 +65,12 @@ def run_model(cfgs, training):
 
 if __name__ == '__main__':
     #torch.distributed.init_process_group('nccl', init_method='env://')
-    torch.distributed.init_process_group('gloo', init_method='env://')
+    # torch.distributed.init_process_group('gloo', init_method='env://')
+    
+    # CHANGED: Only initialize distributed if environment is set up for it
+    if 'WORLD_SIZE' in os.environ and int(os.environ.get('WORLD_SIZE', 1)) > 1:
+        torch.distributed.init_process_group('gloo', init_method='env://')    
+    
     # if torch.distributed.get_world_size() != torch.cuda.device_count():
     #     raise ValueError("Expect number of availuable GPUs({}) equals to the world size({}).".format(
     #         torch.distributed.get_world_size(), torch.cuda.device_count()))

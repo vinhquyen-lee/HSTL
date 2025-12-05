@@ -10,7 +10,23 @@ import yaml
 import random
 from torch.nn.parallel import DistributedDataParallel as DDP
 from collections import OrderedDict, namedtuple
+import torch.distributed as dist
 
+def is_distributed():
+    """Check if distributed training is properly initialized"""
+    return dist.is_available() and dist.is_initialized()
+
+def safe_get_rank():
+    """Get the rank of current process, returns 0 if not distributed"""
+    if is_distributed():
+        return dist.get_rank()
+    return 0
+
+def safe_get_world_size():
+    """Get the world size, returns 1 if not distributed"""
+    if is_distributed():
+        return dist.get_world_size()
+    return 1
 
 class NoOp:
     def __getattr__(self, *args):
@@ -43,9 +59,11 @@ def Ntuple(description, keys, values):
 
 def get_valid_args(obj, input_args, free_keys=[]):
     if inspect.isfunction(obj):
-        expected_keys = inspect.getargspec(obj)[0]
+        # expected_keys = inspect.getargspec(obj)[0] # CHANGED for Python 3.11 Compatibility: getargspec --> getfullargspec
+        expected_keys = inspect.getfullargspec(obj)[0]
     elif inspect.isclass(obj):
-        expected_keys = inspect.getargspec(obj.__init__)[0]
+        # expected_keys = inspect.getargspec(obj.__init__)[0] # CHANGED for Python 3.11 Compatibility: getargspec --> getfullargspec
+        expected_keys = inspect.getfullargspec(obj.__init__)[0]
     else:
         raise ValueError('Just support function and class object!')
     unexpect_keys = list()
@@ -169,10 +187,20 @@ def ddp_all_gather(features, dim=0, requires_grad=True):
         inputs: [n, ...]
     '''
 
-    world_size = torch.distributed.get_world_size()
-    rank = torch.distributed.get_rank()
+    # If not distributed, return features as-is
+    if not is_distributed():
+        return features
+
+    world_size = dist.get_world_size()
+    rank = dist.get_rank()
     feature_list = [torch.ones_like(features) for _ in range(world_size)]
-    torch.distributed.all_gather(feature_list, features.contiguous())
+    dist.all_gather(feature_list, features.contiguous())
+
+    # # Original code
+    # world_size = torch.distributed.get_world_size()
+    # rank = torch.distributed.get_rank()
+    # feature_list = [torch.ones_like(features) for _ in range(world_size)]
+    # torch.distributed.all_gather(feature_list, features.contiguous())
 
     if requires_grad:
         feature_list[rank] = features
@@ -189,6 +217,10 @@ class DDPPassthrough(DDP):
 
 
 def get_ddp_module(module, **kwargs):
+    # If not distributed, return module as-is (no DDP wrapper)
+    if not is_distributed():
+        return module
+
     if len(list(module.parameters())) == 0:
         # for the case that loss module has not parameters.
         return module

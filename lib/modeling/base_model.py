@@ -1,5 +1,5 @@
 import sys
-
+import os
 import torch
 import numpy as np
 import os.path as osp
@@ -24,6 +24,7 @@ from utils import get_valid_args, is_list, is_dict, np2var, ts2np, list2var, get
 from utils import evaluation as eval_functions
 from utils import NoOp
 from utils import get_msg_mgr
+from utils import safe_get_rank, is_distributed  # ADD THIS IMPORT
 
 __all__ = ['BaseModel']
 
@@ -104,8 +105,18 @@ class BaseModel(MetaModel, nn.Module):
 
         if training and self.engine_cfg['enable_float16']:
             self.Scaler = GradScaler()
-        self.save_path = osp.join('output/', cfgs['data_cfg']['dataset_name'],
+        # CHANGED: Use /kaggle/working/ for output on Kaggle
+        if os.path.exists('/kaggle/input'):
+            output_base = '/kaggle/working/output/'
+            ckpt_load_base = '/kaggle/input/project-hstl/output/'  # ADD THIS
+        else:
+            output_base = 'output/'
+            ckpt_load_base = 'output/'  # ADD THIS
+        
+        self.save_path = osp.join(output_base, cfgs['data_cfg']['dataset_name'],
                                   cfgs['model_cfg']['model'], self.engine_cfg['save_name'])
+        self.ckpt_load_base = osp.join(ckpt_load_base, cfgs['data_cfg']['dataset_name'],
+                                       cfgs['model_cfg']['model'], self.engine_cfg['save_name'])  # ADD THIS
 
         self.build_network(cfgs['model_cfg'])
         self.init_parameters()
@@ -118,7 +129,11 @@ class BaseModel(MetaModel, nn.Module):
             self.test_loader = self.get_loader(
                 cfgs['data_cfg'], train=False)
 
-        self.device = torch.distributed.get_rank()
+        # self.device = torch.distributed.get_rank() # Original code
+
+        # CHANGED: Use safe wrapper for device assignment
+        self.device = safe_get_rank() if is_distributed() else 0
+                
         torch.cuda.set_device(self.device)
         self.to(device=torch.device(
             "cuda", self.device))
@@ -200,7 +215,8 @@ class BaseModel(MetaModel, nn.Module):
         return scheduler
 
     def save_ckpt(self, iteration):
-        if torch.distributed.get_rank() == 0:
+        # if torch.distributed.get_rank() == 0: # original code
+        if safe_get_rank() == 0:  # CHANGED: Use safe wrapper
             mkdir(osp.join(self.save_path, "checkpoints/"))
             save_name = self.engine_cfg['save_name']
             checkpoint = {
@@ -242,7 +258,7 @@ class BaseModel(MetaModel, nn.Module):
         if isinstance(restore_hint, int):
             save_name = self.engine_cfg['save_name']
             save_name = osp.join(
-                self.save_path, 'checkpoints/{}-{:0>5}.pt'.format(save_name, restore_hint))
+                self.ckpt_load_base, 'checkpoints/{}-{:0>5}.pt'.format(save_name, restore_hint)) # CHANGED: save_path --> ckpt_load_base
             self.iteration = restore_hint
         elif isinstance(restore_hint, str):
             save_name = restore_hint
@@ -375,7 +391,8 @@ class BaseModel(MetaModel, nn.Module):
     @ staticmethod
     def run_test(model):
 
-        rank = torch.distributed.get_rank()
+        # rank = torch.distributed.get_rank() # original code
+        rank = safe_get_rank()  # CHANGED: Use safe wrapper
         with torch.no_grad():
             info_dict = model.inference(rank)
         if rank == 0:
