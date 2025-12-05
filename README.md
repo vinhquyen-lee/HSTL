@@ -79,3 +79,11 @@ You can run commands in [test.sh](test.sh) for testing different models.
 - [ ] Tại sao lại tồn tại 2 tập tin giống hệt nhau [default.yaml](./config/default.yaml) và [hstl.yaml](./config/hstl.yaml) ?
 
 - [ ] Tại sao lại lưu checkpoint `HSTL-80000.pt` của tập CASIA-B tại đường dẫn `bị dư thừa` như `output\CASIA-B\HSTL\HSTL\checkpoints` ?
+
+2. Tác vụ mới
+
+- [ ] Đề xuất cải tiến (lý thuyết, demo, cài đặt)
+
+- [ ] Huấn luyện trên Kaggle
+    - [ ] Tìm cách tăng tốc quá trình huấn luyện (giảm log, giảm test) để dùng tối đa 12h thực thi của một session
+        - Lần huấn luyện đầu tiên thành công, có kiểm tra sau 1000 lần, lưu checkpoint sau 500 lần, có ghi log, nhưng chỉnh chạy được checkpoint-40000

@@ -1,4 +1,5 @@
 from .common import get_ddp_module, ddp_all_gather
+from .common import is_distributed, safe_get_rank, safe_get_world_size # add this line for "distributed training" bugs on kaggle
 from .common import Odict, Ntuple
 from .common import get_valid_args
 from .common import is_list_or_tuple, is_bool, is_str, is_list, is_dict, is_tensor, is_array, config_loader, init_seeds, handler, params_count

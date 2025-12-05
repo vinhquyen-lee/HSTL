@@ -6,9 +6,21 @@ import torchvision.utils as vutils
 import os.path as osp
 from time import strftime, localtime
 
-from torch.utils.tensorboard import SummaryWriter
-from .common import is_list, is_tensor, ts2np, mkdir, Odict, NoOp
+# from torch.utils.tensorboard import SummaryWriter
+from .common import is_list, is_tensor, ts2np, mkdir, Odict, NoOp, safe_get_rank
 import logging
+import os
+# Conditionally import TensorBoard
+DISABLE_TENSORBOARD = os.environ.get('DISABLE_TENSORBOARD', '0') == '1' or os.path.exists('/kaggle/input')
+
+if not DISABLE_TENSORBOARD:
+    try:
+        from torch.utils.tensorboard import SummaryWriter
+    except ImportError:
+        SummaryWriter = None
+        DISABLE_TENSORBOARD = True
+else:
+    SummaryWriter = None
 
 
 class MessageManager:
@@ -20,9 +32,14 @@ class MessageManager:
     def init_manager(self, save_path, log_to_file, log_iter, iteration=0):
         self.iteration = iteration
         self.log_iter = log_iter
-        mkdir(osp.join(save_path, "summary/"))
-        self.writer = SummaryWriter(
-            osp.join(save_path, "summary/"), purge_step=self.iteration)
+
+        if not DISABLE_TENSORBOARD and SummaryWriter is not None:
+            mkdir(osp.join(save_path, "summary/"))
+            self.writer = SummaryWriter(
+                osp.join(save_path, "summary/"), purge_step=self.iteration)
+        else:
+            self.writer = None
+
         self.init_logger(save_path, log_to_file)
 
     def init_logger(self, save_path, log_to_file):
@@ -54,10 +71,12 @@ class MessageManager:
 
     def flush(self):
         self.info_dict.clear()
-        self.writer.flush()
+        if self.writer is not None:
+            self.writer.flush()
 
     def write_to_tensorboard(self, summary):
-
+        if self.writer is None:
+            return # skip if TensorBoard is disabled
         for k, v in summary.items():
             module_name = k.split('/')[0]
             if module_name not in self.writer_hparams:
@@ -115,7 +134,8 @@ noop = NoOp()
 
 
 def get_msg_mgr():
-    if torch.distributed.get_rank() > 0:
+    # if torch.distributed.get_rank() > 0: # original code
+    if safe_get_rank() > 0:  # CHANGED: was torch.distributed.get_rank()
         return noop
     else:
         return msg_mgr
