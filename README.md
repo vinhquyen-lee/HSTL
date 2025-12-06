@@ -30,6 +30,10 @@ Create conda env using [env.yaml](./config/env.yaml)
 * The checkpoints for CASIA-B [link](https://drive.google.com/file/d/1keZBtWr9O8gfeqBB9qHNbZ-96Eh6LggB/view?usp=sharing)
 * The checkpoints for OUMVLP [link](https://drive.google.com/file/d/1VNYC0QbHxw1aaBTFLj4DMIC2D36B1-ng/view?usp=sharing)
 
+3. Kaggle
+
+Kaggle is the only free platform that can support this for project fully. Read more in [kaggle.md](./kaggle.md)
+
 # Train and test
 ## Train
 Train a model by
@@ -41,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0,1 python -m torch.distributed.launch --nproc_per_node=2 o
 - `--cfgs` The path to config file.
 - `--phase` Specified as `train`.
 <!-- - `--iter` You can specify a number of iterations or use `restore_hint` in the config file and resume training from there. -->
-- `--log_to_file` If specified, the terminal log will be written on disk simultaneously. 
+- `--log_to_file` If specified, the terminal log will be written on disk simultaneously.
 
 You can run commands in [train.sh](train.sh) for training different models.
 
