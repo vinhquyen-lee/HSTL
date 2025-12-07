@@ -82,4 +82,19 @@ You can run commands in [test.sh](test.sh) for testing different models.
 
 - [ ] Tại sao lại tồn tại 2 tập tin giống hệt nhau [default.yaml](./config/default.yaml) và [hstl.yaml](./config/hstl.yaml) ?
 
-- [ ] Tại sao lại lưu checkpoint `HSTL-80000.pt` của tập CASIA-B tại đường dẫn `bị dư thừa` như `output\CASIA-B\HSTL\HSTL\checkpoints` ?
+2. Tác vụ
+
+    chốt
+    - dữ liệu: CASIA-B
+    - tài nguyên: Kaggle via API
+    - hướng nghiên cứu: đổi kỹ thuật, không thay đổi hệ thống
+    -------------------------------
+    tác vụ:
+    - trích xuất các kĩ thuật (A) được dùng (lớn nhỏ tùy ý)
+    - mức độ ảnh hưởng
+    - các kỹ thuật tương đương
+    - lập so sánh chi tiết
+    - tại sao tác giả chọn các kĩ thuật (A) ?
+    - đề xuất kỹ thuật thay thế (A)
+    -------------------------------
+    deadline: 21h - 11/12/2025
