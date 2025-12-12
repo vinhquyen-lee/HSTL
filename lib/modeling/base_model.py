@@ -112,7 +112,7 @@ class BaseModel(MetaModel, nn.Module):
         else:
             output_base = 'output/'
             ckpt_load_base = 'output/'  # ADD THIS
-        
+
         self.save_path = osp.join(output_base, cfgs['data_cfg']['dataset_name'],
                                   cfgs['model_cfg']['model'], self.engine_cfg['save_name'])
         self.ckpt_load_base = osp.join(ckpt_load_base, cfgs['data_cfg']['dataset_name'],
@@ -133,7 +133,7 @@ class BaseModel(MetaModel, nn.Module):
 
         # CHANGED: Use safe wrapper for device assignment
         self.device = safe_get_rank() if is_distributed() else 0
-                
+
         torch.cuda.set_device(self.device)
         self.to(device=torch.device(
             "cuda", self.device))
@@ -276,6 +276,7 @@ class BaseModel(MetaModel, nn.Module):
 
     def inputs_pretreament(self, inputs):
         seqs_batch, labs_batch, typs_batch, vies_batch, seqL_batch = inputs
+        # TODO: compare with last part in hstl.yaml & carefully inspect with paper
         trf_cfgs = self.engine_cfg.get('transform', [{'type': 'BaseSilCuttingTransform', 'img_w': 64}])
         seq_trfs = get_transform(trf_cfgs)
 
@@ -309,6 +310,9 @@ class BaseModel(MetaModel, nn.Module):
 
         if self.engine_cfg['enable_float16']:
             self.Scaler.scale(loss_sum).backward()
+            # # add gradient clipping
+            # self.Scaler.unscale_(self.optimizer)
+            # torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=5.0)
             self.Scaler.step(self.optimizer)
             scale = self.Scaler.get_scale()
             self.Scaler.update()
@@ -365,7 +369,11 @@ class BaseModel(MetaModel, nn.Module):
                 training_feat, visual_summary = retval['training_feat'], retval['visual_summary']
                 del retval
             loss_sum, loss_info = model.loss_aggregator(training_feat)
-            ok = model.train_step(loss_sum)
+            # Training continues with NaN losses, corrupting all weights.
+            if torch.isnan(loss_sum) or torch.isinf(loss_sum):
+                model.msg_mgr.log_warning(f"NaN/Inf loss detected: {loss_sum}, skipping iteration")
+                continue
+            ok = model.train_step(loss_sum)  # No NaN check!
             if not ok:
                 continue
 

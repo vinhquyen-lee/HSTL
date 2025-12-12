@@ -23,8 +23,13 @@ def gather_and_scale_wrapper(func):
             if is_distributed():
                 loss *= safe_get_world_size()
             return loss, loss_info
-        except:
-            raise ArgumentError
+        # except:
+        #     raise ArgumentError
+        # # show detailed error traceback
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise RuntimeError(f"Loss computation failed: {str(e)}") from e
     return inner
 
 
