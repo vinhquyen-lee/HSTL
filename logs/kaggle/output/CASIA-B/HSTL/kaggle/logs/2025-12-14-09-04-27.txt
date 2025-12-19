@@ -1,0 +1,12 @@
+[2025-12-14 09:04:27] [INFO]: {'enable_float16': True, 'fix_BN': False, 'log_iter': 100, 'with_test': True, 'optimizer_reset': False, 'scheduler_reset': False, 'restore_ckpt_strict': True, 'restore_hint': 60000, 'save_iter': 5000, 'save_name': 'kaggle', 'sync_BN': False, 'total_iter': 80000, 'sampler': {'batch_size': [8, 8], 'sample_type': 'fixed_ordered', 'frames_num_fixed': 30, 'frames_skip_num_fixed': 0, 'sample_method': 'random_ordered', 'type': 'TripletSampler', 'batch_shuffle': True, 'frames_skip_num': 0}, 'enable_distributed': False}
+[2025-12-14 09:04:27] [INFO]: {'model': 'HSTL', 'channels': [32, 64, 128], 'class_num': 74}
+[2025-12-14 09:04:27] [INFO]: {'dataset_name': 'CASIA-B', 'dataset_root': '/kaggle/input/casiab', 'dataset_partition': './misc/partitions/CASIA-B_include_005.json', 'num_workers': 4, 'remove_no_gallery': False, 'test_dataset_name': 'CASIA-B', 'cache': False}
+[2025-12-14 09:04:27] [INFO]: -------- Train Pid List --------
+[2025-12-14 09:04:27] [INFO]: [001, 002, ..., 074]
+[2025-12-14 09:05:20] [INFO]: -------- Test Pid List --------
+[2025-12-14 09:05:20] [INFO]: [075, 076, ..., 091]
+[2025-12-14 09:05:30] [INFO]: {'lr': 0.0001, 'momentum': 0.9, 'solver': 'Adam', 'weight_decay': 0.0005}
+[2025-12-14 09:05:30] [INFO]: {'gamma': 0.1, 'milestones': [70000], 'scheduler': 'MultiStepLR'}
+[2025-12-14 09:05:31] [INFO]: Restore Parameters from /kaggle/input/project-hstl/output/CASIA-B/HSTL/kaggle/checkpoints/kaggle-60000.pt !!!
+[2025-12-14 09:05:31] [INFO]: Parameters Count: 4.74583M
+[2025-12-14 09:05:31] [INFO]: Model Initialization Finished!
