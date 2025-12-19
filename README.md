@@ -41,7 +41,7 @@ CUDA_VISIBLE_DEVICES=0,1 python -m torch.distributed.launch --nproc_per_node=2 o
 - `--cfgs` The path to config file.
 - `--phase` Specified as `train`.
 <!-- - `--iter` You can specify a number of iterations or use `restore_hint` in the config file and resume training from there. -->
-- `--log_to_file` If specified, the terminal log will be written on disk simultaneously. 
+- `--log_to_file` If specified, the terminal log will be written on disk simultaneously.
 
 You can run commands in [train.sh](train.sh) for training different models.
 
@@ -80,6 +80,7 @@ You can run commands in [test.sh](test.sh) for testing different models.
 
 - [ ] Tại sao lại lưu checkpoint `HSTL-80000.pt` của tập CASIA-B tại đường dẫn `bị dư thừa` như `output\CASIA-B\HSTL\HSTL\checkpoints` ?
 
+- [ ] Checkpoint do tác giả cung cấp được huấn luyện với 90000 bước, sao lại tải về rồi đổi thành 80K. Làm nhập nhàng quá trình tái thực nghiệm ?
 2. Tác vụ mới
 
 - [ ] Đề xuất cải tiến (lý thuyết, demo, cài đặt)
