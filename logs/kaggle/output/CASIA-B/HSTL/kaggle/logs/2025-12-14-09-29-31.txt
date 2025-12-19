@@ -1,0 +1,132 @@
+[2025-12-14 09:29:31] [INFO]: {'enable_float16': True, 'fix_BN': False, 'log_iter': 100, 'with_test': True, 'optimizer_reset': False, 'scheduler_reset': False, 'restore_ckpt_strict': True, 'restore_hint': 80000, 'save_iter': 5000, 'save_name': 'kaggle', 'sync_BN': False, 'total_iter': 90000, 'sampler': {'batch_size': [8, 8], 'sample_type': 'fixed_ordered', 'frames_num_fixed': 30, 'frames_skip_num_fixed': 0, 'sample_method': 'random_ordered', 'type': 'TripletSampler', 'batch_shuffle': True, 'frames_skip_num': 0}, 'enable_distributed': False}
+[2025-12-14 09:29:31] [INFO]: {'model': 'HSTL', 'channels': [32, 64, 128], 'class_num': 74}
+[2025-12-14 09:29:31] [INFO]: {'dataset_name': 'CASIA-B', 'dataset_root': '/kaggle/input/casiab', 'dataset_partition': './misc/partitions/CASIA-B_include_005.json', 'num_workers': 4, 'remove_no_gallery': False, 'test_dataset_name': 'CASIA-B', 'cache': False}
+[2025-12-14 09:29:31] [INFO]: -------- Train Pid List --------
+[2025-12-14 09:29:31] [INFO]: [001, 002, ..., 074]
+[2025-12-14 09:30:07] [INFO]: -------- Test Pid List --------
+[2025-12-14 09:30:07] [INFO]: [075, 076, ..., 091]
+[2025-12-14 09:30:14] [INFO]: {'lr': 0.0001, 'momentum': 0.9, 'solver': 'Adam', 'weight_decay': 0.0005}
+[2025-12-14 09:30:14] [INFO]: {'gamma': 0.1, 'milestones': [70000], 'scheduler': 'MultiStepLR'}
+[2025-12-14 09:30:16] [INFO]: Restore Parameters from /kaggle/input/project-hstl/output/CASIA-B/HSTL/kaggle/checkpoints/kaggle-80000.pt !!!
+[2025-12-14 09:30:16] [INFO]: Parameters Count: 4.74583M
+[2025-12-14 09:30:16] [INFO]: Model Initialization Finished!
+[2025-12-14 09:33:41] [INFO]: Iteration 80100, Cost 249.59s, triplet_loss=0.9312, triplet_hard_loss=4.0868, triplet_loss_num=565.5746, triplet_mean_dist=20.2803, softmax_loss=0.5815, softmax_accuracy=0.9442
+[2025-12-14 09:36:58] [INFO]: Iteration 80200, Cost 197.21s, triplet_loss=0.9058, triplet_hard_loss=3.9703, triplet_loss_num=554.2173, triplet_mean_dist=20.2756, softmax_loss=0.5768, softmax_accuracy=0.9459
+[2025-12-14 09:40:15] [INFO]: Iteration 80300, Cost 197.23s, triplet_loss=0.9148, triplet_hard_loss=4.0056, triplet_loss_num=552.6104, triplet_mean_dist=20.3015, softmax_loss=0.5753, softmax_accuracy=0.9449
+[2025-12-14 09:43:32] [INFO]: Iteration 80400, Cost 197.28s, triplet_loss=0.9102, triplet_hard_loss=4.0024, triplet_loss_num=567.5675, triplet_mean_dist=20.2820, softmax_loss=0.5815, softmax_accuracy=0.9436
+[2025-12-14 09:46:50] [INFO]: Iteration 80500, Cost 197.50s, triplet_loss=0.9018, triplet_hard_loss=3.9749, triplet_loss_num=565.1362, triplet_mean_dist=20.2167, softmax_loss=0.5768, softmax_accuracy=0.9454
+[2025-12-14 09:50:07] [INFO]: Iteration 80600, Cost 197.37s, triplet_loss=0.9040, triplet_hard_loss=3.9497, triplet_loss_num=535.1656, triplet_mean_dist=20.3565, softmax_loss=0.5724, softmax_accuracy=0.9460
+[2025-12-14 09:53:24] [INFO]: Iteration 80700, Cost 197.14s, triplet_loss=0.9157, triplet_hard_loss=4.0318, triplet_loss_num=557.3219, triplet_mean_dist=20.2885, softmax_loss=0.5759, softmax_accuracy=0.9450
+[2025-12-14 09:56:42] [INFO]: Iteration 80800, Cost 197.18s, triplet_loss=0.9037, triplet_hard_loss=3.9740, triplet_loss_num=554.8974, triplet_mean_dist=20.2887, softmax_loss=0.5767, softmax_accuracy=0.9451
+[2025-12-14 09:59:59] [INFO]: Iteration 80900, Cost 197.46s, triplet_loss=0.9134, triplet_hard_loss=4.0044, triplet_loss_num=563.7789, triplet_mean_dist=20.2825, softmax_loss=0.5780, softmax_accuracy=0.9444
+[2025-12-14 10:03:17] [INFO]: Iteration 81000, Cost 197.57s, triplet_loss=0.9102, triplet_hard_loss=4.0009, triplet_loss_num=557.3431, triplet_mean_dist=20.2932, softmax_loss=0.5781, softmax_accuracy=0.9444
+[2025-12-14 10:06:34] [INFO]: Iteration 81100, Cost 197.64s, triplet_loss=0.9111, triplet_hard_loss=4.0305, triplet_loss_num=538.1569, triplet_mean_dist=20.3114, softmax_loss=0.5758, softmax_accuracy=0.9459
+[2025-12-14 10:09:52] [INFO]: Iteration 81200, Cost 197.61s, triplet_loss=0.9085, triplet_hard_loss=3.9866, triplet_loss_num=529.1345, triplet_mean_dist=20.3618, softmax_loss=0.5775, softmax_accuracy=0.9445
+[2025-12-14 10:13:09] [INFO]: Iteration 81300, Cost 197.59s, triplet_loss=0.9045, triplet_hard_loss=3.9912, triplet_loss_num=552.8677, triplet_mean_dist=20.2587, softmax_loss=0.5766, softmax_accuracy=0.9441
+[2025-12-14 10:16:27] [INFO]: Iteration 81400, Cost 197.49s, triplet_loss=0.9031, triplet_hard_loss=3.9575, triplet_loss_num=547.4099, triplet_mean_dist=20.2805, softmax_loss=0.5729, softmax_accuracy=0.9457
+[2025-12-14 10:19:45] [INFO]: Iteration 81500, Cost 197.69s, triplet_loss=0.9020, triplet_hard_loss=3.9823, triplet_loss_num=551.9960, triplet_mean_dist=20.2991, softmax_loss=0.5750, softmax_accuracy=0.9448
+[2025-12-14 10:23:02] [INFO]: Iteration 81600, Cost 197.63s, triplet_loss=0.9023, triplet_hard_loss=3.9686, triplet_loss_num=556.9026, triplet_mean_dist=20.3154, softmax_loss=0.5782, softmax_accuracy=0.9447
+[2025-12-14 10:26:20] [INFO]: Iteration 81700, Cost 197.85s, triplet_loss=0.9018, triplet_hard_loss=3.9759, triplet_loss_num=551.3578, triplet_mean_dist=20.2861, softmax_loss=0.5779, softmax_accuracy=0.9442
+[2025-12-14 10:29:38] [INFO]: Iteration 81800, Cost 197.67s, triplet_loss=0.8932, triplet_hard_loss=3.9074, triplet_loss_num=538.3398, triplet_mean_dist=20.3426, softmax_loss=0.5771, softmax_accuracy=0.9439
+[2025-12-14 10:32:56] [INFO]: Iteration 81900, Cost 197.80s, triplet_loss=0.9039, triplet_hard_loss=3.9641, triplet_loss_num=533.3948, triplet_mean_dist=20.3285, softmax_loss=0.5722, softmax_accuracy=0.9452
+[2025-12-14 10:36:13] [INFO]: Iteration 82000, Cost 197.61s, triplet_loss=0.9114, triplet_hard_loss=4.0218, triplet_loss_num=565.3289, triplet_mean_dist=20.2893, softmax_loss=0.5765, softmax_accuracy=0.9448
+[2025-12-14 10:39:33] [INFO]: Iteration 82100, Cost 199.54s, triplet_loss=0.9011, triplet_hard_loss=3.9544, triplet_loss_num=526.9174, triplet_mean_dist=20.3284, softmax_loss=0.5750, softmax_accuracy=0.9451
+[2025-12-14 10:42:50] [INFO]: Iteration 82200, Cost 197.67s, triplet_loss=0.8989, triplet_hard_loss=3.9550, triplet_loss_num=547.2244, triplet_mean_dist=20.2937, softmax_loss=0.5733, softmax_accuracy=0.9456
+[2025-12-14 10:46:08] [INFO]: Iteration 82300, Cost 197.71s, triplet_loss=0.9168, triplet_hard_loss=4.0177, triplet_loss_num=544.1290, triplet_mean_dist=20.3120, softmax_loss=0.5742, softmax_accuracy=0.9452
+[2025-12-14 10:49:28] [INFO]: Iteration 82400, Cost 199.52s, triplet_loss=0.9258, triplet_hard_loss=4.0759, triplet_loss_num=545.0153, triplet_mean_dist=20.3045, softmax_loss=0.5732, softmax_accuracy=0.9450
+[2025-12-14 10:52:45] [INFO]: Iteration 82500, Cost 197.37s, triplet_loss=0.9036, triplet_hard_loss=3.9590, triplet_loss_num=556.9989, triplet_mean_dist=20.2823, softmax_loss=0.5745, softmax_accuracy=0.9451
+[2025-12-14 10:56:02] [INFO]: Iteration 82600, Cost 197.42s, triplet_loss=0.9033, triplet_hard_loss=3.9504, triplet_loss_num=541.5646, triplet_mean_dist=20.3331, softmax_loss=0.5757, softmax_accuracy=0.9450
+[2025-12-14 10:59:20] [INFO]: Iteration 82700, Cost 197.73s, triplet_loss=0.9039, triplet_hard_loss=3.9682, triplet_loss_num=556.8867, triplet_mean_dist=20.2340, softmax_loss=0.5709, softmax_accuracy=0.9462
+[2025-12-14 11:02:38] [INFO]: Iteration 82800, Cost 197.56s, triplet_loss=0.8974, triplet_hard_loss=3.9457, triplet_loss_num=540.2640, triplet_mean_dist=20.3095, softmax_loss=0.5741, softmax_accuracy=0.9453
+[2025-12-14 11:05:55] [INFO]: Iteration 82900, Cost 197.58s, triplet_loss=0.8915, triplet_hard_loss=3.9251, triplet_loss_num=540.6249, triplet_mean_dist=20.3152, softmax_loss=0.5734, softmax_accuracy=0.9456
+[2025-12-14 11:09:13] [INFO]: Iteration 83000, Cost 197.58s, triplet_loss=0.9066, triplet_hard_loss=3.9890, triplet_loss_num=531.8569, triplet_mean_dist=20.3493, softmax_loss=0.5732, softmax_accuracy=0.9447
+[2025-12-14 11:12:31] [INFO]: Iteration 83100, Cost 197.73s, triplet_loss=0.9135, triplet_hard_loss=4.0255, triplet_loss_num=556.1932, triplet_mean_dist=20.3013, softmax_loss=0.5740, softmax_accuracy=0.9441
+[2025-12-14 11:15:48] [INFO]: Iteration 83200, Cost 197.72s, triplet_loss=0.9070, triplet_hard_loss=4.0003, triplet_loss_num=553.8550, triplet_mean_dist=20.2736, softmax_loss=0.5767, softmax_accuracy=0.9450
+[2025-12-14 11:19:06] [INFO]: Iteration 83300, Cost 197.84s, triplet_loss=0.8810, triplet_hard_loss=3.8589, triplet_loss_num=540.5733, triplet_mean_dist=20.3331, softmax_loss=0.5758, softmax_accuracy=0.9451
+[2025-12-14 11:22:24] [INFO]: Iteration 83400, Cost 198.05s, triplet_loss=0.9008, triplet_hard_loss=3.9592, triplet_loss_num=541.8451, triplet_mean_dist=20.3230, softmax_loss=0.5791, softmax_accuracy=0.9445
+[2025-12-14 11:25:42] [INFO]: Iteration 83500, Cost 198.08s, triplet_loss=0.8932, triplet_hard_loss=3.9253, triplet_loss_num=534.8059, triplet_mean_dist=20.2993, softmax_loss=0.5755, softmax_accuracy=0.9458
+[2025-12-14 11:29:00] [INFO]: Iteration 83600, Cost 198.19s, triplet_loss=0.8948, triplet_hard_loss=3.9488, triplet_loss_num=557.1481, triplet_mean_dist=20.3021, softmax_loss=0.5773, softmax_accuracy=0.9441
+[2025-12-14 11:32:19] [INFO]: Iteration 83700, Cost 198.24s, triplet_loss=0.9032, triplet_hard_loss=3.9797, triplet_loss_num=545.0051, triplet_mean_dist=20.2990, softmax_loss=0.5754, softmax_accuracy=0.9451
+[2025-12-14 11:35:37] [INFO]: Iteration 83800, Cost 198.21s, triplet_loss=0.8997, triplet_hard_loss=3.9421, triplet_loss_num=544.7941, triplet_mean_dist=20.3034, softmax_loss=0.5710, softmax_accuracy=0.9468
+[2025-12-14 11:38:55] [INFO]: Iteration 83900, Cost 198.21s, triplet_loss=0.8937, triplet_hard_loss=3.9379, triplet_loss_num=561.9426, triplet_mean_dist=20.2568, softmax_loss=0.5759, softmax_accuracy=0.9449
+[2025-12-14 11:42:13] [INFO]: Iteration 84000, Cost 197.81s, triplet_loss=0.9032, triplet_hard_loss=3.9860, triplet_loss_num=555.4837, triplet_mean_dist=20.3326, softmax_loss=0.5758, softmax_accuracy=0.9450
+[2025-12-14 11:45:31] [INFO]: Iteration 84100, Cost 197.98s, triplet_loss=0.9025, triplet_hard_loss=3.9621, triplet_loss_num=538.4536, triplet_mean_dist=20.3403, softmax_loss=0.5741, softmax_accuracy=0.9453
+[2025-12-14 11:48:48] [INFO]: Iteration 84200, Cost 197.38s, triplet_loss=0.8883, triplet_hard_loss=3.9210, triplet_loss_num=538.2568, triplet_mean_dist=20.3439, softmax_loss=0.5742, softmax_accuracy=0.9446
+[2025-12-14 11:52:06] [INFO]: Iteration 84300, Cost 197.67s, triplet_loss=0.8981, triplet_hard_loss=3.9530, triplet_loss_num=560.9131, triplet_mean_dist=20.3118, softmax_loss=0.5808, softmax_accuracy=0.9437
+[2025-12-14 11:55:26] [INFO]: Iteration 84400, Cost 199.56s, triplet_loss=0.8984, triplet_hard_loss=3.9713, triplet_loss_num=551.5353, triplet_mean_dist=20.3149, softmax_loss=0.5782, softmax_accuracy=0.9443
+[2025-12-14 11:58:43] [INFO]: Iteration 84500, Cost 197.95s, triplet_loss=0.8873, triplet_hard_loss=3.8837, triplet_loss_num=529.5530, triplet_mean_dist=20.3173, softmax_loss=0.5684, softmax_accuracy=0.9466
+[2025-12-14 12:02:03] [INFO]: Iteration 84600, Cost 199.92s, triplet_loss=0.8817, triplet_hard_loss=3.8647, triplet_loss_num=516.3184, triplet_mean_dist=20.3850, softmax_loss=0.5685, softmax_accuracy=0.9461
+[2025-12-14 12:05:21] [INFO]: Iteration 84700, Cost 197.95s, triplet_loss=0.8816, triplet_hard_loss=3.8522, triplet_loss_num=525.0986, triplet_mean_dist=20.3401, softmax_loss=0.5701, softmax_accuracy=0.9471
+[2025-12-14 12:08:39] [INFO]: Iteration 84800, Cost 197.98s, triplet_loss=0.9108, triplet_hard_loss=4.0045, triplet_loss_num=540.6520, triplet_mean_dist=20.3364, softmax_loss=0.5742, softmax_accuracy=0.9456
+[2025-12-14 12:11:57] [INFO]: Iteration 84900, Cost 197.91s, triplet_loss=0.9000, triplet_hard_loss=3.9568, triplet_loss_num=531.3659, triplet_mean_dist=20.3135, softmax_loss=0.5740, softmax_accuracy=0.9457
+[2025-12-14 12:15:15] [INFO]: Iteration 85000, Cost 197.93s, triplet_loss=0.8965, triplet_hard_loss=3.9404, triplet_loss_num=538.4279, triplet_mean_dist=20.3467, softmax_loss=0.5764, softmax_accuracy=0.9444
+[2025-12-14 12:15:15] [INFO]: Running test...
+[2025-12-14 12:16:16] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-14 12:16:16] [INFO]: NM: 98.7,	BG: 92.9,	CL: 93.6
+[2025-12-14 12:16:16] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-14 12:16:16] [INFO]: NM: 98.5,	BG: 92.6,	CL: 92.9
+[2025-12-14 12:16:16] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-14 12:16:16] [INFO]: NM: [ 96.56  99.69 100.00  98.75  97.81  97.50  98.75  99.38 100.00  99.69
+  95.62]
+[2025-12-14 12:16:16] [INFO]: BG: [90.91 94.55 93.03 91.56 92.12 92.73 91.52 94.24 95.45 94.06 88.18]
+[2025-12-14 12:16:16] [INFO]: CL: [86.87 93.75 99.06 97.81 92.50 92.19 90.00 95.63 97.81 93.75 82.81]
+[2025-12-14 12:19:31] [INFO]: Iteration 85100, Cost 195.30s, triplet_loss=0.9335, triplet_hard_loss=4.0708, triplet_loss_num=534.7650, triplet_mean_dist=20.3456, softmax_loss=0.5720, softmax_accuracy=0.9457
+[2025-12-14 12:22:46] [INFO]: Iteration 85200, Cost 195.33s, triplet_loss=0.9265, triplet_hard_loss=4.0509, triplet_loss_num=545.9595, triplet_mean_dist=20.3388, softmax_loss=0.5778, softmax_accuracy=0.9448
+[2025-12-14 12:26:02] [INFO]: Iteration 85300, Cost 195.31s, triplet_loss=0.9236, triplet_hard_loss=4.0657, triplet_loss_num=557.7014, triplet_mean_dist=20.3079, softmax_loss=0.5758, softmax_accuracy=0.9448
+[2025-12-14 12:29:17] [INFO]: Iteration 85400, Cost 195.14s, triplet_loss=0.9298, triplet_hard_loss=4.0781, triplet_loss_num=561.7993, triplet_mean_dist=20.3169, softmax_loss=0.5758, softmax_accuracy=0.9440
+[2025-12-14 12:32:32] [INFO]: Iteration 85500, Cost 195.12s, triplet_loss=0.8992, triplet_hard_loss=3.9292, triplet_loss_num=541.3459, triplet_mean_dist=20.3207, softmax_loss=0.5738, softmax_accuracy=0.9452
+[2025-12-14 12:35:47] [INFO]: Iteration 85600, Cost 195.29s, triplet_loss=0.9268, triplet_hard_loss=4.0774, triplet_loss_num=550.4308, triplet_mean_dist=20.3057, softmax_loss=0.5740, softmax_accuracy=0.9455
+[2025-12-14 12:39:02] [INFO]: Iteration 85700, Cost 195.12s, triplet_loss=0.9134, triplet_hard_loss=4.0255, triplet_loss_num=582.8682, triplet_mean_dist=20.2402, softmax_loss=0.5779, softmax_accuracy=0.9442
+[2025-12-14 12:42:17] [INFO]: Iteration 85800, Cost 194.99s, triplet_loss=0.9154, triplet_hard_loss=4.0001, triplet_loss_num=538.3982, triplet_mean_dist=20.3283, softmax_loss=0.5739, softmax_accuracy=0.9454
+[2025-12-14 12:45:32] [INFO]: Iteration 85900, Cost 195.01s, triplet_loss=0.9131, triplet_hard_loss=4.0204, triplet_loss_num=536.7020, triplet_mean_dist=20.2939, softmax_loss=0.5714, softmax_accuracy=0.9454
+[2025-12-14 12:48:48] [INFO]: Iteration 86000, Cost 195.33s, triplet_loss=0.9117, triplet_hard_loss=4.0006, triplet_loss_num=539.9227, triplet_mean_dist=20.3363, softmax_loss=0.5731, softmax_accuracy=0.9456
+[2025-12-14 12:52:03] [INFO]: Iteration 86100, Cost 195.30s, triplet_loss=0.9087, triplet_hard_loss=3.9769, triplet_loss_num=554.0897, triplet_mean_dist=20.3217, softmax_loss=0.5738, softmax_accuracy=0.9454
+[2025-12-14 12:55:18] [INFO]: Iteration 86200, Cost 195.28s, triplet_loss=0.9012, triplet_hard_loss=3.9765, triplet_loss_num=541.8475, triplet_mean_dist=20.2965, softmax_loss=0.5761, softmax_accuracy=0.9453
+[2025-12-14 12:58:33] [INFO]: Iteration 86300, Cost 195.26s, triplet_loss=0.8982, triplet_hard_loss=3.9410, triplet_loss_num=549.3318, triplet_mean_dist=20.2993, softmax_loss=0.5720, softmax_accuracy=0.9453
+[2025-12-14 13:01:49] [INFO]: Iteration 86400, Cost 195.28s, triplet_loss=0.9107, triplet_hard_loss=4.0028, triplet_loss_num=543.5489, triplet_mean_dist=20.3150, softmax_loss=0.5694, softmax_accuracy=0.9461
+[2025-12-14 13:05:04] [INFO]: Iteration 86500, Cost 195.22s, triplet_loss=0.9036, triplet_hard_loss=3.9670, triplet_loss_num=562.2764, triplet_mean_dist=20.3304, softmax_loss=0.5762, softmax_accuracy=0.9440
+[2025-12-14 13:08:21] [INFO]: Iteration 86600, Cost 197.03s, triplet_loss=0.9002, triplet_hard_loss=3.9543, triplet_loss_num=534.0428, triplet_mean_dist=20.2958, softmax_loss=0.5725, softmax_accuracy=0.9463
+[2025-12-14 13:11:36] [INFO]: Iteration 86700, Cost 195.04s, triplet_loss=0.8996, triplet_hard_loss=3.9569, triplet_loss_num=548.9069, triplet_mean_dist=20.3248, softmax_loss=0.5783, softmax_accuracy=0.9449
+[2025-12-14 13:14:51] [INFO]: Iteration 86800, Cost 195.29s, triplet_loss=0.9037, triplet_hard_loss=3.9669, triplet_loss_num=551.6558, triplet_mean_dist=20.2940, softmax_loss=0.5754, softmax_accuracy=0.9451
+[2025-12-14 13:18:06] [INFO]: Iteration 86900, Cost 195.16s, triplet_loss=0.9066, triplet_hard_loss=3.9866, triplet_loss_num=542.2315, triplet_mean_dist=20.2973, softmax_loss=0.5731, softmax_accuracy=0.9451
+[2025-12-14 13:21:22] [INFO]: Iteration 87000, Cost 195.10s, triplet_loss=0.8957, triplet_hard_loss=3.9198, triplet_loss_num=546.6653, triplet_mean_dist=20.3384, softmax_loss=0.5763, softmax_accuracy=0.9453
+[2025-12-14 13:24:37] [INFO]: Iteration 87100, Cost 195.05s, triplet_loss=0.8956, triplet_hard_loss=3.9094, triplet_loss_num=528.8113, triplet_mean_dist=20.3407, softmax_loss=0.5677, softmax_accuracy=0.9470
+[2025-12-14 13:27:54] [INFO]: Iteration 87200, Cost 197.14s, triplet_loss=0.9074, triplet_hard_loss=3.9725, triplet_loss_num=547.3993, triplet_mean_dist=20.2913, softmax_loss=0.5773, softmax_accuracy=0.9447
+[2025-12-14 13:31:09] [INFO]: Iteration 87300, Cost 195.07s, triplet_loss=0.8924, triplet_hard_loss=3.9248, triplet_loss_num=536.7237, triplet_mean_dist=20.3354, softmax_loss=0.5753, softmax_accuracy=0.9457
+[2025-12-14 13:34:24] [INFO]: Iteration 87400, Cost 195.08s, triplet_loss=0.8926, triplet_hard_loss=3.9346, triplet_loss_num=555.4651, triplet_mean_dist=20.3037, softmax_loss=0.5777, softmax_accuracy=0.9455
+[2025-12-14 13:37:39] [INFO]: Iteration 87500, Cost 195.12s, triplet_loss=0.8988, triplet_hard_loss=3.9430, triplet_loss_num=538.8068, triplet_mean_dist=20.3166, softmax_loss=0.5756, softmax_accuracy=0.9454
+[2025-12-14 13:40:54] [INFO]: Iteration 87600, Cost 195.08s, triplet_loss=0.8871, triplet_hard_loss=3.9005, triplet_loss_num=545.7379, triplet_mean_dist=20.2836, softmax_loss=0.5681, softmax_accuracy=0.9472
+[2025-12-14 13:44:09] [INFO]: Iteration 87700, Cost 195.04s, triplet_loss=0.8955, triplet_hard_loss=3.9346, triplet_loss_num=530.3027, triplet_mean_dist=20.3336, softmax_loss=0.5755, softmax_accuracy=0.9459
+[2025-12-14 13:47:24] [INFO]: Iteration 87800, Cost 195.00s, triplet_loss=0.9003, triplet_hard_loss=3.9683, triplet_loss_num=561.3659, triplet_mean_dist=20.2598, softmax_loss=0.5799, softmax_accuracy=0.9446
+[2025-12-14 13:50:39] [INFO]: Iteration 87900, Cost 195.03s, triplet_loss=0.8891, triplet_hard_loss=3.8845, triplet_loss_num=514.6660, triplet_mean_dist=20.2974, softmax_loss=0.5703, softmax_accuracy=0.9455
+[2025-12-14 13:53:54] [INFO]: Iteration 88000, Cost 195.01s, triplet_loss=0.8943, triplet_hard_loss=3.9065, triplet_loss_num=518.5430, triplet_mean_dist=20.3759, softmax_loss=0.5688, softmax_accuracy=0.9468
+[2025-12-14 13:57:09] [INFO]: Iteration 88100, Cost 195.02s, triplet_loss=0.8891, triplet_hard_loss=3.9260, triplet_loss_num=537.5441, triplet_mean_dist=20.3383, softmax_loss=0.5738, softmax_accuracy=0.9454
+[2025-12-14 14:00:24] [INFO]: Iteration 88200, Cost 194.98s, triplet_loss=0.8932, triplet_hard_loss=3.9044, triplet_loss_num=521.9511, triplet_mean_dist=20.3441, softmax_loss=0.5702, softmax_accuracy=0.9462
+[2025-12-14 14:03:39] [INFO]: Iteration 88300, Cost 195.20s, triplet_loss=0.8943, triplet_hard_loss=3.9461, triplet_loss_num=549.9474, triplet_mean_dist=20.3017, softmax_loss=0.5721, softmax_accuracy=0.9461
+[2025-12-14 14:06:54] [INFO]: Iteration 88400, Cost 195.09s, triplet_loss=0.8827, triplet_hard_loss=3.8896, triplet_loss_num=558.5161, triplet_mean_dist=20.2906, softmax_loss=0.5712, softmax_accuracy=0.9461
+[2025-12-14 14:10:09] [INFO]: Iteration 88500, Cost 195.01s, triplet_loss=0.8915, triplet_hard_loss=3.9250, triplet_loss_num=543.4944, triplet_mean_dist=20.2865, softmax_loss=0.5714, softmax_accuracy=0.9463
+[2025-12-14 14:13:24] [INFO]: Iteration 88600, Cost 194.97s, triplet_loss=0.8846, triplet_hard_loss=3.8953, triplet_loss_num=537.6777, triplet_mean_dist=20.3500, softmax_loss=0.5764, softmax_accuracy=0.9456
+[2025-12-14 14:16:40] [INFO]: Iteration 88700, Cost 195.18s, triplet_loss=0.8867, triplet_hard_loss=3.8910, triplet_loss_num=529.1529, triplet_mean_dist=20.3495, softmax_loss=0.5668, softmax_accuracy=0.9473
+[2025-12-14 14:19:55] [INFO]: Iteration 88800, Cost 194.93s, triplet_loss=0.8952, triplet_hard_loss=3.9321, triplet_loss_num=546.5428, triplet_mean_dist=20.3499, softmax_loss=0.5749, softmax_accuracy=0.9454
+[2025-12-14 14:23:10] [INFO]: Iteration 88900, Cost 195.00s, triplet_loss=0.8855, triplet_hard_loss=3.8839, triplet_loss_num=515.0309, triplet_mean_dist=20.3848, softmax_loss=0.5727, softmax_accuracy=0.9459
+[2025-12-14 14:26:25] [INFO]: Iteration 89000, Cost 195.04s, triplet_loss=0.8864, triplet_hard_loss=3.9217, triplet_loss_num=546.6688, triplet_mean_dist=20.3054, softmax_loss=0.5768, softmax_accuracy=0.9440
+[2025-12-14 14:29:40] [INFO]: Iteration 89100, Cost 195.03s, triplet_loss=0.8750, triplet_hard_loss=3.8169, triplet_loss_num=498.7807, triplet_mean_dist=20.3649, softmax_loss=0.5675, softmax_accuracy=0.9466
+[2025-12-14 14:32:57] [INFO]: Iteration 89200, Cost 196.96s, triplet_loss=0.8930, triplet_hard_loss=3.9790, triplet_loss_num=578.0466, triplet_mean_dist=20.2693, softmax_loss=0.5793, softmax_accuracy=0.9442
+[2025-12-14 14:36:12] [INFO]: Iteration 89300, Cost 195.07s, triplet_loss=0.8882, triplet_hard_loss=3.9021, triplet_loss_num=546.7355, triplet_mean_dist=20.3272, softmax_loss=0.5734, softmax_accuracy=0.9458
+[2025-12-14 14:39:27] [INFO]: Iteration 89400, Cost 195.13s, triplet_loss=0.8691, triplet_hard_loss=3.8152, triplet_loss_num=517.6877, triplet_mean_dist=20.4034, softmax_loss=0.5732, softmax_accuracy=0.9457
+[2025-12-14 14:42:42] [INFO]: Iteration 89500, Cost 195.10s, triplet_loss=0.8871, triplet_hard_loss=3.9292, triplet_loss_num=553.6790, triplet_mean_dist=20.2967, softmax_loss=0.5801, softmax_accuracy=0.9446
+[2025-12-14 14:45:59] [INFO]: Iteration 89600, Cost 196.96s, triplet_loss=0.8696, triplet_hard_loss=3.8249, triplet_loss_num=544.8585, triplet_mean_dist=20.2647, softmax_loss=0.5646, softmax_accuracy=0.9478
+[2025-12-14 14:49:14] [INFO]: Iteration 89700, Cost 194.89s, triplet_loss=0.8739, triplet_hard_loss=3.8323, triplet_loss_num=523.4300, triplet_mean_dist=20.3001, softmax_loss=0.5699, softmax_accuracy=0.9476
+[2025-12-14 14:52:29] [INFO]: Iteration 89800, Cost 195.13s, triplet_loss=0.8894, triplet_hard_loss=3.9324, triplet_loss_num=557.6015, triplet_mean_dist=20.2933, softmax_loss=0.5792, softmax_accuracy=0.9449
+[2025-12-14 14:55:44] [INFO]: Iteration 89900, Cost 195.04s, triplet_loss=0.8675, triplet_hard_loss=3.8261, triplet_loss_num=536.6899, triplet_mean_dist=20.3011, softmax_loss=0.5722, softmax_accuracy=0.9464
+[2025-12-14 14:58:59] [INFO]: Iteration 90000, Cost 195.04s, triplet_loss=0.8681, triplet_hard_loss=3.7972, triplet_loss_num=522.0101, triplet_mean_dist=20.3742, softmax_loss=0.5729, softmax_accuracy=0.9462
+[2025-12-14 14:58:59] [INFO]: Running test...
+[2025-12-14 14:59:58] [INFO]: ===Rank-1 (Include identical-view cases)===
+[2025-12-14 14:59:58] [INFO]: NM: 98.7,	BG: 93.0,	CL: 93.4
+[2025-12-14 14:59:58] [INFO]: ===Rank-1 (Exclude identical-view cases)===
+[2025-12-14 14:59:58] [INFO]: NM: 98.6,	BG: 92.7,	CL: 92.8
+[2025-12-14 14:59:58] [INFO]: ===Rank-1 of each angle (Exclude identical-view cases)===
+[2025-12-14 14:59:58] [INFO]: NM: [ 96.56  99.69 100.00  99.06  97.81  98.12  98.75  99.38 100.00  99.69
+  95.31]
+[2025-12-14 14:59:58] [INFO]: BG: [91.21 94.55 93.03 91.56 92.12 92.42 92.42 94.55 95.45 94.38 87.58]
+[2025-12-14 14:59:58] [INFO]: CL: [86.88 93.75 99.06 97.50 92.19 91.56 90.00 95.31 97.50 94.06 82.81]
