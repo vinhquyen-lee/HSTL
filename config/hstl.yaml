@@ -11,18 +11,22 @@ evaluator_cfg:
   enable_distributed: false
   enable_float16: false
   restore_ckpt_strict: true
-  restore_hint: 80000
-  save_name: kaggle # HSTL
+  restore_hint: 0
+  save_name: med-circleloss # HSTL
   sampler:
     batch_size: 1
     sample_type: all_ordered
     type: InferenceSampler
 
 loss_cfg:
-  - loss_term_weight: 1.0
-    margin: 0.2
-    type: TripletLoss
-    log_prefix: triplet
+  - loss_term_weight: 0.05 # 1.0 (for triplet loss), circle loss returns higher values (around 80) --> reduce to match with softmax values
+    # margin: 0.2
+    # type: TripletLoss
+    # log_prefix: triplet
+    m: 0.25          # margin for gait recognition (from Circle Loss paper)
+    gamma: 128       # scale factor for gait recognition (from Circle Loss paper)
+    type: CircleLoss
+    log_prefix: circle
   - loss_term_weight: 1.0
     scale: 1
     type: CrossEntropyLoss
@@ -50,16 +54,16 @@ trainer_cfg:
   enable_distributed: false
   enable_float16: true
   # fix_BN: false
-  log_iter: 100
+  log_iter: 300
   with_test: true # CHANGE: disable mid-training tests to save time for session
   optimizer_reset: false # true - continue with latest state
   scheduler_reset: false # true - continue with latest state
   restore_ckpt_strict: true
-  restore_hint: 40000 # keep training with true setup from latest checkpoint
+  restore_hint: 0 # keep training with true setup from latest checkpoint
   save_iter: 5000 # 10000
-  save_name: kaggle # HSTL
+  save_name: med-circleloss # HSTL
   sync_BN: false # true - CHANGE: no distributed training
-  total_iter: 80000
+  total_iter: 90000
   sampler:
     batch_shuffle: true
     batch_size: # [P,K] - [8,8] (from the paper) (T4 can handle with FP16)
