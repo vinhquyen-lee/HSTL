@@ -223,7 +223,8 @@ class HSTL(BaseModel):
         n, _, s, h, w = sils.size()
         retval = {
             'training_feat': {
-                'triplet': {'embeddings': bnft, 'labels': labs},
+                # 'triplet': {'embeddings': bnft, 'labels': labs},
+                'circle': {'embeddings': bnft, 'labels': labs},
                 'softmax': {'logits': logi, 'labels': labs}
             },
             'visual_summary': {
