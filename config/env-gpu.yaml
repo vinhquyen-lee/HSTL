@@ -18,3 +18,4 @@ dependencies:
     - --extra-index-url https://download.pytorch.org/whl/cu117
     - tensorboard
     - einops
+    - pytorch-metric-learning
