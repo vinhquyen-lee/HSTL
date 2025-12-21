@@ -3,6 +3,7 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 from utils import clones, is_list_or_tuple
+from .temporal_shift import TemporalShift
 
 class BasicConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, padding, **kwargs):
@@ -98,3 +99,37 @@ def RmBN2dAffine(model):
         if isinstance(m, nn.BatchNorm2d):
             m.weight.requires_grad = False
             m.bias.requires_grad = False
+
+
+# Adapter module: TSM + 2D Conv to replace 3D Conv
+class TSM_Conv_Block(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=(3,3,3), stride=(1,1,1), padding=(1,1,1), bias=False, n_div=8):
+        super().__init__()
+        # Official TSM logic (assumed imported or copied above)
+        self.tsm = TemporalShift(nn.Identity(), n_segment=None, n_div=n_div)
+
+        # 2D Conv replacing 3D Conv
+        # Note: We take kernel_size[1:] to get (3,3) spatial kernel
+        self.conv2d = nn.Conv2d(in_channels, out_channels,
+                                kernel_size=kernel_size[1:],
+                                stride=stride[1:],
+                                padding=padding[1:],
+                                bias=bias)
+
+    def forward(self, x):
+        # Input: [N, C, T, H, W]
+        n, c, t, h, w = x.size()
+
+        # 1. Reshape for TSM [N*T, C, H, W]
+        x_2d = x.permute(0, 2, 1, 3, 4).reshape(n * t, c, h, w)
+
+        # 2. Apply TSM
+        self.tsm.n_segment = t # Set dynamically
+        x_shifted = self.tsm(x_2d)
+
+        # 3. Apply 2D Conv
+        x_conv = self.conv2d(x_shifted)
+
+        # 4. Reshape back to [N, C, T, H, W]
+        out = x_conv.view(n, t, -1, h, w).permute(0, 2, 1, 3, 4)
+        return out
