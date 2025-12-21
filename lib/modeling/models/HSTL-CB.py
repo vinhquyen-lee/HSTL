@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from ..base_model import BaseModel
-from ..modules import SeparateFCs, BasicConv3d, PackSequenceWrapper, BasicConv2d
+from ..modules import SeparateFCs, BasicConv3d, PackSequenceWrapper, BasicConv2d, TSM_Conv_Block
 
 # frame-level temporal aggregation (FTA)
 # frame-level temporal aggregation (FTA)
@@ -55,15 +55,21 @@ class FTA_Block(nn.Module):
 # adaptive region-based motion extractor (ARME)
 class ARME_Conv(nn.Module):
     def __init__(self, in_channels, out_channels, split_param ,m, kernel_size=(3, 3, 3), stride=(1, 1, 1),
-                 padding=(1, 1, 1),bias=False,**kwargs):
+                 padding=(1, 1, 1),bias=False, use_tsm=False,**kwargs):
         super(ARME_Conv, self).__init__()
         self.m = m
 
         self.split_param = split_param
 
-        self.conv3d = nn.ModuleList([
-            BasicConv3d(in_channels, out_channels, kernel_size, stride, padding,bias ,**kwargs)
-            for i in range(self.m)])
+        if use_tsm:
+            self.convs = nn.ModuleList([
+                TSM_Conv_Block(in_channels, out_channels, kernel_size, stride, padding, bias)
+                for i in range(self.m)
+            ])
+        else:
+            self.convs = nn.ModuleList([
+                BasicConv3d(in_channels, out_channels, kernel_size, stride, padding,bias ,**kwargs)
+                for i in range(self.m)])
 
 
     def forward(self, x):
@@ -71,7 +77,7 @@ class ARME_Conv(nn.Module):
             x: [n, c, s, h, w]
         '''
         feat = x.split(self.split_param, 3)
-        feat = torch.cat([self.conv3d[i](_) for i, _ in enumerate(feat)], 3)
+        feat = torch.cat([self.convs[i](_) for i, _ in enumerate(feat)], 3)
         feat = F.leaky_relu(feat)
         return feat
 
@@ -146,9 +152,9 @@ class HSTL(BaseModel):
 
         self.arme2 = nn.Sequential(
             ARME_Conv(in_c[0], in_c[0], split_param=[40, 24], m=2, kernel_size=(
-                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
+                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), use_tsm=True),
             ARME_Conv(in_c[0], in_c[1], split_param=[40, 24], m=2, kernel_size=(
-                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), use_tsm=True)
         )
 
         self.astp2 = ASTP(split_param=[40, 24], m=2, in_channels=in_c[1], out_channels=in_c[-1])
@@ -159,9 +165,9 @@ class HSTL(BaseModel):
 
         self.arme3 = nn.Sequential(
             ARME_Conv(in_c[1], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
-                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
+                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), use_tsm=True),
             ARME_Conv(in_c[2], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
-                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), use_tsm=True)
         )
 
         self.astp3 = ASTP(split_param=[8, 32, 16, 8], m=4, in_channels=in_c[2], out_channels=in_c[-1], flag=False)
