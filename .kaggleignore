@@ -1,0 +1,10 @@
+.git/
+venv/
+datasets/CASIA-B/
+datasets/CASIA-B-pkl/
+logs/
+__pycache__/
+*.pyc
+.vscode/
+
+

@@ -1,0 +1,8 @@
+/datasets/CASIA-B
+/datasets/CASIA-B-pkl
+/venv
+**/__pycache__
+/logs
+/utils
+/output_local
+/output
