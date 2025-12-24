@@ -4,8 +4,9 @@
 **/__pycache__
 # /logs
 /utils
-# /output
+/output
 /logs
+/logsP3D
 **/*.txt
 run.ipynb
 /myenv311
