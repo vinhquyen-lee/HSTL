@@ -1,0 +1,190 @@
+%Đây là template dùng cho đề cương đề tài tốt nghiệp
+%Khoa Công nghệ Thông tin
+%Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM
+
+%Liên hệ về mẫu LaTEX này: Thầy Bùi Huy Thông (bhthong@fit.hcmus.edu.vn)
+
+\documentclass{article}[14pt]
+\usepackage[utf8]{vietnam}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{listings}
+\usepackage[left=2cm,right=2cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{fancyhdr}
+\usepackage{fancybox,framed}
+\linespread{1.3}
+\usepackage{lastpage}
+\usepackage{floatrow}
+\pagenumbering{arabic}
+
+% % Setup fancy headers and footers - no need at the moment
+% \pagestyle{fancy}
+% \fancyhf{} % Clear all header and footer fields
+% \fancyhead[L]{Đề cương khóa luận tốt nghiệp}
+% \fancyhead[R]{\thepage}
+% \fancyfoot[L]{Phạm Thái Huy - Tiêu Ân Tuấn}
+% \fancyfoot[C]{Tô màu ảnh độ xám}
+% \fancyfoot[R]{Trang \thepage\ của \pageref{LastPage}}
+% \renewcommand{\headrulewidth}{0.4pt}
+% \renewcommand{\footrulewidth}{0.4pt}
+
+\newfloatcommand{capbtabbox}{table}[][\FBwidth]
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{blindtext}
+\usepackage{titlesec}
+\usepackage[nottoc]{tocbibind}
+\usepackage[unicode]{hyperref}
+% no need at the moment
+% \usepackage[unicode,
+%     bookmarks=true,
+%     bookmarksnumbered=true,
+%     bookmarksopen=true,
+%     colorlinks=true,
+%     linkcolor=black,
+%     citecolor=blue,
+%     urlcolor=blue,
+%     pdftitle={Đề cương khóa luận: Tô màu ảnh độ xám},
+%     pdfauthor={Phạm Thái Huy, Tiêu Ân Tuấn},
+%     pdfsubject={Khóa luận tốt nghiệp},
+%     pdfkeywords={tô màu ảnh, độ xám, học sâu, GAN}
+% ]{hyperref}
+
+\titleformat*{\section}{\LARGE\bfseries}
+\titleformat*{\subsection}{\Large\bfseries}
+\titleformat*{\subsubsection}{\large\bfseries}
+%\addbibresource{ref.bib}
+
+\begin{document}
+\begin{figure}[h]
+    \begin{floatrow}
+        \ffigbox{\includegraphics[scale = .4]{logo.png}}
+        {%
+
+        }
+        \capbtabbox{
+            \begin{tabular}{l}
+                \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN\\KHOA CÔNG NGHỆ THÔNG TIN\end{tabular}}} \\ \\ \\
+            \end{tabular}
+        }
+        {%
+
+        }
+    \end{floatrow}
+\end{figure}
+
+\begin{center}
+
+    %Xác định loại đề tài tốt nghiệp tương ứng: Khóa luận, Thực tập, Đồ án
+    \textbf{\Large BÁO CÁO TIẾN ĐỘ GIỮA KỲ} \\
+\end{center}
+
+%\vspace{.5cm}
+
+\begin{center}
+    %Tên đề tài phải VIẾT HOA
+
+    \textbf{\huge SINH TRẮC HỌC}
+    \\
+    % (THEO PHƯƠNG PHÁP CÁC NÉT VẼ MÀU - \textcolor{red}{cần thể hiện chi tiết hướng nghiên cứu})
+
+    %Tên đề tài bằng tiếng Anh (nếu có)
+    \vspace{.5cm}
+    \textit{\textbf{\Large CHỦ ĐỀ: NHẬN DIỆN DÁNG ĐI}}
+\end{center}
+
+\vspace{.5cm}
+
+\Large
+\section{THÔNG TIN CHUNG}
+\begin{itemize}[label = {}]
+
+    \item \textbf{Giảng viên hướng dẫn:}
+          %Thể hiện dạng: <Chức danh> <Họ và tên> (<Đơn vị công tác>)
+          \begin{itemize}
+              \item PGS. TS. Lê Hoàng Thái (Khoa Công nghệ thông tin)
+              \item Thầy Dương Thái Bảo (Khoa Công nghệ thông tin) - \textcolor{red}{Tìm kiếm học vị của Thầy (ThS? TS?,...) và bổ sung trước khi nộp}
+          \end{itemize}{}
+
+    \item \textbf{Nhóm sinh viên thực hiện:}
+
+          %Thể hiện dạng: <Họ và tên sinh viên> (MSSV: )
+          \begin{enumerate}
+
+              \item Phạm Thái Huy (MSSV: 21120081)
+              \item Nguyễn Đức Mạnh (MSSV: 22120204)
+              \item Lê Quang Vĩnh Quyền (MSSV: 22120307)
+
+          \end{enumerate}
+
+          %Chọn loại thích hợp
+          % \item \textbf{Loại đề tài:} Nghiên cứu
+
+          % \item \textbf{Thời gian thực hiện:} Từ \textit{01/2025} đến \textit{07/2025}
+
+\end{itemize}
+
+\pagebreak
+
+\section{NỘI DUNG BÁO CÁO}
+
+\subsection{Tổng hợp nội dung chương sách được chọn}
+
+\textbf{Người phụ trách:} Mạnh và Quyền
+
+Tổng hợp đầy đủ nội dung, với tổ chức thư mục \textbf{BẮT BUỘC} giống hoàn toàn của chương.
+\textbf{Lưu ý:}
+\begin{itemize}
+    \item Đề cập đầy đủ thông tin cốt lõi. Bỏ qua các \textit{kể chuyện dài dòng} (tóm tắt lại nếu cần).
+    \item Các biểu thức toán phải được viết bằng môi trường toán của \LaTeX.
+    \item Đề cập đầy đủ các số liệu.
+    \item Chèn hình ảnh nếu cần thiết.
+    \item \textcolor{red}{Không sao chép nội dung trong sách}.
+\end{itemize}
+
+\subsection{Phương pháp trình bày}
+
+\textbf{Người phụ trách:} Huy.
+
+\begin{itemize}
+    \item Trình bày chi tiết về phương pháp gốc đã chọn. (đặt vấn đề, đề xuất phương pháp, tiến hành thực nghiệm, phân tích kết quả, bàn luận, tổng kết)
+    \item Phân tích của nhóm về hạn chế tiềm ẩn của phương pháp.
+\end{itemize}
+
+\subsection{Hướng nghiên cứu và thực nghiệm}
+
+Hướng nghiên cứu: Dựa trên phân tích về hạn chế tiềm ẩn, nhóm đều xuất các giải pháp thay thế, tái thực nghiệm, so sánh với phương pháp gốc, phân tích và bàn luận.
+\newpage
+Lưu ý:
+\begin{itemize}
+    \item Phân tích chi tiết giữa kĩ thuật gốc và kĩ thuật đề xuất (ưu nhược điểm, độ phức tạp, biểu thức toán, mức độ cải thiện kỳ vọng đóng góp vào hiệu suất của toàn mô hình).
+    \item \textcolor{red}{Không chèn mã nguồn vào báo cáo}.
+\end{itemize}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Hướng đề xuất} & \textbf{Người phụ trách} \\ \hline
+Thay \textbf{Conv3D} bằng \textbf{P3D} & Mạnh, Quyền \\ \hline
+Thay \textbf{Triplet Loss} bằng \textbf{Circle Loss} & Huy \\ \hline
+Bổ sung kĩ thuật \textbf{TSM} vào module chứa \textbf{Conv3D} & Huy \\ \hline
+\end{tabular}
+\end{table}
+
+\section{LỜI KẾT}
+
+% Cuối lời, chúng em chân thành cảm ơn Thầy vì đã cho chúng em một cơ hội để trình bày cũng như lắng nghe những nhận xét quý báu, nhờ đó chúng em có thể rút kinh nghiệm và cải thiện hơn cho phần trình bày trong buổi bảo vệ khóa luận sắp tới, cũng như quá trình học tập, nghiên cứu và làm việc sau này. Vì đây cũng là lần đầu tiên chúng em thực hiện một nghiên cứu mang tính học thuật cao, do đó không thể nào tránh khỏi những sai sót trong quá trình thực hiện, chúng em rất mong Thầy có thể thông cảm. Đồng thời chúng em cũng rất mong nhận được thêm các lời nhận xét và góp ý từ thầy để chúng em có thể tiếp thu, cải thiện và ngày càng phát triển.
+
+% Cuối lời nhóm chúng em xin chân thành cảm ơn Thầy, chúc Thầy và gia đình nhiều sức khỏe.
+
+% Trân trọng.
+
+\textcolor{red}{\textbf{DEADLINE: 22h - 25/12/2025}}
+
+\end{document}
