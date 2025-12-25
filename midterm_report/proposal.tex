@@ -22,7 +22,8 @@
 \usepackage{lastpage}
 \usepackage{floatrow}
 \pagenumbering{arabic}
-
+\usepackage{amsmath} 
+\usepackage{amsfonts}
 % % Setup fancy headers and footers - no need at the moment
 % \pagestyle{fancy}
 % \fancyhf{} % Clear all header and footer fields
@@ -146,16 +147,136 @@ Tổng hợp đầy đủ nội dung, với tổ chức thư mục \textbf{BẮT
     \item Đề cập đầy đủ các số liệu.
     \item Chèn hình ảnh nếu cần thiết.
     \item \textcolor{red}{Không sao chép nội dung trong sách}.
+    
 \end{itemize}
 
-\subsection{Phương pháp trình bày}
+\subsubsection{Vấn đề}
+    Bài toán thử thách HumanID được thiết lập trong chương trình HumanID At a Distance của DARPA nhằm cung cấp một khung tham chiếu khách quan
+     và định lượng để đo lường tiến bộ trong nghiên cứu nhận dạng dáng đi. Bài toán bao gồm ba thành phần chính: cơ sở dữ liệu quy mô lớn, hệ thống
+      các thí nghiệm thử thách với độ khó tăng dần và một thuật toán cơ sở 
 
-\textbf{Người phụ trách:} Huy.
+
+\paragraph{a. Cơ sở dữ liệu và biến số}
+
+Dữ liệu bao gồm 1870 chuỗi video từ 122 cá nhân, được thu thập trong môi trường ngoài trời.
+Mỗi đối tượng được ghi hình dưới sự kết hợp của năm biến số chính:
+\begin{itemize}
+    \item \textbf{Góc quay camera:} Hai góc nhìn bên trái và bên phải.
+    \item \textbf{Loại giày:} Hai loại giày khác nhau.
+    \item \textbf{Bề mặt:} Cỏ và bê tông.
+    \item \textbf{Vật dụng mang theo:} Có mang túi xách hoặc không mang.
+    \item \textbf{Thời gian:} Hai thời điểm thu thập cách nhau 6 tháng.
+\end{itemize}
+
+
+
+Ngoài ra, bộ dữ liệu còn cung cấp các thông tin bổ trợ như nhân trắc học (tuổi, giới tính, chiều cao) 
+và các hình ảnh bóng được tách thủ công cho 71 đối tượng để hỗ trợ nghiên cứu lỗi phân đoạn và xây dựng mô hình chi tiết các bộ phận cơ thể.
+
+
+
+\paragraph{b. Baseline Gait Algorithm}
+Thuật toán cơ sở dựa trên việc khớp mẫu hình bóng. Quá trình này được mô tả thông qua các bước toán học sau:
+\begin{enumerate}
+    \item \textbf{Ước lượng chu kỳ:} Xác định chu kỳ dáng đi ($N_{Gait}$) dựa trên sự biến thiên định kỳ của số lượng pixel tiền cảnh ở phần dưới hình bóng. Gọi $f(t)$ là hàm đếm số pixel tại khung hình $t$, chu kỳ được tính dựa trên khoảng cách giữa các điểm cực tiểu liên tiếp của $f(t)$.
+
+
+
+\item \textbf{Độ đo tương quan không gian - thời gian:} 
+Giả sử chuỗi kiểm tra là $S_P = \{S_P(1), \dots, S_P(M)\}$ và chuỗi chuẩn (Gallery) là $S_G = \{S_G(1), \dots, S_G(N)\}$. Quá trình so sánh thực hiện qua các bước:
 
 \begin{itemize}
-    \item Trình bày chi tiết về phương pháp gốc đã chọn. (đặt vấn đề, đề xuất phương pháp, tiến hành thực nghiệm, phân tích kết quả, bàn luận, tổng kết)
-    \item Phân tích của nhóm về hạn chế tiềm ẩn của phương pháp.
+    \item \textit{Độ tương đồng khung hình:} Sử dụng chỉ số Tanimoto ($S$) để so sánh hai khung hình $i$ và $j$:
+    \begin{equation}
+        S(S_P(i), S_G(j)) = \frac{\#(S_P(i) \cap S_G(j))}{\#(S_P(i) \cup S_G(j))}
+    \end{equation}
+    Trong đó, $\#$ là số lượng pixel tiền cảnh của phép giao ($\cap$) và phép hợp ($\cup$).
+    
+    \item \textit{Tương quan chuỗi con:} Chia $S_P$ thành các chuỗi con $S_{Pk}$ có độ dài $N_{Gait}$. Độ tương quan giữa $S_{Pk}$ và $S_G$ tại vị trí dịch chuyển $l$ là:
+    \begin{equation}
+        \text{Corr}(S_{Pk}, S_G)(l) = \sum_{j=1}^{N_{Gait}} S(S_P(k+j), S_G(l+j))
+    \end{equation}
 \end{itemize}
+
+\item \textbf{Hàm độ đo tương đồng cuối cùng:} Để chống nhiễu và sai số phân đoạn cục bộ, độ tương đồng tổng thể ($Sim$) được tính bằng giá trị trung vị của các giá trị tương quan cực đại:
+\begin{equation}
+    Sim(S_P, S_G) = \text{Median}_k \left( \max_l \text{Corr}(S_{Pk}, S_G)(l) \right)
+\end{equation}
+\end{enumerate}
+
+\paragraph{c. Các thách thức trong thực nghiệm (Challenge Experiments)}
+
+Để đánh giá hiệu suất của thuật toán dưới tác động của các biến số khác nhau, bài toán thiết lập 12 thách thức trong thí nghiệm. Một tập hợp chuẩn (\textit{Gallery}) được cố định làm nhóm đối chứng với các điều kiện: bề mặt cỏ, giày loại A, góc nhìn bên phải, không mang túi xách và dữ liệu thu thập vào tháng 5.
+
+Các tập kiểm tra được thiết kế để cô lập hoặc kết hợp các biến số nhằm đo lường sự sụt giảm hiệu suất:
+
+\begin{itemize} \item \textbf{Các thí nghiệm đơn biến :} Được đánh dấu () trong bảng thử thách, bao gồm: \begin{itemize} \item \textbf{Exp A (View):} Thay đổi góc nhìn (Trái vs Phải). \item \textbf{Exp B* (Shoe):} Thay đổi loại giày (A vs B). \item \textbf{Exp D* (Surface):} Thay đổi bề mặt đi bộ (Cỏ vs Bê tông). \item \textbf{Exp H* (Carry):} Thay đổi điều kiện mang vác (Có túi xách vs Không). \item \textbf{Exp K* (Time):} Thay đổi thời gian thu thập (Tháng 5 vs Tháng 11), bao gồm cả thay đổi ngầm định về trang phục. \end{itemize}
+
+\item \textbf{Các thí nghiệm đa biến:} Các thí nghiệm còn lại (như C, E, F, G, I, J, L) kết hợp từ hai đến ba biến số cùng lúc như là vừa thay đổi bề mặt, vừa thay đổi góc nhìn để kiểm tra tính bền vững của hệ thống trong các tình huống phức tạp hơn.
+\end{itemize}
+
+Việc phân cấp các thí nghiệm này cho phép xác định thứ tự độ khó của bài toán nhận dạng. Thông thường, các thí nghiệm liên quan đến bề mặt và thời gian được coi là những thử thách lớn nhất đối với các thuật toán nhận dạng dáng đi hiện nay.
+
+
+ \paragraph{d. Đánh giá hiệu suất }
+
+Kết quả thực nghiệm trên bài toán thử thách HumanID phản ánh sự tiến bộ vượt bậc của các thuật toán nhận dạng dáng đi qua hai giai đoạn phát triển chính:
+
+\begin{itemize} \item \textbf{Giai đoạn khởi đầu (2002):} Khi bài toán mới được công bố, thuật toán cơ sở (Baseline) đạt hiệu suất cao hơn hầu hết các thuật toán thế hệ đầu. Điều này cho thấy tính hiệu quả của phương pháp khớp mẫu hình bóng đơn giản nhưng ổn định.
+
+\item \textbf{Giai đoạn cải tiến (2004 -- 2006):} Hiệu suất của các thuật toán mới bắt đầu vượt xa Baseline một cách đáng kể. Sự cải thiện này không chỉ đến từ việc tối ưu hóa kỹ thuật (engineering) mà còn nhờ sự thay đổi trong tư duy tiếp cận: chuyển từ phân tích động lực học thuần túy sang phân tích hình dạng hình bóng (silhouette shapes) và các mô hình dựa trên bộ phận cơ thể.
+\end{itemize}
+
+Dựa trên các kết quả báo cáo, có thể rút ra các nhận định quan trọng sau: \begin{itemize} \item \textbf{Độ khó của biến số:} Các thí nghiệm thay đổi bề mặt (Exp D) và thời gian (Exp K) vẫn là những thách thức lớn nhất. 
+Mặc dù hiệu suất đã được cải thiện, nhưng khoảng cách giữa kết quả thực tế và kỳ vọng vẫn còn lớn so với các thí nghiệm về góc nhìn hay loại giày. \item \textbf{Tính đa dạng của phương pháp:} Các nghiên cứu cho 
+thấy động lực học là quan trọng nhưng chưa đủ; việc kết hợp thông tin về hình thái (morphology) giúp hệ thống bền vững hơn trước các sai số phân đoạn và nhiễu hậu cảnh. \end{itemize}
+
+\subsubsection{Hướng tiếp cận}Hầu hết các phương pháp nhận dạng dáng đi đều dựa trên việc khai thác hình bóng (silhouette) của đối tượng. 
+Đây là đặc trưng mức thấp phổ biến nhờ tính bền vững trước sự thay đổi màu sắc trang phục và khả năng trích xuất dễ dàng trong môi trường camera tĩnh. 
+Các hướng tiếp cận chính được chia thành ba nhóm:
+\paragraph{a. Phương pháp dựa trên căn chỉnh thời gian}
+Đây là hướng tiếp cận phổ biến nhất, coi chuỗi dáng đi là một chuỗi thời gian chứa đựng cả đặc trưng hình dạng và động lực học. Quá trình này thường bao gồm ba giai đoạn: trích xuất đặc trưng (silhouette, PCA, mô tả Fourier), căn chỉnh chuỗi và tính toán độ đo.
+\begin{itemize}
+\item \textbf{Căn chỉnh chuỗi:} Sử dụng các kỹ thuật như Biến đổi thời gian động (Dynamic Time Warping - DTW) để đồng bộ hóa các chuỗi có tốc độ khác nhau, hoặc Mô hình Markov ẩn (HMM) để mô tả sự chuyển giao giữa các tư thế.
+\item \textbf{Mô hình toán học HMM:}
+\begin{equation}
+P(O|\lambda) = \sum_{q} \pi_{q_1} b_{q_1}(o_1) a_{q_1q_2} \dots b_{q_T}(o_T)
+\end{equation}
+\textbf{Trong đó:}
+\begin{itemize}
+\item $O = \{o_1, o_2, \dots, o_T\}$ là chuỗi các đặc trưng hình bóng quan sát được từ video.
+\item $\pi_{q_1}$: Xác suất bắt đầu tại trạng thái tư thế $q_1$.
+\item $a_{q_{t-1}q_t}$: Xác suất chuyển đổi giữa hai tư thế liên tiếp (ví dụ: từ tư thế chân chụm sang chân xòe). Nó mô tả \textbf{động lực học} của bước đi.
+\item $b_{q_t}(o_t)$: Xác suất để một hình bóng cụ thể $o_t$ xuất hiện tại trạng thái $q_t$. Nó mô tả \textbf{đặc điểm hình dạng} của tư thế đó.
+\item $P(O|\lambda)$ là tổng xác suất của chuỗi video khớp với mô hình mẫu $\lambda$ của một cá nhân.
+\end{itemize}
+\end{itemize}
+\paragraph{b. Phương pháp dựa trên hình dạng}Hướng tiếp cận này ưu tiên sự tương đồng về hình thái của hình bóng và giảm nhẹ yếu tố trình tự thời gian. Một số kỹ thuật tiêu biểu bao gồm:
+\begin{itemize}
+\item \textbf{Hình ảnh năng lượng dáng đi (Gait Energy Image - GEI):}
+\begin{equation}
+A(x, y) = \frac{1}{N} \sum_{t=1}^{N} S(x, y, t)
+\end{equation}
+\textbf{Trong đó:}
+\begin{itemize}
+\item $S(x, y, t)$ là giá trị pixel (0 hoặc 1) tại tọa độ $(x, y)$ của khung hình thời điểm $t$.
+\item $A(x, y)$ (GEI) là một ảnh xám duy nhất đại diện cho toàn bộ chu kỳ.
+\item Các vùng có cường độ sáng cao nhất trong GEI cho thấy đó là nơi cơ thể ít thay đổi nhất (thường là đầu và thân), trong khi các vùng mờ (cường độ thấp) đại diện cho các bộ phận chuyển động mạnh như tay và chân.
+\end{itemize}
+\item \textbf{Chuẩn hóa động lực học :} Sử dụng một mô hình HMM chung cho toàn bộ quần thể để ánh xạ các khung hình vào các khung hình tư thế chuẩn (\textit{stance-frames}). Khoảng cách giữa hai đối tượng sau đó được tính toán trong không gian.
+\item \textbf{Phân tích biệt thức tuyến tính (LDA):}
+\begin{equation}
+    J(W) = \frac{|W^T S_B W|}{|W^T S_W W|}
+\end{equation}
+\textbf{Trong đó:}
+\begin{itemize}
+    \item $S_B$: Đo lường sự khác biệt giữa các cá nhân khác nhau. Chúng ta muốn giá trị này lớn nhất để dễ phân biệt người này với người kia.
+    \item $S_W$: Đo lường sự biến thiên của cùng một người dưới các điều kiện khác nhau (ví dụ: cùng một người nhưng khi mặc áo khoác hoặc đi trên cỏ).
+\end{itemize}
+\paragraph{c. Phương pháp tham số tĩnh }Hướng tiếp cận này trích xuất các thông số hình học trực tiếp từ cơ thể và các đặc trưng vận động cơ bản:
+\begin{itemize}
+\item \textbf{Tham số vận động:} Độ dài sải chân , tốc độ bước đi và nhịp độ .
+\item \textbf{Tham số hình thể:} Tỷ lệ kích thước các bộ phận cơ thể (tỷ lệ chiều dài chân/thân).\end{itemize}Tuy nhiên, phương pháp này thường đòi hỏi việc hiệu chuẩn camera 3D phức tạp và có hiệu suất thấp hơn khi xử lý dữ liệu ở khoảng cách xa hoặc độ phân giải thấp.
 
 \subsection{Hướng nghiên cứu và thực nghiệm}
 
@@ -176,6 +297,9 @@ Thay \textbf{Triplet Loss} bằng \textbf{Circle Loss} & Huy \\ \hline
 Bổ sung kĩ thuật \textbf{TSM} vào module chứa \textbf{Conv3D} & Huy \\ \hline
 \end{tabular}
 \end{table}
+
+
+
 
 \section{LỜI KẾT}
 
