@@ -17,14 +17,277 @@
 
 \subsubsection{Bối cảnh và vấn đề}
 
-Các công nghệ liên quan đến sinh trắc học như vân tay, mống mắt, khuôn mặt đều yêu cầu dữ liệu được thu thập trong một điều kiện lý tưởng (ví dụ: ảnh khuôn mặt phải được chụp chính diện hoặc gần máy ảnh để xác định rõ định danh) và sự phối hợp giữa thiết bị với chủ thể (người cung cấp dữ liệu). Trong khi đó, dữ liệu dáng đi có thể được thu thập mà không cần sự phối hợp đó.
+Các công nghệ liên quan đến sinh trắc học như vân tay, mống mắt, khuôn mặt đều yêu cầu dữ liệu được thu thập trong một điều kiện lý tưởng (ví dụ: ảnh khuôn mặt phải được chụp chính diện hoặc gần máy ảnh để xác định rõ định danh) và sự phối hợp giữa thiết bị với chủ thể (người cung cấp dữ liệu). Trong khi đó, dữ liệu dáng đi có thể được thu thập mà không cần sự phối hợp đó. Đồng thời, nghiên cứu nhận dạng dáng đi có ứng dụng trong nhiều lĩnh vực như: điều tra tội phạm, khoa học thể thao (ví dụ: phân tích chuyển động của các vận động viên), \dots Tuy nhiên, các thách thức lớn dễ quan sát được, chẳng hạn sự đa dạng góc quan sát đối tượng, đối tượng bị che khuất, hoặc đối tượng mặc các trang phục sẽ làm ẩn thông tin về khuôn mẫu riêng của dáng đi.
 
-\subsubsection{Phương pháp đề xuất (gốc)}
+Nhiều nghiên cứu đã được đề xuất để giải quyết các vấn đề trên. Các nghiên cứu tập trung trích xuất đặc trưng từ các loại dữ liệu như chuẩn ảnh bóng, cấu trúc cơ thể 3D, hoặc mẫu dáng đi. Dữ liệu ảnh bóng được sử dụng phổ biến nhất do dễ dàng thu thập từ các đoạn phim, đồng thời chúng cũng bảo toàn thông tin thời gian cần thiết. Một kỹ thuật phổ biến xử lý dữ liệu này là căn chỉnh và cắt ngang hình ảnh bóng. Chiến lược này lần đầu được giới thiệu trong bài toán tái nhận diện người (ReID) và đã được chứng minh là hiệu quả với nhận diện dáng đi.
+
+Điểm hạn chế chính của kỹ thuật cắt ngang hình ảnh bóng là chúng không xem xét bản chất phân cấp tự nhiên của các chuyển động cục bộ của cơ thể người, ví dụ, chân và thân dưới có những đặc điểm chuyển động riêng biệt. Do đó, điều quan trọng là phải xem xét các vùng cơ thể này một cách riêng biệt và nghiên cứu mối quan hệ giữa các bộ phận. Đây chính là động lực nghiên cứu của \textbf{HSTL}.
+
+
+\textbf{HSTL} là một quy trình học biểu diễn không gian-thời gian phân cấp, được xây dựng dựa trên 3 mô-đun chính, bao gồm:
+\begin{itemize}
+    \item Mô-đun trích xuất chuyển động theo vùng có khả năng thích ứng, gọi tắt là \textbf{ARME}.
+    \item Mô-đun gộp không gian-thời gian có khả năng thích ứng, gọi tắt là \textbf{ASTP}.
+    \item Mô-đun tổng hợp đặc trưng theo thời gian ở mức khung hình, gọi tắt là \textbf{FTA}.
+\end{itemize}
+
+\textbf{Tổng hợp các đóng góp chính của bài báo \textbf{HSTL} bao gồm:}
+\begin{itemize}
+    \item  Đề xuất quy trình đơn giản và có khả năng mở rộng, để học biểu diễn không gian-thời gian phân cấp \textbf{HSTL} cho nhận dạng dáng đi, bằng cách xem xét sự phụ thuộc các vùng trên cơ thể trong chuyển động của dáng đi.
+    \item Giới thiệu mô-đun \textbf{ARME} để học biểu diễn không gian-thời gian độc lập với vùng cho chuỗi ảnh dáng đi, mô-đun \textbf{ASTP} để thực hiện phép ánh xạ các đặc trưng theo phân cấp, và mô-đun \textbf{FTA} để nén chuỗi dáng đi bằng cách loại bỏ cách khung hình dư thừa.
+    \item Đạt độ hiệu quả tốt nhất (\textit{SOTA tại thời điểm công bố}) trên tập dữ liệu dáng đi phổ biến CASIA-B, kèm theo sự cân bằng hợp lý giữa độ phức tạp và độ chính xác của mô hình.
+\end{itemize}
+
+\subsubsection{Phương pháp}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{../utils/arXiv-2307.09856v1/pyramid.pdf}
+    \caption{Quy trình \textbf{HSTL}}
+    \label{fig:pyramid}
+\end{figure}
+
+\begin{enumerate}
+    \item Quy trình chung
+
+          Hình \ref{fig:pyramid} trình bày quy trình \textbf{HSTL}. Cho tập dữ liệu $\mathcal{D}=\{{S_i}\}_{i=1}^{N} $, gồm $N$ chuỗi dáng đi, mỗi chuỗi $S_i \in \mathbb{R}^{C \times T \times H \times W}$ được biểu diễn bằng tensor 4 chiều bao gồm $C$ kênh, $T$ khung hình, và kích thước $H \times W$. Ở bước tiền xử lý, mỗi chuỗi được chia đều theo chiều ngang thành $k$ phần rồi dùng thuật toán phân cụm phân cấp (cụ thể là DBSCAN) để tạo một thứ bậc chuyển động $\mathcal{P}=\{\mathcal{P}^{(l)}\}_{l=1}^{L}$, với $L$ là số bậc trong phân cấp và $\mathcal{P}^{(l)} = \{\mathcal{P}_1^{(l),\dots,\mathcal{P}_{K_l}^{(l)}}\}$ là tập các phân vùng ở mức $l$. Sự phân cấp là một thuộc tính có cấu trúc của các mẫu chuyển động dáng đi và dùng để hướng dẫn quy trình trích xuất đặc trưng dáng đi. \textbf{HSTL} xếp chồng các mô-đun theo cấu trúc phân cấp đó. Xét đầu vào $S_{in}$, nhánh chính của \textbf{HSTL} được biểu diễn như sau:
+
+          \begin{equation}
+              \label{eq:pipeline}
+              Y^{M}=\Gamma^{(L)} \circ \Psi^{(L-1)} \circ \cdots \circ \Omega^{(2)} \circ \Psi^{(2)} \circ \Psi^{(1)}(S_{in}),
+          \end{equation}
+
+          trong đó $\Psi^{(l)}$, $\Gamma^{(l)}$, và $\Omega^{(l)}$ lần lượt là các mô-đun \textbf{ARME}, \textbf{ASTP} và \textbf{FTA} ở mức thứ $l$ của $\mathcal{P}$.  Vì \textbf{FTA} nén dữ liệu giữa các khung hình, nên chỉ được dùng một lần duy nhất tại mức $l_{\Omega}$ trong $\mathcal{P}$ (ví dụ, $l_{\Omega}=2$ trong biểu thức (\ref{eq:pipeline})) để tránh mất thông tin quá mức.
+
+          Các đặc trưng dáng đi ở các phân cấp khác được thu thập bằng cách truyền:
+          \begin{itemize}
+              \item Đầu ra $Y^{(l)}$ của từng $\Psi^{(l)}$ ở mức $l \in \{1, 2, \ldots, L-1\}$,
+              \item và đầu ra $Y_{\Omega}^{(l_{\Omega})}$ của $\Omega^{(l_{\Omega})}$ ở mức $l_{\Omega}$
+          \end{itemize}
+          vào $\Gamma^{(l)}$ tương ứng.
+          Đầu ra cuối cùng của quy trình \textbf{HSTL} được hình thành bằng cách ghép nối các đặc trưng, biểu diễn như sau:
+
+          \begin{align}
+              Y =  \biggl[ & Y^{M}, \Gamma^{(L-1)}\left(Y^{(L-1)}\right),  \ldots , \nonumber                                                                         \\
+                           & \Gamma^{(l_{\Omega})}\left(Y_{\Omega}^{(l_{\Omega})}\right), \Gamma^{(2)}\left(Y^{(2)}\right), \Gamma^{(1)}\left(Y^{(1)}\right) \biggl],
+          \end{align}
+
+          Sau đó, $Y$ được truyền qua các lớp kết nối đầy đủ (\textbf{FC}), trước khi tối ưu bằng tổ hợp hàm mất mát bộ ba $\mathcal{L}_{tri}$ và hàm mất mát entropy chéo $\mathcal{L}_{ce}$.
+
+    \item Mô-đun trích xuất chuyển động theo vùng có khả năng thích ứng - \textbf{ARME}.
+
+          Mục tiêu của \textbf{ARME} là trích xuất các mẫu không gian-thời gian tương ứng với từng vùng cơ thể, và chúng phải độc lập với nhau. Dựa trên phân cấp $\mathcal{P}$, đầu vào $X$ được phân thành $K_l$ vùng tại mức $l$, ký hiệu là $\{X_{j}^{(l)}\}_{j=1}^{K_l}$, với $X_{j}^{(l)} \in \mathbb{R}^{C \times T \times H_j^{(l)} \times W}$ và $H^{(l)}_j=\frac{\left|P_j^{(l)}\right|}{k}H$ là chiều cao vùng $j$ ở mức $l$. Mức $l$ của \textbf{ARME}, $\Psi^{(l)}$ được biểu diễn như sauL
+
+          \begin{equation}
+              Y^{(l)}_{\Psi}=\Psi^{(l)}(X^{(l)})=\left[f_{1}(X_{1}^{(l)}), f_{2}(X_{2}^{(l)}) ,\ldots, f_{K_l}(X_{K_l}^{(l)})  \right],
+          \end{equation}
+
+          trong đó, $f_{j}\left(\cdot\right)$ là phép tích chập 3D (không chia sẻ) ứng với vùng $j$. Đầu ra $Y^{(l)}_{\Psi} \in \mathbb{R}^{C^{(l)} \times T \times H \times W}$ của mức $l$ có $C^{(l)}$ kênh, và giữ nguyên độ phân giải không gian và thời gian.
+
+    \item Mô-đun gộp không gian-thời gian có khả năng thích ứng - \textbf{ASTP}.
+
+          \textbf{ASTP} thực hiện ánh xạ đặc trưng phân cấp bằng cách áp dụng kĩ thuật gộp (\textbf{pooling}) không đều lên các vùng thu được từ $\mathcal{P}$. Với vùng $j$ của mức $l$, $X_j^{(l)}$, mô-đun \textbf{ASTP} tại mức $l$, $\Gamma^{(l)}$, được biểu diễn như sau:
+          \begin{equation}
+              Y_{\Gamma,j}^{(l)}=\Gamma_j^{(l)}(X_j^{(l)})=\text{GeM}_j \circ \text{FC} \circ \text{Max}(X_j^{(l)}),
+          \end{equation}
+          trong đó, $\text{Max}(\cdot)$ là phép gộp dựa trên giá trị lớn nhất (\text{max pooling}) dọc theo trục thời gian, $\text{FC}(\cdot)$ là lớp kết nối đầy đủ, $\text{GeM}_j(\cdot)$ là phép gộp trung bình tổng quát (generalized mean pooling (GeM)) \cite{radenovic2018fine} cho vùng $j$. Chuỗi phép ánh xạ của $\Gamma_j$ như sau: $\Gamma_j:\mathbb{R}^{C \times T \times H_j^{(l)} \times W} \mapsto \mathbb{R}^{C \times 1 \times H_j^{(l)} \times W} \mapsto \mathbb{R}^{C^{(l)} \times 1 \times H_j^{(l)} \times W} \mapsto \mathbb{R}^{C^{(l)} \times 1 \times 1 \times 1}$. Nối các $Y_{\Gamma,j}^{(l)}$ theo thứ tự, thu được $Y_{\Gamma}^{(l)}=\left[Y_{\Gamma,1}^{(l)},Y_{\Gamma,2}^{(l)},\ldots,Y_{\Gamma,K_l}^{(l)}\right]$, với $Y_{\Gamma}^{(l)} \in \mathbb{R}^{C_{}^{(l)}\times 1 \times  K_l \times 1}$ là đầu ra của \textbf{ASTP} ở mức $l$.
+
+    \item Mô-đun tổng hợp đặc trưng theo thời gian ở mức khung hình - \textbf{FTA}.
+
+          \textbf{FTA} nén các khung hình cục bộ để loại bỏ khung dư thừa bằng cách kết hợp đa tỉ lệ thời gian và chọn khung tại mức khung hình. Với vùng $X_{j}^{(l)}$, hai phép gộp theo thời gian với nhân $3 \times 1 \times 1$ và $5 \times 1 \times 1$ (với cùng độ trượt $3 \times 1 \times 1$) sinh ra $U_{j,1}^{(l)}$ và $U_{j,2}^{(l)}$, biểu diễn như sau:
+
+          \begin{equation}
+              \begin{aligned}
+                  \hat{U}_{j}^{(l)} & =U_{j,1}^{(l)}+U_{j,2}^{(l)} \\ &=\text{Max}_{3 \times 1 \times 1}^{3\times 1 \times 1}\left(X_{j}^{(l)}\right)
+                  +\text{Max}_{5 \times 1 \times 1}^{3\times 1 \times 1}\left(X_{j}^{(l)}\right),
+              \end{aligned}
+              % \hat{U}_{j}^{(l)}=U_{j,1}^{(l)}=\sum_{v=1}^{V}\psi_{v}\left(X_{j}^{(l)}\right),v\in \left\{1,2,\cdots,V\right\},
+              \label{equ:poolfeature}
+          \end{equation}
+
+          trong đó, $\text{Max}_{3 \times 1 \times 1}^{3\times 1 \times 1}\left(\cdot\right)$ và $\text{Max}_{5 \times 1 \times 1}^{3\times 1 \times 1}\left(\cdot\right)$ là phép gộp dựa trên giá trị lớn nhất. $\hat{U}_{j}^{(l)}$, $U_{j,1}^{(l)}$ và $U_{j,2}^{(l)}$ có cùng kích thước $(C,\frac{T}{3},H_j^{(l)},W)$.
+
+          Tiếp đó, \textbf{FTA} sinh trọng số lựa trong khung:
+
+          \begin{equation}
+              \begin{gathered}
+                  Z_{j,1}^{(l)}=\text{FC}_{j,1}^{(l)}\left(\text{GAP}\left(\hat{U}_j^{(l)}\right)\right),\\
+                  Z_{j,2}^{(l)}=\text{FC}_{j,2}^{(l)}\left(\text{GAP}\left(\hat{U}_j^{(l)}\right)\right),
+              \end{gathered}
+              % \hat{U}_j^{(l)}&=g\left(\sum_{n=1}^N U_{j,n}^{(l)}\right)\\
+              \label{equ:weight}
+          \end{equation}
+          trong đó, $\text{GAP}\left(\cdot\right)$  là phép gộp trụng bình toàn cục dọc theo chiều không gian, $Z_{j,1}^{(l)}$ và $ Z_{j,2}^{(l)} \in \mathbb{R}^{C  \times \frac{T}{3} \times 1 \times 1}$. Trọng số được chuẩn hóa chéo trên 2 tỉ lệ, được biểu diễn như sau:
+          \begin{equation}
+              \label{equ:normalize}
+              \mathcal{W}_{j,s,c,t}^{(l)}=\frac{e^{Z_{j,s,c,t}^{(l)}}}{e^{Z_{j,1,c,t}^{(l)}}+e^{Z_{j,2,c,t}^{(l)}}}   \quad s\in \{1,2\},
+          \end{equation}
+          trong đó, $\mathcal{W}_{j,s,c,t}^{(l)} \in \mathbb{R}^{1 \times 1 \times 1 \times 1}$ là trọng số của kênh $c$của khung hình $t$.
+          %,w_{j,2,c,t}^{(l)}=\frac{e^{z_{j,2,c,t}^{(l)}}}{e^{z_{j,1,c,t}^{(l)}}+e^{z_{j,2,c,t}^{(l)}}},
+          Kết hợp biểu thức (\ref{equ:poolfeature}) và biểu thức (\ref{equ:normalize}), đầu ra vùng $j$, $Y_{\Omega,j}^{(l)} \in \mathbb{R}^{C^{(l)} \times \frac{T}{3} \times H_j^{(l)} \times W}$ ở mức $l$ \textbf{FTA} được biểu diễn như sau:
+          \begin{equation}
+              % Y_{\Omega,j}^{(l)}=\sum_{v=1}^{V}\left(\mathcal{W}_{j,v}^{(l)} \odot U_{j,n}^{(l)}\right)
+              Y_{\Omega,j}^{(l)}=\mathcal{W}_{j,1}^{(l)}\odot U_{j,1}^{(l)}+\mathcal{W}_{j,2}^{(l)}\odot U_{j,2}^{(l)},
+          \end{equation}
+          trong đó $\mathcal{W}_{j,1}^{(l)}, \mathcal{W}_{j,2}^{(l)} \in \mathbb{R}^{C \times \frac{T}{3} \times 1 \times 1}$ là 2 tensor trọng số được  tính theo biểu thức (\ref{equ:poolfeature}), và $\odot$ là phép nhân trên từng phần tử. Kết quả của \textbf{FTA}, $Y^{(l)}_{\Omega}\in \mathbb{R}^{C \times \frac{T}{3} \times H \times W}$ được tạo bằng cách ghép nối $K_l$ vùng của mức $l$, với $Y^{(l)}_{\Omega}=\left[Y_{\Omega,1}^{(l)},Y_{\Omega,2}^{(l)},\ldots,Y_{\Omega,K_l}^{(l)}\right]$.
+
+
+
+          \begin{figure}[t]%
+              \centering
+              \includegraphics[width=\textwidth]{../utils/arXiv-2307.09856v1/mma.pdf}
+              \caption{Minh họa mô-đun \textbf{FTA}.
+              }
+              \label{fig:mma}
+          \end{figure}
+
+\end{enumerate}
 
 \subsubsection{Cài đặt thực nghiệm}
 
+Tác giả thực hiện trên 4 tập CASIA-B, GREW, OUVMLP, và Gait3D. Tuy nhiên, nhóm chỉ có thể tìm thấy và truy cập tập CASIA-B (lý do đã trình bày ở trên). Đây cũng là tập nhóm dùng để phát cải thiện nghiên cứu, nên nhóm tập trung trình bày thực nghiệm và kết quả trên tập này.
+\begin{enumerate}
+    \item Tập dữ liệu
+
+          CASIA-B gồm 124 chủ thể, 11 góc nhìn, ba điều kiện đi bộ: NM (normal), BG (cầm túi), CL (mặc áo khoác). Theo giao thức chuẩn, 74 chủ thể đầu dùng để huấn luyện và 50 chủ thể còn lại để kiểm thử. Trong kiểm thử, bốn chuỗi NM\#01-04 được dùng làm gallery; các chuỗi còn lại (NM\#05-06, BG\#01-02, CL\#01-02) là probe.
+
+    \item Chi tiết cài đặt thực nghiệm
+
+          \begin{itemize}
+
+              \item Đầu vào: ảnh hình bóng, được các về kích thước $64 \times 44$, dùng mẫu 30 khung hình trong huấn luyện và toàn bộ khung hình trong kiểm thử.
+              \item Batch size $(8 \times 8)$, bộ tối ưu  $Adam$ với $weight decay = 5 \times 10 ^{-4}$, huấn luyện 100K iterations, tốc độ học khởi tạo là $1e-5$, và giảm $10\%$ tại 70K.
+              \item Hàm mất mát bộ ba với lề $ m =0.2$.
+              \item Trong \textbf{GeM} của mô-đun \textbf{ASTP}, tham số $p=6.5$.
+
+          \end{itemize}
+
+    \item Chi tiết kiến trúc của \textbf{HSTL} trong thực nghiệm với tập CASIA-B ở bảng \ref{tab:pcb-str}.
+
+          \begin{table}[bt]
+              \centering
+              \setlength{\abovecaptionskip}{0cm}  %段前
+              \setlength{\belowcaptionskip}{-0.2cm} %段后
+              \caption{Kiến trúc chi tiết của \textbf{HSTL} đề xuất trên CASIA-B. Cột đầu tiên biểu thị các mức của phân cấp dáng đi và $K_l$ là số nhóm ở mức $l$. $C_{in}$ và $C_{out}$ lần lượt biểu thị kênh đầu vào và kênh đầu ra của mỗi lớp. Các bộ phận cơ thể được đánh chỉ số theo thứ tự không gian từ trên xuống dưới, được đánh số từ 1 đến 8.}
+              % \renewcommand\arraystretch{1.3}
+              \resizebox{\linewidth}{!}{
+                  \begin{tabular}{c|ccccc|c|c}
+                      \toprule    \multicolumn{1}{l|}{Mức}                         & \multicolumn{1}{c|}{Khối}                              & \multicolumn{1}{c|}{Lớp}                         & \multicolumn{1}{c|}{$C_{in}$}               & \multicolumn{1}{c|}{$C_{out}$}              & Kernel  & $K_l$                 & \multicolumn{1}{c}{Các nhóm}                                    \\
+                      \hline    \multicolumn{1}{c|}{\multirow{2}[1]{*}{1}}         & \multicolumn{1}{c|}{\textbf{ARME}}                     & \multicolumn{1}{c|}{Conv3d}                      & \multicolumn{1}{c|}{1}                      & \multicolumn{1}{c|}{32}                     & (3,3,3) & \multirow{2}[1]{*}{1} & \multirow{2}[1]{*}{$\{\{1,2,3,4,5,6,7,8\}\}$}                   \\
+                      \cline{2-6}                                                  & \multicolumn{5}{c|}{\textbf{ASTP}}                     &                                                  &                                                                                                                                                                                               \\
+                      \cline{1-8}      \multicolumn{1}{c|}{\multirow{3}[1]{*}{2}}  & \multicolumn{1}{c|}{\multirow{2}[1]{*}{\textbf{ARME}}} & \multicolumn{1}{c|}{Conv3d}                      & \multicolumn{1}{c|}{32}                     & \multicolumn{1}{c|}{32}                     & (3,3,3) & \multirow{3}[1]{*}{2} & \multirow{3}[1]{*}{$\{\{1,2,3,4,5\}$,$\{6,7,8\}\}$}             \\
+                      \cline{3-6}                                                  & \multicolumn{1}{c|}{}                                  & \multicolumn{1}{c|}{Conv3d}                      & \multicolumn{1}{c|}{32}                     & \multicolumn{1}{c|}{64}                     & (3,3,3) &                       &                                                                 \\
+                      \cline{2-6}                                                  & \multicolumn{5}{c|}{\textbf{ASTP}}                     &                                                  &                                                                                                                                                                                               \\
+                      \cline{1-8}      \multicolumn{1}{c|}{\multirow{3}[1]{*}{2}}  & \multicolumn{1}{c|}{\multirow{2}[1]{*}{\textbf{FTA}}}  & \multicolumn{1}{c|}{\multirow{2}[1]{*}{MaxPool}} & \multicolumn{1}{c|}{\multirow{2}[1]{*}{64}} & \multicolumn{1}{c|}{\multirow{2}[1]{*}{64}} & (3,1,1) & \multirow{3}[1]{*}{2} & \multirow{3}[1]{*}{$\{\{1,2,3,4,5\}$,$\{6,7,8\}\}$}             \\
+                      \cline{6-6}                                                  & \multicolumn{1}{c|}{}                                  & \multicolumn{1}{c|}{}                            & \multicolumn{1}{c|}{}                       & \multicolumn{1}{c|}{}                       & (5,1,1) &                       &                                                                 \\
+                      \cline{2-6}                                                  & \multicolumn{5}{c|}{\textbf{ASTP}}                     &                                                  &                                                                                                                                                                                               \\
+                      \cline{1-8}       \multicolumn{1}{c|}{\multirow{3}[1]{*}{3}} & \multicolumn{1}{c|}{\multirow{2}[1]{*}{\textbf{ARME}}} & \multicolumn{1}{c|}{Conv3d}                      & \multicolumn{1}{c|}{64}                     & \multicolumn{1}{c|}{128}                    & (3,3,3) & \multirow{3}[1]{*}{4} & \multirow{3}[1]{*}{$\{\{1\}$,$\{2,3,4,5\}$,$\{6,7\}$,$\{8\}\}$} \\
+                      \cline{3-6}                                                  & \multicolumn{1}{c|}{}                                  & \multicolumn{1}{c|}{Conv3d}                      & \multicolumn{1}{c|}{128}                    & \multicolumn{1}{c|}{128}                    & (3,3,3) &                       &                                                                 \\
+                      \cline{2-6}                                                  & \multicolumn{5}{c|}{\textbf{ASTP}}                     &                                                  &                                                                                                                                                                                               \\
+                      \cline{1-8}      4                                           & \multicolumn{5}{c|}{\textbf{ASTP}}                     & 8                                                & \makecell[c]{$\{\{1\},\{2\},\{3\},\{4\},$                                                                                                                                                     \\$\{5\},\{6\},\{7\},\{8\}\}$} \\
+                      \bottomrule\end{tabular}%
+              }
+              \label{tab:pcb-str}%
+          \end{table}%
+
+
+\end{enumerate}
+
+
 \subsubsection{Kết quả}
 
-\subsubsection{Bàn luận của tác giả}
+Kết quả thực nghiệm trên CASIA-B với số liệu chi tiết ở bảng \ref{tab:sota-ou}.
 
-\subsubsection{Phân tích của nhóm}
+Nhìn chung, \textbf{HSTL} đa phần tốt hơn các nghiên cứu pháp ở thời điểm đó. Phân tích chi tiết về bảng này sẽ được bỏ qua trong báo cáo tiến độ này để tránh dài dòng.
+
+% \begin{table*}[tbp]
+%     \centering
+%     \setlength{\abovecaptionskip}{0cm}  %段前
+%     \setlength{\belowcaptionskip}{-0.2cm} %段后
+%     \caption{Rank-1 accuracy (\%) on OUMVLP under all views, excluding identical-view cases. Std denotes the performance sample standard deviation across 14 views.}
+%     \resizebox{0.95\linewidth}{!}{
+%         \begin{tabular}{c|cccccccccccccc|c|c}
+%             \toprule
+%             \multirow{2}[1]{*}{Method}           & \multicolumn{14}{c|}{Probe View} & \multirow{2}[1]{*}{Mean} & \multirow{2}[1]{*}{Std}                                                                                                                                                                                                                                                       \\
+%             \cline{2-15}                         & $0^{\circ}$                      & $15^{\circ}$             & $30^{\circ}$            & $45^{\circ}$     & $60^{\circ}$     & $75^{\circ}$     & $90^{\circ}$     & $180^{\circ}$    & $195^{\circ}$    & $210^{\circ}$    & $225^{\circ}$    & $240^{\circ}$    & $255^{\circ}$    & $270^{\circ}$    &                                    \\
+%             \hline
+%             GaitSet \cite{chao2019gaitset}       & 79.3                             & 87.9                     & 90.0                    & 90.1             & 88.0             & 88.7             & 87.7             & 81.8             & 86.5             & 89.0             & 89.2             & 87.2             & 87.6             & 86.2             & 87.1             & 4.0             \\
+
+%             GaitPart \cite{fan2020gaitpart}      & 82.6                             & 88.9                     & 90.8                    & 91.0             & 89.7             & 89.9             & 89.5             & 85.2             & 88.1             & 90.0             & 90.1             & 89.0             & 89.1             & 88.2             & 88.7             & 2.3             \\
+
+%             GLN \cite{hou2020gait}               & 83.8                             & 90.0                     & 91.0                    & 91.2             & 90.3             & 90.0             & 89.4             & 85.3             & 89.1             & 90.5             & 90.6             & 89.6             & 89.3             & 88.5             & 89.2             & 2.1             \\
+
+%             CSTL \cite{huang2021context}         & 87.1                             & 91.0                     & 91.5                    & 91.8             & 90.6             & 90.8             & 90.6             & \underline{89.4} & 90.2             & 90.5             & 90.7             & 89.8             & 90.0             & 89.4             & 90.2             & \underline{1.1} \\
+
+%             GaitGL \cite{lin2021gait}            & 84.9                             & 90.2                     & 91.1                    & 91.5             & 91.1             & 90.8             & 90.3             & 88.5             & 88.6             & 90.3             & 90.4             & 89.6             & 89.5             & 88.8             & 89.7             & 1.7             \\
+
+%             3D Local \cite{huang20213d}          & 86.1                             & 91.2                     & 92.6                    & 92.9             & 92.2             & 91.3             & 91.1             & 86.9             & 90.8             & \textbf{92.2}    & 92.3             & 91.3             & 91.1             & 90.2             & 90.9             & 2.0             \\
+
+%             LagrangeGait \cite{chai2022lagrange} & 85.9                             & 90.6                     & 91.3                    & 91.5             & 91.2             & 91.0             & 90.6             & 88.9             & 89.2             & 90.5             & 90.6             & 89.9             & 89.8             & 89.2             & 90.0             & 1.4             \\
+
+%             MetaGait \cite{dou2022metagait}      & \underline{88.2}                 & \underline{92.3}         & \textbf{93.0}           & \textbf{93.5}    & \textbf{93.1}    & \textbf{92.7}    & \textbf{92.6}    & 89.3             & \underline{91.2} & 92.0             & \textbf{92.6}    & \textbf{92.3}    & \textbf{91.9}    & \underline{91.1} & \underline{91.9} & 1.4             \\
+%             \hline
+%             \textbf{Ours}                        & \textbf{91.4}                    & \textbf{92.9}            & \underline{92.7}        & \underline{93.0} & \underline{92.9} & \underline{92.5} & \underline{92.5} & \textbf{92.7}    & \textbf{92.3}    & \underline{92.1} & \underline{92.3} & \underline{92.2} & \underline{91.8} & \textbf{91.8}    & \textbf{92.4}    & \textbf{0.5}    \\
+%             \bottomrule
+%         \end{tabular}%
+%         \label{tab:sota-ou}%
+%     }
+% \end{table*}%
+
+\begin{table*}[tbp]
+    \centering
+    \setlength{\abovecaptionskip}{0cm}  %段前
+    \setlength{\belowcaptionskip}{-0.2cm} %段后
+    \caption{Độ chính xác Rank-1 (\%) trên CASIA-B dưới tất cả các góc nhìn và các điều kiện khác nhau, loại trừ các trường hợp góc nhìn giống nhau. Std biểu thị độ lệch chuẩn mẫu hiệu suất trên 11 góc nhìn.}
+    \resizebox{0.95\linewidth}{!}{
+        \begin{tabular}{c|c|ccccccccccc|c|c}
+            \toprule
+            \multicolumn{2}{c|}{Gallery NM \#1-4}      & \multicolumn{11}{c|}{$0^{\circ}-180^{\circ}$} & \multirow{1}[4]{*}{Mean} & \multirow{1}[4]{*}{Std}                                                                                                                                                                                                                 \\
+            \cline{1-13}    \multicolumn{2}{c|}{Probe} & $0^{\circ}$                                   & $18^{\circ}$             & $36^{\circ}$            & $54^{\circ}$     & $72^{\circ}$     & $90^{\circ}$     & $108^{\circ}$    & $126^{\circ}$    & $144^{\circ}$    & $162^{\circ}$    & $180^{\circ}$    &                                                       \\
+            \hline
+            \multirow{5}[10]{*}{NM \#5-6}              & GaitSet \cite{chao2019gaitset}                & 90.8                     & 97.9                    & 99.4             & 96.9             & 93.6             & 91.7             & 95.0             & 97.8             & 98.9             & 96.8             & 85.8             & 95.0             & 3.5             \\
+            % \cline{14-14}         & ACL   & 92.0    & 98.5  & \textbf{100.0}   & \textbf{98.9}  & 95.7  & 91.5  & 94.5  & 97.7  & 98.4  & 96.7  & 91.9  & 96.0 \\
+                                                       & GaitPart \cite{fan2020gaitpart}               & 94.1                     & 98.6                    & 99.3             & 98.5             & 94.0             & 92.3             & 95.9             & 98.4             & 99.2             & 97.8             & 90.4             & 96.2             & 3.1             \\
+            % \cline{14-14}          & MT3D  & 95.7  & 98.2  & 99.0    & 97.5  & 95.1  & 93.9  & 96.1  & 98.6  & 99.2  & 98.2  & 92.0    & 96.7 \\
+                                                       & 3D Local \cite{huang20213d}                   & 96.0                     & \underline{99.0}        & \underline{99.5} & \underline{98.9} & 97.1             & 94.2             & 96.3             & 99.0             & 98.8             & 98.5             & 95.2             & 97.5             & 1.8             \\
+                                                       & CSTL \cite{huang2021context}                  & 97.2                     & \underline{99.0}        & 99.2             & 98.1             & 96.2             & \underline{95.5} & \underline{97.7} & 98.7             & 99.2             & \underline{98.9} & 96.5             & \underline{97.8} & 1.3             \\
+                                                       & GaitGL \cite{lin2021gait}                     & 96.0                     & 98.3                    & 99.0             & 97.9             & 96.9             & 95.4             & 97.0             & 98.9             & \underline{99.3} & 98.8             & 94.0             & 97.4             & 1.7             \\
+                                                       & LagrangeGait \cite{chai2022lagrange}          & 95.7                     & 98.1                    & 99.1             & 98.3             & 96.4             & 95.2             & 97.5             & 99.0             & \underline{99.3} & \underline{98.9} & 94.9             & 97.5             & 1.6             \\
+                                                       & MetaGait \cite{dou2022metagait}               & \underline{97.3}         & \textbf{99.2}           & \underline{99.5} & \textbf{99.1}    & \underline{97.2} & \underline{95.5} & 97.6             & \underline{99.1} & \underline{99.3} & \textbf{99.1}    & \underline{96.7} & \textbf{98.1}    & \underline{1.3} \\
+            \cline{2-15}                               & \textbf{Ours}                                 & \textbf{97.6}            & 98.0                    & \textbf{99.6}    & 98.2             & \textbf{97.4}    & \textbf{96.5}    & \textbf{97.9}    & \textbf{99.3}    & \textbf{99.4}    & 98.4             & \textbf{97.0}    & \textbf{98.1}    & \textbf{1.0}    \\
+            \hline
+            \multirow{4}[12]{*}{BG \#1-2}              & GaitSet \cite{chao2019gaitset}                & 83.8                     & 91.2                    & 91.8             & 88.8             & 83.3             & 81.0             & 84.1             & 90.0             & 92.2             & 94.4             & 79.0             & 87.2             & 4.9             \\
+                                                       & GaitPart \cite{fan2020gaitpart}               & 89.1                     & 94.8                    & 96.7             & 95.1             & 88.3             & 84.9             & 89.0             & 93.5             & 96.1             & 93.8             & 85.8             & 91.5             & 4.2             \\
+            % \cline{14-14}           & MT3D  & 91.0    & 85.4  & 97.5  & 94.2  & 92.3  & 86.9  & 91.2  & 95.6  & 97.3  & 96.4  & 86.6  & 93.0 \\
+                                                       & 3D Local \cite{huang20213d}                   & 92.9                     & 95.9                    & \textbf{97.8}    & 96.2             & 93.0             & 87.8             & 92.7             & 96.3             & 97.9             & 98.0             & 88.5             & 94.3             & 3.5             \\
+                                                       & CSTL \cite{huang2021context}                  & 91.7                     & 96.5                    & 97.0             & 95.4             & 90.9             & 88.0             & 91.5             & 95.8             & 97.0             & 95.5             & 90.3             & 93.6             & 3.0             \\
+                                                       & GaitGL \cite{lin2021gait}                     & 92.6                     & \underline{96.6}        & 96.8             & 95.5             & 93.5             & 89.3             & 92.2             & 96.5             & 98.2             & 96.9             & 91.5             & 94.5             & 2.8             \\
+                                                       & LagrangeGait \cite{chai2022lagrange}          & \underline{94.2}         & 96.2                    & \underline{96.8} & 95.8             & 94.3             & 89.5             & 91.7             & 96.8             & 98.0             & 97.0             & 90.9             & 94.6             & 2.7             \\
+                                                       & MetaGait \cite{dou2022metagait}               & 92.9                     & \textbf{96.7}           & 97.1             & \underline{96.4} & \underline{94.7} & \underline{90.4} & \underline{92.9} & \textbf{97.2}    & \underline{98.5} & \textbf{98.1}    & \underline{92.3} & \underline{95.2} & \underline{2.6} \\
+            \cline{2-15}                               & \textbf{Ours}                                 & \textbf{95.0}            & 96.5                    & \underline{97.3} & \textbf{96.6}    & \textbf{95.3}    & \textbf{93.3}    & \textbf{94.6}    & \underline{96.8} & \textbf{98.6}    & \underline{97.7} & \textbf{92.9}    & \textbf{95.9}    & \textbf{1.7}    \\
+            \hline
+            \multirow{4}[12]{*}{CL \#1-2}              & GaitSet \cite{chao2019gaitset}                & 61.4                     & 75.4                    & 80.7             & 77.3             & 72.1             & 70.1             & 71.5             & 73.5             & 73.5             & 68.4             & 50.0             & 70.4             & 8.0             \\
+                                                       & GaitPart \cite{fan2020gaitpart}               & 70.7                     & 85.5                    & 86.9             & 83.3             & 77.1             & 72.5             & 76.9             & 82.2             & 83.8             & 80.2             & 66.5             & 78.7             & 6.6             \\
+            % \cline{14-14}          & MT3D  & 76.0    & 87.6  & 89.8  & 85.0    & 81.2  & 75.7  & 81.0    & 84.5  & 85.4  & 82.2  & 68.1  & 81.5 \\
+                                                       & 3D Local \cite{huang20213d}                   & 78.2                     & 90.2                    & 92.0             & 87.1             & 83.0             & 76.8             & 83.1             & 86.6             & 86.8             & 84.1             & 70.9             & 83.7             & 6.2             \\
+                                                       & CSTL \cite{huang2021context}                  & 78.1                     & 89.4                    & 91.6             & 86.6             & 82.1             & 79.9             & 81.8             & 86.3             & 88.7             & 86.6             & 75.3             & 84.2             & \underline{4.9} \\
+                                                       & GaitGL \cite{lin2021gait}                     & 76.6                     & 90.0                    & 90.3             & 87.1             & 84.5             & 79.0             & 84.1             & 87.0             & 87.3             & 84.4             & 69.5             & 83.6             & 6.3             \\
+                                                       & LagrangeGait \cite{chai2022lagrange}          & 77.4                     & 90.6                    & \underline{93.2} & \underline{90.2} & 84.7             & 80.3             & \underline{85.2} & 87.7             & 89.3             & 86.6             & 71.0             & 85.1             & 6.3             \\
+                                                       & MetaGait \cite{dou2022metagait}               & \underline{80.0}         & \underline{91.8}        & 93.0             & 87.8             & \underline{86.5} & \underline{82.9} & \underline{85.2} & \underline{90.0} & \underline{90.8} & \underline{89.3} & \underline{78.4} & \underline{86.9} & \textbf{4.6}    \\
+            \cline{2-15}                               & \textbf{Ours}                                 & \textbf{82.4}            & \textbf{94.2}           & \textbf{95.0}    & \textbf{91.7}    & \textbf{88.2}    & \textbf{83.3}    & \textbf{88.0}    & \textbf{92.3}    & \textbf{93.1}    & \textbf{91.0}    & \textbf{78.5}    & \textbf{88.9}    & 5.1             \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \label{tab:sota-cb}%
+\end{table*}%
+
+
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=\textwidth]{../utils/arXiv-2307.09856v1/hlb.pdf}
+%     \caption{Quy trình \textbf{HSTL}}
+%     \label{fig:pyramid}
+% \end{figure}
+% \subsubsection{Bàn luận của tác giả}
+
+% \subsubsection{Phân tích của nhóm}
