@@ -75,6 +75,71 @@ class ARME_Conv(nn.Module):
         feat = F.leaky_relu(feat)
         return feat
 
+# Pseudo 3D Convolutional Neural Networks (P3D)
+class P3D_Conv(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False):
+        super(P3D_Conv, self).__init__()
+
+        # kernel_size là 3x3x3.
+
+        # 1. Spatial Conv (1 x 3 x 3)
+        self.spatial_conv = nn.Conv3d(
+            in_channels, out_channels,
+            kernel_size=(1, kernel_size[1], kernel_size[2]),
+            stride=(1, stride[1], stride[2]),
+            padding=(0, padding[1], padding[2]),
+            bias=bias
+        )
+        self.spatial_bn = nn.BatchNorm3d(out_channels)
+
+        # 2. Temporal Conv (3 x 1 x 1)
+        self.temporal_conv = nn.Conv3d(
+            out_channels, out_channels,
+            kernel_size=(kernel_size[0], 1, 1),
+            stride=(stride[0], 1, 1),
+            padding=(padding[0], 0, 0),
+            bias=bias
+        )
+        self.temporal_bn = nn.BatchNorm3d(out_channels)
+
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        # Spatial
+        out = self.spatial_conv(x)
+        out = self.spatial_bn(out)
+        out = self.relu(out)
+
+        # Temporal
+        out = self.temporal_conv(out)
+        out = self.temporal_bn(out)
+
+        return out
+
+class ARME_P3D(nn.Module):
+    def __init__(self, in_channels, out_channels, split_param, m, kernel_size=(3, 3, 3), stride=(1, 1, 1),
+                 padding=(1, 1, 1), bias=False, **kwargs):
+        super(ARME_P3D, self).__init__()
+        self.m = m
+        self.split_param = split_param
+
+        # Thay BasicConv3d bằng P3D_Layer
+        self.conv3d = nn.ModuleList([
+            P3D_Conv(in_channels, out_channels, kernel_size, stride, padding, bias)
+            for i in range(self.m)
+        ])
+
+    def forward(self, x):
+        '''
+            x: [n, c, s, h, w]
+        '''
+        feat = x.split(self.split_param, 3)
+
+        feat = torch.cat([self.conv3d[i](_) for i, _ in enumerate(feat)], 3)
+        feat = F.leaky_relu(feat) # Activation cuối cùng
+        return feat
+
+
 # Generalized Mean Pooling (GeM)
 class GeMHPP(nn.Module):
     def __init__(self, bin_num=[64], p=6.5, eps=1.0e-6):
@@ -144,10 +209,17 @@ class HSTL(BaseModel):
 
         self.astp1 = ASTP(split_param=[64], m=1, in_channels=in_c[0], out_channels=in_c[-1])
 
+        # self.arme2 = nn.Sequential(
+        #     ARME_Conv(in_c[0], in_c[0], split_param=[40, 24], m=2, kernel_size=(
+        #         3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
+        #     ARME_Conv(in_c[0], in_c[1], split_param=[40, 24], m=2, kernel_size=(
+        #         3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+        # )
+
         self.arme2 = nn.Sequential(
-            ARME_Conv(in_c[0], in_c[0], split_param=[40, 24], m=2, kernel_size=(
+            ARME_P3D(in_c[0], in_c[0], split_param=[40, 24], m=2, kernel_size=(
                 3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
-            ARME_Conv(in_c[0], in_c[1], split_param=[40, 24], m=2, kernel_size=(
+            ARME_P3D(in_c[0], in_c[1], split_param=[40, 24], m=2, kernel_size=(
                 3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
         )
 
@@ -157,10 +229,17 @@ class HSTL(BaseModel):
 
         self.astp2_fta = ASTP(split_param=[40, 24], m=2, in_channels=in_c[1], out_channels=in_c[-1])
 
+        # self.arme3 = nn.Sequential(
+        #     ARME_Conv(in_c[1], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
+        #         3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
+        #     ARME_Conv(in_c[2], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
+        #         3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+        # )
+
         self.arme3 = nn.Sequential(
-            ARME_Conv(in_c[1], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
+            ARME_P3D(in_c[1], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
                 3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
-            ARME_Conv(in_c[2], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
+            ARME_P3D(in_c[2], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
                 3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
         )
 
