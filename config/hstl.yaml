@@ -50,16 +50,16 @@ trainer_cfg:
   enable_distributed: false
   enable_float16: true
   # fix_BN: false
-  log_iter: 100
+  log_iter: 250
   with_test: true # CHANGE: disable mid-training tests to save time for session
   optimizer_reset: false # true - continue with latest state
   scheduler_reset: false # true - continue with latest state
   restore_ckpt_strict: true
-  restore_hint: 80000 # keep training with true setup from latest checkpoint - v5
+  restore_hint: 90000 # keep training with true setup from latest checkpoint - final
   save_iter: 5000 # 10000
   save_name: kaggle # HSTL
   sync_BN: false # true - CHANGE: no distributed training
-  total_iter: 90000
+  total_iter: 100000 # follow setup in paper 100K
   sampler:
     batch_shuffle: true
     batch_size: # [P,K] - [8,8] (from the paper) (T4 can handle with FP16)
