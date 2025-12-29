@@ -60,7 +60,7 @@ trainer_cfg:
   scheduler_reset: false # true - continue with latest state
   restore_ckpt_strict: true
   restore_hint: 0 # keep training with true setup from latest checkpoint - v4
-  save_iter: 3000 # 10000
+  save_iter: 2500 # 10000
   save_name: p3d-circleloss # HSTL
   sync_BN: false # true - CHANGE: no distributed training
   total_iter: 100000
