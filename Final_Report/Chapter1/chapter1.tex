@@ -1,0 +1,67 @@
+\chapter{Giới thiệu}
+\label{Chapter1}
+\textcolor{blue}{Mục này được viết dựa trên các bài khảo sát (survey) để giới thiệu tổng quan về chủ đề lớn \textcolor{red}{Nhận dạng dáng đi} được nghiên cứu. Cách tổ chức nội dung bên dưới có thể tham khảo, hoặc chỉnh sửa tùy cho phù hợp ngữ cảnh.}
+\section{Bối cảnh chung}
+
+Với sự phát triển của trí tuệ nhân tạo, các ứng dụng xử lý ảnh ngày càng được cải thiện, đặc biệt trong các tác vụ dịch ảnh sang ảnh như tô màu ảnh độ xám. Nhu cầu phục chế màu cho các bức ảnh trắng đen ngày càng gia tăng, đặc biệt trong các ứng dụng liên quan đến lịch sử và xã hội.
+
+Về mặt thực tiễn, nhu cầu tô màu ảnh độ xám đến từ nhiều lĩnh vực như phục dựng ảnh lịch sử, tô màu ảnh phác họa trong thiết kế. Về mặt nghiên cứu, một số vấn đề trong chủ đề tô màu ảnh độ xám vẫn chưa được giải quyết triệt để, bao gồm phương thức tô màu tự động và bán tự động, vấn đề về dữ liệu huấn luyện, và chi phí tính toán.
+
+\section{Động lực}
+
+Kỳ vọng của nghiên cứu này là tạo ra một mô hình tô màu có thể đáp ứng các ứng dụng như phục hồi ảnh trắng đen lịch sử. Sản phẩm cuối cùng sẽ cho phép người dùng có thể tô màu theo cả hai phương pháp, tô màu tự động hoặc bán tự động dựa trên nhu cầu.
+
+Bài toán tô màu là một bài toán tạo sinh ảnh không đơn trị, tức là từ một ảnh độ xám có thể có nhiều cách tô màu hợp lý khác nhau. Do đó, một mô hình hiệu quả không chỉ cần tái tạo ảnh màu đẹp mắt mà còn cần hiểu được ngữ cảnh và nội dung ngữ nghĩa trong ảnh.
+
+\section{Phát biểu bài toán}
+
+Bài toán tô màu ảnh độ xám là việc \textbf{ước tính các giá trị màu của các điểm ảnh trong một ảnh độ xám}. Hệ thống tô màu một ảnh độ xám sẽ gồm các thành phần:
+
+\begin{itemize}
+    \item \textbf{Đầu vào:} $I_g$ là ma trận đại diện cho \textbf{ảnh độ xám} cần được tô và $c$ là điều kiện điều khiển việc tô màu (nếu có).
+    \item \textbf{Đầu ra:} $I_{rgb}$ là ảnh màu trong không gian RGB do hệ thống trả về.
+\end{itemize}
+
+Phương trình dự đoán ảnh màu có thể viết như sau:
+
+\begin{equation} \label{eqn:general}
+    I_{rgb} = \Phi(I_g).
+\end{equation}
+
+Nếu quá trình tô màu được điều khiển bởi điều kiện $c$, phương trình \ref{eqn:general} có thể được viết lại thành:
+
+\begin{equation} \label{eqn:generalcon}
+    I_{rgb} = \Phi(I_g, c).
+\end{equation}
+
+Với $\Phi(.)$ là hàm số được xây dựng để tạo ra ảnh màu từ ảnh độ xám đầu vào một cách chân thật và phù hợp với điều kiện điều khiển.
+
+\section{Thách thức của bài toán}
+
+Thách thức đầu tiên là vấn đề rất khó để có thể kiểm tra được kết quả của quá trình tô màu bằng phương pháp định lượng. Với một bức ảnh độ xám đầu vào, ta gần như có vô số cách tô màu, và kết quả đó có phù hợp hay không chỉ có thể được đánh giá qua cảm nhận của người sử dụng.
+
+Một thách thức khác là việc nhiều bức ảnh cùng chụp 1 đối tượng nhưng có thể bị ảnh hưởng bởi nhiều yếu tố khác nhau như góc chụp, độ chói, độ sáng. Ngoài ra, chúng ta cũng rất khó có thể xác định màu cho một số đối tượng có màu tùy biến như quần áo, phương tiện đi lại, đồ nội thất.
+
+\section{Đóng góp}
+
+Trong khóa luận này, mục tiêu là xây dựng một mô hình tô màu ảnh độ xám đa phương thức dựa trên mô hình khuếch tán. Đóng góp bao gồm:
+
+\textbf{Về mặt lý thuyết:}
+
+\begin{itemize}
+    \item Xây dựng một phương pháp tô màu ảnh độ xám đa phương thức dựa trên mô hình khuếch tán có kết hợp điều kiện.
+    \item Kết hợp bộ giải mã biến dạng để giải quyết vấn đề tràn màu và tô màu sai.
+    \item Kết hợp mô hình ngôn ngữ ảnh BLIP vào quá trình tạo sinh dữ liệu văn bản.
+\end{itemize}
+
+\textbf{Về mặt thực tiễn:}
+
+\begin{itemize}
+    \item Thu thập, xử lý và cung cấp các tập dữ liệu dùng cho quá trình huấn luyện.
+    \item Tạo ra một mô hình tô màu ảnh độ xám chung cho nhiều miền dữ liệu.
+    \item Cung cấp một giao diện đơn giản, dễ sử dụng và có khả năng tùy chỉnh cao.
+\end{itemize}
+
+\section{Bố cục của khóa luận}
+
+Báo cáo khóa luận bao gồm năm chương: Chương \ref{Chapter1} trình bày bối cảnh, động lực nghiên cứu và phát biểu bài toán; Chương \ref{Chapter2} trình bày các công trình nghiên cứu liên quan; Chương \ref{Chapter3} trình bày chi tiết phương pháp đề xuất; Chương \ref{Chapter4} trình bày kết quả thực nghiệm; Chương \ref{Chapter5} trình bày kết luận và hướng phát triển.

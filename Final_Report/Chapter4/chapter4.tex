@@ -1,0 +1,146 @@
+\chapter{Thực nghiệm}
+\label{Chapter4}
+\textcolor{blue}{Mục này tương đối đơn giản, chỉ cần liệt kê về tập dữ liệu, cài đặt chi tiết cho thực nghiệm, kế hoạch thực nghiệm, kết quả thực nghiệm so với nghiên cứu gốc (baseline).}
+
+Ở mục phân tích kết quả, ngoài việc phân tích về sự cải thiện trên kết quả, cần xem xét các khía cạnh khác như:
+\begin{itemize}
+    \item Thời gian huấn luyện ra mô hình cuối cùng (100K).
+    \item Chi phí của quá trình con (ví dụ, 100 iterations mất bao lâu).
+    \item Sự biến thiên của hàm mất mát, độ chính xác (dựa trên log, vẽ biểu đồ đường thì càng tốt).
+    \item Phải phân tích các khía cạnh mà mô hình đề xuất bị kém đi, nguyên nhân nào gây ra (do cấu hình chưa tối ưu, hay đó là điều không thể tránh khỏi khi dùng kĩ thuật đó, hay do dữ liệu). Đề xuất một số cách khắc phục các hạn chế đó (dành cho phần hướng nghiên cứu tương lai).
+\end{itemize}
+\section{Mục tiêu thực nghiệm}
+
+Nhóm tiến hành huấn luyện để tạo ra 4 mô hình cho các mục tiêu khác nhau. Một mô hình được huấn luyện để tô màu cho các trường hợp tổng quát, 3 mô hình còn lại được huấn luyện trên các tập dữ liệu chuyên biệt.
+
+Sau đó nhóm sử dụng các độ đo FID và Colorfulness để so sánh trong tác vụ tô màu tự động và sử dụng thêm CLIP score để so sánh trong tác vụ tô màu bán tự động.
+
+\section{Chi tiết quá trình huấn luyện}
+
+\subsection{Tập dữ liệu huấn luyện}
+
+Nhóm huấn luyện các mô hình trên 4 tập dữ liệu:
+
+\begin{itemize}
+    \item \textbf{ImageNet100k:} Tập dữ liệu do nhóm tạo ra bằng cách chọn ngẫu nhiên 100 ngàn ảnh từ tập dữ liệu huấn luyện ImageNet \cite{russakovsky2015imagenetlargescalevisual}. Tất cả ảnh được điều chỉnh về kích thước $512 \times 512$.
+
+    \item \textbf{Fashion Product Images:} Tập dữ liệu bao gồm 44,441 ảnh có kích thước chung $1800 \times 2400$.
+
+    \item \textbf{Furniture Image:} bao gồm 15,000 ảnh của 5 loại nội thất riêng biệt.
+
+    \item \textbf{VN-celeb:} Bộ dữ liệu bao gồm 23105 khuôn mặt của 1020 người.
+\end{itemize}
+
+\subsection{Quá trình tiền xử lý dữ liệu}
+
+Quy trình tiền xử lý dữ liệu gồm 3 bước:
+
+\begin{enumerate}
+    \item \textbf{Lọc ảnh độ xám:} Lọc ra các ảnh độ xám, chỉ giữ lại ảnh màu. Ảnh được xem là ảnh độ xám khi:
+
+    \begin{equation}
+        E(Var(C_i,C_j)) = \frac{1}{3}\sum_{(i,j) \in \{(R,G),(G,B),(B,R)\}} Var(C_i - C_j) < t
+    \end{equation}
+
+    Trong đó $t = 12$ là ngưỡng độ xám.
+
+    \item \textbf{Thay đổi độ phân giải:} Tất cả ảnh được điều chỉnh về kích thước $512 \times 512$.
+
+    \item \textbf{Tạo sinh câu mô tả:} Sử dụng mô hình BLIP\cite{blip} để tạo sinh câu mô tả cho ảnh màu.
+\end{enumerate}
+
+Bảng \ref{tab:train-dataset} thể hiện số lượng ảnh của 4 tập dữ liệu sau khi tiền xử lý.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        Tập dữ liệu & ImageNet100k & Fashion Product & Furniture Image & VN-celeb \\
+        \midrule
+        Số lượng ảnh & 97,590 & 38,284 & 13,525 & 22,284 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Thống kê số lượng ảnh theo từng tập huấn luyện sau khi tiền xử lý.}
+    \label{tab:train-dataset}
+\end{table}
+
+\subsection{Kết quả quá trình huấn luyện}
+
+Nhóm trình bày kết quả trực quan của quá trình huấn luyện. Khi sử dụng các lớp tích chập khởi tạo bằng không, ở giai đoạn đầu, các ảnh màu được sinh ra ngẫu nhiên không giống với ảnh độ xám điều kiện. Sau một thời gian học, ở khoảng bước thứ 3100 trở đi, ảnh màu được sinh ra bắt đầu giống với ảnh điều kiện, đây là hiện tượng \textbf{hội tụ đột ngột} được giới thiệu bởi Zhang và các đồng nghiệp \cite{ControlNet}.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{@{} >{\centering\arraybackslash}m{1.5cm} c @{}}
+		\hline
+		\rule{0pt}{1.2ex} & \rule{0pt}{1.2ex} \\[-1.0ex]
+        \multirow{2}{*}{\footnotesize 2650 bước} & \includegraphics[width=0.5\textwidth]{figures/training/samples-002650.png}        \\
+                                   & \includegraphics[width=0.5\textwidth]{figures/training/reconstruction-002650.png} \\ [0.1ex]
+        \hline
+        \rule{0pt}{1.2ex} & \rule{0pt}{1.2ex} \\[-1.0ex]
+        \multirow{2}{*}{\footnotesize \textbf{3200 bước}} & \includegraphics[width=0.5\textwidth]{figures/training/samples-003200.png}        \\
+                                   & \includegraphics[width=0.5\textwidth]{figures/training/reconstruction-003200.png} \\ [0.15ex]
+		\hline
+		\rule{0pt}{1.2ex} & \rule{0pt}{1.2ex} \\[-1.0ex]
+        \multirow{2}{*}{\footnotesize 9300 bước} & \includegraphics[width=0.5\textwidth]{figures/training/samples-009300.png}        \\
+                                   & \includegraphics[width=0.5\textwidth]{figures/training/reconstruction-009300.png} \\ [0.1ex]
+		\hline
+    \end{tabular}
+    \caption{Chất lượng ảnh được tạo sinh trong quá trình huấn luyện. Ở lân cận bước thứ 3200, hiện tượng \textbf{hội tụ đột ngột} xảy ra.}
+    \label{fig:convergence}
+\end{figure}
+
+\section{Thử nghiệm mô hình tô màu tổng quát}
+
+\subsection{Tập dữ liệu thử nghiệm}
+
+Để đánh giá độ hiệu quả của mô hình, nhóm sử dụng 3 tập dữ liệu đánh giá:
+
+\begin{itemize}
+    \item \textbf{Tập val5k:} chứa 5000 ảnh từ bộ dữ liệu đánh giá của ImageNet \cite{russakovsky2015imagenetlargescalevisual}.
+    \item \textbf{Tập ctest:} tập 10000 ảnh được đề xuất bởi Larson và các đồng nghiệp \cite{larsson2017learningrepresentationsautomaticcolorization}.
+    \item \textbf{Tập COCO-Stuff:} với 5000 ảnh từ bộ dữ liệu COCO-Stuff \cite{coco-stuff}.
+\end{itemize}
+
+\subsection{Kết quả thử nghiệm}
+
+Kết quả thực nghiệm đối với các mô hình tô màu tự động được thể hiện trong bảng \ref{tab:uncond-metrics}. Các điểm số được in đậm thể hiện giá trị tốt nhất, các chỉ số được gạch chân thể hiện chỉ số tốt thứ hai.
+
+\begin{table}[ht]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{c |c c | c c | c c}
+            \toprule
+            Tập dữ liệu & \multicolumn{2}{c|}{ImageNet (val5k)} & \multicolumn{2}{c|}{ImageNet (ctest)} & \multicolumn{2}{c}{COCO-Stuff} \\
+            \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+            Độ đo & FID$\downarrow$ & Colorfulness$\uparrow$ & FID$\downarrow$ & Colorfulness$\uparrow$ & FID$\downarrow$ & Colorfulness$\uparrow$ \\
+            \midrule
+            CIC \cite{Zhang_Isola_Efros_2016} & 22.0860 & 37.0313 & 12.7651 & 37.5761 & 33.3418 & 37.6487 \\
+            UGColor \cite{zhang_real-time_2017} & 15.1777 & 27.0966 & 6.5466 & 27.8122 & 21.4010 & 28.4487 \\
+            DeOldify \cite{DeOldify} & 10.5191 & 26.4827 & 4.2143 & 23.1538 & 13.4318 & 28.3779 \\
+            DDColor \cite{kang2023ddcolorphotorealisticimagecolorization} & \textbf{5.5726} & \underline{42.8370} & \textbf{2.6294} & 42.9575 & \textbf{7.2718} & 42.2919 \\
+            \midrule
+            Chúng tôi & 10.4125 & \textbf{44.2871} & 6.8341 & \textbf{44.7854} & 10.4632 & \textbf{45.2589} \\
+            \bottomrule
+        \end{tabular}
+    }
+    \caption{Kết quả so sánh các mô hình tô màu tự động trên các tập dữ liệu đánh giá.}
+    \label{tab:uncond-metrics}
+\end{table}
+
+Kết quả cho thấy, mô hình của nhóm đã vượt qua hầu hết các phương pháp tô màu tiên tiến trước đó trên phương thức tô màu tự động về chỉ số Colorfulness.
+
+\section{Phân tích kết quả}
+
+Hình \ref{fig:results} minh họa một số kết quả tô màu của mô hình đề xuất.
+
+\begin{figure}[htp]
+    \centering
+    \begin{tabular}{ccc}
+        \includegraphics[width=0.3\linewidth]{figures/inputs/ILSVRC2012_val_00000863.JPEG} &
+        \includegraphics[width=0.3\linewidth]{figures/main_rs/ILSVRC2012_val_00000863.png} &
+        \includegraphics[width=0.3\linewidth]{figures/gt/ILSVRC2012_val_00000863.JPEG} \\
+        (a) Ảnh đầu vào & (b) Kết quả tô màu & (c) Ảnh gốc
+    \end{tabular}
+    \caption{Ví dụ kết quả tô màu. (a) Ảnh độ xám đầu vào. (b) Ảnh được tô màu bởi mô hình đề xuất. (c) Ảnh màu gốc để so sánh.}
+    \label{fig:results}
+\end{figure}
