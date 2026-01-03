@@ -1,0 +1,419 @@
+\section{Thực nghiệm}
+
+% 4 slides:
+% - Side 1: Giới thiệu các tập data đc sử dụng
+% - Slide 2: So sánh ReCo với các phương pháp khác (GAR, BM25, UniXcoder, CodeT5+)
+% - Slide 3: Kết quả đánh giá trên các tập dữ liệu
+% - Slide 4: So sánh CSSim với các độ đo khác (BLEU, ROUGE-L, CodeBLEU)
+
+\subsection*{Huấn luyện}
+
+% - tập dữ liệu ImageNet100k dùng để huấn luyện mô hình tổng quát, với mong muốn tô màu trên nhiều miền ảnh nhất có thể.
+% - ba tập dữ liệu còn lại dùng để huấn luyện các mô hình tô màu trên miền ảnh chuyên biệt, bao gồm thời trang, nội thất, và khuôn mặt
+
+\begin{frame}{Tập dữ liệu}
+\begin{itemize}
+    \item \textbf{ImageNet100k}: bao gồm 100K ảnh được chọn ngẫu nhiên từ tập dữ liệu huấn luyện ImageNet.
+    \item \textbf{Fashion Product Images}: bao gồm khoảng 44K ảnh, mỗi ảnh chứa một loại phụ kiện thời trang chính, có thể được chụp với người mẫu hoặc chụp trên nền trắng.
+    \item \textbf{Furniture Image}: bao gồm 15K ảnh của 5 loại nội thất khác nhau (tủ quần áo, ghế, tủ lạnh, bàn, tivi).
+    \item \textbf{VN-celeb}: bao gồm khoảng 23K khuôn mặt của 1.020 người nổi tiếng ở Việt Nam có thế tìm thấy trên mạng, cụ thể là Wikipedia Việt Nam.
+\end{itemize}    
+\end{frame}
+% các tập dữ liệu sẽ được tiền xử lý qua 3 bước:
+% - lọc các ảnh tương đối xám, chỉ giữa lại các ảnh  màu sắc ổn định để huấn luyện
+% - điều chỉnh về cùng 1 độ phân giải
+% - tạo sinh câu mô tả bằng mô hình BLIP để làm điều kiện cho quá trình huấn luyệnluyện
+
+\begin{frame}{Tiền xử lý dữ liệu}
+    \begin{enumerate}
+        \item Lọc ảnh độ xám: loại bỏ các ảnh có màu sắc tương đối xám, chỉ giữ lại các ảnh có màu sắc ổn định cho việc huấn luyện.
+        \[
+          E(Var(C_i,C_j)) = \frac{1}{3}\sum_{(i,j) \in \{(R,G),(G,B),(B,R)\}} Var(C_i - C_j) < t
+        \]
+        \item Thay đổi độ phân giải: về cùng kích thước $512 \times 512$.
+        \item Tạo sinh câu mô tả: sử dụng mô hình BLIP sinh câu mô tả để làm điều kiện trong quá trình huấn luyện.
+    \end{enumerate}
+\vspace{0.3cm}
+Dữ liệu cho việc huấn luyện được tổ chức theo bộ ba tương ứng là: \textbf{ảnh xám, ảnh màu, câu mô tả}.
+\vspace{-3mm}
+\begin{table}[ht]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{c|cccc}
+        \toprule
+        Tập dữ liệu & ImageNet100k & Fashion Product Images & Furniture Image & VN-celeb \\
+        \midrule
+        Số lượng ảnh & 97,590 & 38,284 & 13,525 & 22,284 \\
+        \bottomrule
+    \end{tabular}
+}
+    % \caption{Thống kê số lượng ảnh theo từng tập huấn luyện sau khi tiền xử lý.}
+    % \label{tab:train-dataset}
+\end{table}
+
+\end{frame}
+
+% \begin{frame}{Triển khai}
+%     \begin{itemize}
+%         \item Sử dụng mô hình tiền huấn luyện tạo sinh ảnh Stable Duffusion V1.5.
+%         \item Ảnh đầu vào $512 \times 512$ được nén vào không gian tiềm ẩn với kích thước $64 \times 64$ và được giải mã bằng bộ mã hóa tự động.
+%         \item Sử dụng bộ mã hóa văn bản CLIP ViT-L14 để mã hóa câu mô tả thành vec-tơ có chiều dài 768.
+%         \item Dùng kiến thức U-Net kết hợp với cơ chế chú ý chéo (8 đầu) để kết hợp thông tin văn bản và thời gian.
+%         \item Sử dụng hàm tối ưu Adam với tham số $\beta_1 = 0.9$ và $\beta_2 = 0.999$, tốc độ học là $10^{-5}$.
+%         \item Huấn luyện mô hình chính trên tập ImageNet100k với 10,674 bước trong 2 ngày, với kích thước lô là 8.
+%         \item Các mô hình trong nghiên cứu đều được huấn luyện với RAM 64GB và 1 GPU A100 với 40GB VRAM từ máy chủ do Khoa cung cấp.
+%     \end{itemize}
+% \end{frame}
+
+% \begin{frame}{Kết quả quá trình huấn luyện}
+%     Có nên viết hay không ?
+% \end{frame}
+
+\subsection*{Đánh giá}
+% - Độ đo FID và Colorfulness được dùng để đánh giá tất cả phương thức tô màu của mô hình
+% - Điểm số CLIP được dùng riêng cho đánh giá phương thức tô màu dựa trên câu mô tả
+
+\begin{frame}{Độ đo}
+Có ba độ đo phổ biến trong các nghiên cứu tô màu ảnh độ xám, gồm:
+\begin{itemize}
+    \item \textbf{Độ đo Fréchet Inception Distance (FID)} - kiểm tra độ chân thật của ảnh được tạo ra so với ảnh gốc. Ảnh sinh ra càng giống ảnh gốc thì FID càng thấp.
+    \item \textbf{Độ đo Colorfulness} - đánh giá độ sặc sỡ của ảnh được tô màu. Ảnh càng sặc sỡ thì Colorfulness càng cao.
+    \item \textbf{Điểm số CLIP} - đánh giá độ tương đồng giữa ảnh kết quả với câu mô tả trong không gian tiềm ẩn của CLIP, được dùng cho phương thức tô màu bán tự động.
+    
+    % \[
+    %     \text{CLIP score} = \dfrac{\mathrm{I} \cdot \mathrm{T}}{||\mathrm{I}||\cdot ||\mathrm{T}||}
+    % \]
+    % trong đó, $\mathrm{I} = \epsilon_i(i)$ và $\mathrm{T} = \epsilon_t(t)$, lần lượt là vec-tơ mã hóa của ảnh và văn bản của hai bộ mã hóa tương ứng.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Chiến lược đánh giá}
+    \begin{enumerate}
+        \item So sánh chất lượng với các mô hình SOTA
+        \item So sánh Mô hình tổng quát với các mô hình chuyện biệt
+        % \item Đánh giá sự phụ thuộc của chất lượng ảnh vào các tham số của mô hình
+    \end{enumerate}
+\end{frame}
+
+% \begin{frame}{Tô màu tự động - Tập dữ liệu}
+%     \begin{itemize}
+%         \item val5k: gồm 5K ảnh đầu tiên trong tập đánh giá của ImageNet.
+%         \item ctest: gồm 10K ảnh được lấy ngẫu nhiên của tập đánh giá của ImageNet.
+%         \item COCO-Stuff: gồm 5K ảnh của tập đánh giá của bộ dữ liệu COCO-Stuff.
+%     \end{itemize}
+% \end{frame}
+
+\begin{frame}{Tô màu tự động - Kết quả}
+% So sánh với các mô hình  thuộc 3 nhóm kiến trúc: mạng đối kháng, bộ biến đổi và khuếch tán (GAN, Transformer và Diffusion)
+% Với độ đo Colorfulness, nhóm đạt thứ hạng 2, chỉ thua mô hình Control Color
+% Với độ đo FID, tuy không tốt hơn mô hình DDColor, nhưng nhóm đạt độ hiểu quả ở mức độ trung bình, vẫn tốt hơn phần lớn mô hình còn lại.
+% Điểm chú ý là mô hình đề xuất vẫn đạt độ hiệu quả cao, trong khi chi phí huấn luyện với ít dữ liệu và ít bước hơn nhiều so với các mô hình còn lại.
+    \begin{table}[ht]
+            \centering
+            \resizebox{\textwidth}{!}{
+                \begin{tabular}{c |c c | c c | c c}
+                    \toprule
+                    Tập dữ liệu & \multicolumn{2}{c|}{ImageNet (val5k)} & \multicolumn{2}{c|}{ImageNet (ctest)} & \multicolumn{2}{c}{COCO-Stuff} \\
+                    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+                    Độ đo & FID$\downarrow$ & Colorfulness$\uparrow$ & FID$\downarrow$ & Colorfulness$\uparrow$ & FID$\downarrow$ & Colorfulness$\uparrow$ \\
+                    \midrule
+                    CIC & 22.0860 & 37.0313 & 12.7651 & 37.5761 & 33.3418 & 37.6487 \\
+                    UGColor & 15.1777 & 27.0966 & 6.5466 & 27.8122 & 21.4010 & 28.4487 \\
+                    DeOldify & 10.5191 & 26.4827 & 4.2143 & 23.1538 & 13.4318 & 28.3779 \\
+                    ChromaGAN & 16.4390  & 25.5862 & 9.3487 & 29.0895 & 26.4624 & 29.1411 \\
+                    InstColor & 12.9455 & 27.5710 & 6.7803 & 28.1923 & 12.6844 & 29.2302 \\
+                    ToVivid & \underline{5.8019}  & 37.3376 &\underline{2.6775} & 37.8425 & 8.5452 & 38.8155 \\
+                    BigColor & 7.7677  & 42.5364 & 2.8583 & 44.4135 & 10.0362 & 43.4104 \\
+                    \midrule
+                    DISCO & 10.2895 & 40.9533 & 5.7196 & 37.4613 & 13.3850 & 39.1969 \\
+                    DDColor & \textbf{5.5726} & 42.8370 & \textbf{2.6294} & 42.9575 & \textbf{7.2718} & 42.2919 \\
+                    ColorFormer & 6.3831  & 40.5631 & 2.9816 & 41.2833 & 8.5623 & 41.0248 \\
+                    UniColor & 9.6292  & 36.3415 & 4.9140 & 37.1726 & \underline{8.0509} & 36.7442 \\
+                    \midrule
+                    Control Color & 8.8749 & \textbf{47.1680} & 4.2915 & \textbf{44.9256} & 10.2651 & \textbf{47.0501}\\
+                    \midrule
+                    \textbf{ColorFill-LDM-CNet} & 10.4125 & \underline{44.2871} & 6.8341 & \underline{44.7854} & 10.4632         & \underline{45.2589} \\
+                    \bottomrule
+                \end{tabular}
+            }
+            % \caption{So sánh định lượng khả năng tô màu tự động của các mô hình.}
+            % trên các tập dữ liệu ImageNet (val5k), ImageNet (ctest) và COCO-Stuff. Số liệu được \textbf{in đậm} thể hiện kết quả tốt nhất, số liệu tốt thứ hai được thể hiện bằng cách \underline{gạch chân}.}
+            \label{tab:uncond-metrics}
+        \end{table}
+\end{frame}
+
+\begin{frame}{Tô màu tự động - Kết quả (tt)}
+% - Đây là một số mẫu ảnh được tô màu bởi mô hình đề xuất và một số mô hình khác.
+% - Một số ảnh như chim cánh cụt (ở mô hình Unicolor hoặc BigColor) rất sặc sỡ nhưng không đúng với màu trong tự nhiên
+% - Ở các mô hình ToViVid và DDColor, có độ đo FID cao nhất như theo bảng số liệu trước. Vì chúng hiệu quả ở phía cạnh tô màu chân thật, nên màu sắc của ảnh được tô không phong phú, bị đều màu và có phần hơi nhạt.
+% - Trong khi đó, ảnh được tạo ra từ mô hình của nhóm vừa sặc sỡ, vừa rất chân thật, màu của các đối tượng được tô đúng với thực tế.
+
+   \begin{figure}[htp]
+        	\centering
+        	\begin{tabular}{@{}c@{}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{}}
+        		\includegraphics[width=0.05\linewidth]{Figures/header/anh_goc.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/gt/ILSVRC2012_val_00004780.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/gt/ILSVRC2012_val_00004581.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/gt/ILSVRC2012_val_00003989.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/gt/ILSVRC2012_val_00001859.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/gt/ILSVRC2012_val_00003625.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/gt/ILSVRC2012_val_00002305.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/gt/ILSVRC2012_val_00002437.JPEG} \\ [-3pt]   
+        		
+        		% \includegraphics[width=0.05\linewidth]{Figures/header/anh_dau_vao.png} &
+        		% \includegraphics[width=0.12\linewidth]{Figures/inputs/ILSVRC2012_val_00004780.JPEG} & 
+        		% \includegraphics[width=0.12\linewidth]{Figures/inputs/ILSVRC2012_val_00004581.JPEG} & 
+        		% \includegraphics[width=0.12\linewidth]{Figures/inputs/ILSVRC2012_val_00003989.JPEG} & 
+        		% \includegraphics[width=0.12\linewidth]{Figures/inputs/ILSVRC2012_val_00001859.JPEG} & 
+        		% \includegraphics[width=0.12\linewidth]{Figures/inputs/ILSVRC2012_val_00003625.JPEG} & 
+        		% \includegraphics[width=0.12\linewidth]{Figures/inputs/ILSVRC2012_val_00002305.JPEG} & 
+        		% \includegraphics[width=0.12\linewidth]{Figures/inputs/ILSVRC2012_val_00002437.JPEG} \\ [-3pt]
+        		\includegraphics[width=0.05\linewidth]{Figures/header/unicolor.png} &
+        		\includegraphics[width=0.12\linewidth]{Figures/uni_rs/ILSVRC2012_val_00004780.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/uni_rs/ILSVRC2012_val_00004581.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/uni_rs/ILSVRC2012_val_00003989.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/uni_rs/ILSVRC2012_val_00001859.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/uni_rs/ILSVRC2012_val_00003625.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/uni_rs/ILSVRC2012_val_00002305.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/uni_rs/ILSVRC2012_val_00002437.JPEG} \\ [-3pt]
+        		\includegraphics[width=0.05\linewidth]{Figures/header/bigcolor.png} &
+        		\includegraphics[width=0.12\linewidth]{Figures/big_color_rs/ILSVRC2012_val_00004780_c150.jpg} & \includegraphics[width=0.12\linewidth]{Figures/big_color_rs/ILSVRC2012_val_00004581_c911.jpg} & \includegraphics[width=0.12\linewidth]{Figures/big_color_rs/ILSVRC2012_val_00003989_c872.jpg} & \includegraphics[width=0.12\linewidth]{Figures/big_color_rs/ILSVRC2012_val_00001859_c718.jpg} & \includegraphics[width=0.12\linewidth]{Figures/big_color_rs/ILSVRC2012_val_00003625_c989.jpg} & \includegraphics[width=0.12\linewidth]{Figures/big_color_rs/ILSVRC2012_val_00002305_c310.jpg} & \includegraphics[width=0.12\linewidth]{Figures/big_color_rs/ILSVRC2012_val_00002437_c883.jpg} \\ [-3pt]
+        		\includegraphics[width=0.05\linewidth]{Figures/header/tovid.png} &
+        		\includegraphics[width=0.12\linewidth]{Figures/vivid_rs/ILSVRC2012_val_00004780.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/vivid_rs/ILSVRC2012_val_00004581.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/vivid_rs/ILSVRC2012_val_00003989.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/vivid_rs/ILSVRC2012_val_00001859.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/vivid_rs/ILSVRC2012_val_00003625.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/vivid_rs/ILSVRC2012_val_00002305.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/vivid_rs/ILSVRC2012_val_00002437.png} \\ [-3pt]
+        		\includegraphics[width=0.05\linewidth]{Figures/header/ddcolor.png} &
+        		\includegraphics[width=0.12\linewidth]{Figures/ddcolor_rs/ILSVRC2012_val_00004780.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/ddcolor_rs/ILSVRC2012_val_00004581.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/ddcolor_rs/ILSVRC2012_val_00003989.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/ddcolor_rs/ILSVRC2012_val_00001859.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/ddcolor_rs/ILSVRC2012_val_00003625.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/ddcolor_rs/ILSVRC2012_val_00002305.JPEG} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/ddcolor_rs/ILSVRC2012_val_00002437.JPEG} \\ [-3pt]
+        		\includegraphics[width=0.05\linewidth]{Figures/header/colorfill.png} &
+        		\includegraphics[width=0.12\linewidth]{Figures/main_rs/ILSVRC2012_val_00004780.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/main_rs/ILSVRC2012_val_00004581.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/main_rs/ILSVRC2012_val_00003989.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/main_rs/ILSVRC2012_val_00001859.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/main_rs/ILSVRC2012_val_00003625.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/main_rs/ILSVRC2012_val_00002305.png} & 
+        		\includegraphics[width=0.12\linewidth]{Figures/main_rs/ILSVRC2012_val_00002437.png} \\ [-3pt]      
+        	\end{tabular}
+        	% \caption{Kết quả so sánh trực quan mô hình của nhóm (chúng tôi) với một số mô hình tô màu trước đó trên phương thức tô màu tự động. Ảnh đầu vào được lấy từ tập thử nghiệm ImageNet (val5k).}
+        	\label{fig:sample}
+        
+        \end{figure}
+\end{frame}
+
+\begin{frame}{Tô màu tự động - Kết quả (tt)}
+% Như đã trình bày, mô hình của nhóm kém hơn mô hình Control Color ở độ đo Colorfulness.
+% Tuy nhiên, một số tình huống, ảnh do Control Color tạo ra đúng là sặc sỡ hơn, nhưng nhìn bằng mắt có thể thấy các ảnh đó không tốt bằng ảnh do mô hình đề xuất tạo ra.
+% ở bức ảnh có con chó, thì màu xanh của cỏ bị tràn sang 2 vùng bê tông xung quanh.
+% ở bức ảnh con tàu, thì nước biển lại được tô màu vàng, không đúng với thực tế.
+   \begin{figure}[htp]
+        	\centering
+        	\begin{tabular}{@{}c@{}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{}}
+        		\includegraphics[width=0.1\linewidth]{Figures/header/anh_goc.png} &
+        		\includegraphics[width=0.13\linewidth]{Figures/gt/ILSVRC2012_val_00001400.JPEG} &
+        		\includegraphics[width=0.16\linewidth]{Figures/gt/ILSVRC2012_val_00002503.JPEG} &
+        		\includegraphics[width=0.26\linewidth]{Figures/gt/ILSVRC2012_val_00002748.JPEG} &
+        		\includegraphics[width=0.26\linewidth]{Figures/gt/ILSVRC2012_val_00004780.JPEG} \\ [-3pt]
+
+        		% \includegraphics[width=0.05\linewidth]{Figures/header/anh_dau_vao.png} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/inputs/ILSVRC2012_val_00004780.JPEG} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/inputs/ILSVRC2012_val_00004581.JPEG} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/inputs/ILSVRC2012_val_00003989.JPEG} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/inputs/ILSVRC2012_val_00001859.JPEG} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/inputs/ILSVRC2012_val_00003625.JPEG} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/inputs/ILSVRC2012_val_00002305.JPEG} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/inputs/ILSVRC2012_val_00002437.JPEG} \\ [-3pt]
+        		\includegraphics[width=0.05\linewidth]{Figures/header/controlcolor.png} &
+        		\includegraphics[width=0.13\linewidth]{Figures/ctrlcolor/16181/ILSVRC2012_val_00001400.png} &
+        		\includegraphics[width=0.16\linewidth]{Figures/ctrlcolor/16181/ILSVRC2012_val_00002503.png} &
+        		\includegraphics[width=0.26\linewidth]{Figures/ctrlcolor/16181/ILSVRC2012_val_00002748.png} &
+        		\includegraphics[width=0.26\linewidth]{Figures/ctrlcolor/16181/ILSVRC2012_val_00004780.png} \\ [-3pt]
+
+				\includegraphics[width=0.05\linewidth]{Figures/header/colorfill-2.png} &
+        		\includegraphics[width=0.13\linewidth]{Figures/main_rs/ILSVRC2012_val_00001400.png} &
+        		\includegraphics[width=0.16\linewidth]{Figures/main_rs/ILSVRC2012_val_00002503.png} &
+        		\includegraphics[width=0.26\linewidth]{Figures/main_rs/ILSVRC2012_val_00002748.png} &
+        		\includegraphics[width=0.26\linewidth]{Figures/main_rs/ILSVRC2012_val_00004780.png} & \\ [-3pt]
+
+				% \includegraphics[width=0.03\linewidth]{Figures/header/colorfill-2.png} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/main_rs/ILSVRC2012_val_00004780.png} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/main_rs/ILSVRC2012_val_00004581.png} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/main_rs/ILSVRC2012_val_00003989.png} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/main_rs/ILSVRC2012_val_00001859.png} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/main_rs/ILSVRC2012_val_00003625.png} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/main_rs/ILSVRC2012_val_00002305.png} &
+        		% \includegraphics[width=0.13\linewidth]{Figures/main_rs/ILSVRC2012_val_00002437.png} \\ [-3pt]
+        	\end{tabular}
+        	\caption{Kết quả so sánh trực quan mô hình của nhóm (ColorFill-LDM-CNet) với mô hình Control Color trên phương thức tô màu tự động. Ảnh đầu vào được lấy từ tập thử nghiệm ImageNet (val5k).}
+        	\label{fig:sample}
+
+        \end{figure}
+\end{frame}
+\begin{frame}{Tô màu tự động - Kết quả (tt)}
+% Tuy nhiên, mô hình của nhóm vẫn có một số hạn chế như:
+% Mô hình của nhóm kém khi cố gắng tô màu các đối tượng ở phần background của ảnh (như hình gấu bông hoặc người phụ nữ) hoặc ở ảnh người đàn ông thổi kèn, tuy ảnh sau khi được tô có thể chấp nhận được nhưng màu sắc không đa dạng bằng của Control Color.
+    \begin{figure}[htp]
+        	\centering
+        	\begin{tabular}{@{}c@{}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{}}
+        		\includegraphics[width=0.1\linewidth]{Figures/header/anh_goc.png} &
+        		\includegraphics[width=0.13\linewidth]{Figures/gt/ILSVRC2012_val_00003759.JPEG} &
+				\includegraphics[width=0.23\linewidth]{Figures/gt/ILSVRC2012_val_00004581.JPEG} &
+        		\includegraphics[width=0.26\linewidth]{Figures/gt/ILSVRC2012_val_00001085.JPEG}\\ [-3pt]
+
+        		\includegraphics[width=0.05\linewidth]{Figures/header/controlcolor.png} &
+        		\includegraphics[width=0.13\linewidth]{Figures/ctrlcolor/16181/ILSVRC2012_val_00003759.png} &
+				\includegraphics[width=0.23\linewidth]{Figures/ctrlcolor/16181/ILSVRC2012_val_00004581.png} &
+        		\includegraphics[width=0.26\linewidth]{Figures/ctrlcolor/16181/ILSVRC2012_val_00001085.png}\\ [-3pt]
+
+				\includegraphics[width=0.05\linewidth]{Figures/header/colorfill-2.png} &
+        		\includegraphics[width=0.13\linewidth]{Figures/main_rs/ILSVRC2012_val_00003759.png} &
+				\includegraphics[width=0.23\linewidth]{Figures/main_rs/ILSVRC2012_val_00004581.png} &
+        		\includegraphics[width=0.26\linewidth]{Figures/main_rs/ILSVRC2012_val_00001085.png}\\ [-3pt]
+
+        	\end{tabular}
+        	% \caption{Kết quả so sánh trực quan mô hình của nhóm (ColorFill-LDM-CNet) với mô hình Control Color trên phương thức tô màu tự động. Ảnh đầu vào được lấy từ tập thử nghiệm ImageNet (val5k).}
+        	% \label{fig:sample}
+
+        \end{figure}
+
+\end{frame}
+
+\begin{frame}{Tô màu tự động - Kết quả (tt)}
+% Một điểm kém trong mô hình đề xuất chính là khả năng tô màu các đối tượng nhỏ.
+% Một số đối tượng nhỏ trong ảnh như khung ảnh của người phụ nữ hoặc cái hộp hình tròn ở góc dưới bên phải đều được tô màu chi tiết, trong khi đó mô hình của nhóm lại tô không hoàn chỉnh.
+    \begin{figure}[htp]
+	\centering
+	\begin{tabular}{@{}c@{\hspace{0.1em}}c@{\hspace{0.1em}}c@{}}
+		% Header row
+		% \includegraphics[width=0.05\linewidth]{Figures/header/anh_goc.png} &
+		% \includegraphics[width=0.03\linewidth]{Figures/header/controlcolor.png} &
+		% \includegraphics[width=0.03\linewidth]{Figures/header/colorfill-2.png} \\ [-3pt]
+		Ảnh gốc                                                                                     & Control Color & \textbf{ColorFill} \\
+		% Image row
+		\includegraphics[width=0.3\linewidth]{Figures/gt/ILSVRC2012_val_00003433.JPEG}             &
+		\includegraphics[width=0.3\linewidth]{Figures/ctrlcolor/16181/ILSVRC2012_val_00003433.png} &
+		\includegraphics[width=0.3\linewidth]{Figures/main_rs/ILSVRC2012_val_00003433.png}                                              \\ [-3pt]
+	\end{tabular}
+	% \caption{Kết quả so sánh trực quan mô hình của nhóm (ColorFill-LDM-CNet) với mô hình Control Color trên phương thức tô màu tự động. Ảnh đầu vào được lấy từ tập thử nghiệm ImageNet (val5k).}
+	% \label{fig:sample}
+\end{figure}
+\end{frame}
+
+% \begin{frame}{Tô màu bán tự động - Tập dữ liệu và Độ đo}
+%     Sử dụng tập dữ liệu gồm 2.486 ảnh với câu mô tả chứa tính từ, được trích xuất từ tập COCO-Stuff.
+% \end{frame}
+
+\begin{frame}{Tô màu bán tự động - Kết quả}
+% Trên phương thức tô màu bán tự động, mô hình đề xuất được so sánh với mô hình Unicolor. Trong đó, mô hình đề xuất đạt điểm cao hơn ở độ đo Colorfulness và CLIP Score, cho thấy sự cải thiện về độ sặc sỡ và sự tương thích ngữ nghĩa của ảnh được sinh ra với câu mô tả được cung cấp.
+% Mô hình của nhóm chỉ kém hơn Unicolor một chút ở độ đo FID.
+    \begin{table}[ht]
+        	\centering
+        	\begin{tabular}{c |c c c}
+        		\toprule
+        		Tập dữ liệu & \multicolumn{3}{c}{COCO-Stuff} \\
+        		\cmidrule(lr){2-4}
+        		Độ đo & FID$\downarrow$ & Colorfulness$\uparrow$ & CLIP score$\uparrow$ \\
+        		\midrule
+        		UniColor & \textbf{16.5833} & 42.3788 &  0.2906 \\
+        		\textbf{ColorFill-LDM-CNet} & 17.0299 & \textbf{49.7282} & \textbf{0.3066}  \\
+        		\bottomrule
+        	\end{tabular}
+        	% \caption{So sánh định lượng khả năng tô màu bán tự động dựa trên lời nhắc văn bản trên tập dữ liệu đánh giá COCO-Stuff đã được trích 2.486 ảnh mà câu mô tả có chứa tính từ.}
+            % giữa mô hình tổng quát (chúng tôi) và mô hình tô màu đa phương thức UniColor.
+        	\label{tab:cond-metrics}
+        \end{table} 
+\end{frame}
+\begin{frame}{Tô màu bán tự động - Kết quả (tt)}
+% đây là một số thử nghiệm khi so sánh với UniColor.
+% ở hình ảnh có con ngựa, cả hai mô hình gần như đều tô theo đúng mô tả, tuy nhiên, trong ảnh của mô hình tạo ra, một phần thác nước bị tô sai màu thành bãi cỏ, còn ảnh của mô hình Unicolor thì bảo toàn được thác nước.
+% Ở mẫu bên dưới, Unicolor lại kém hiệu quả khi không chỉ tô màu một biển báo màu đỏ và màu trắng đúng như câu mô tả và còn bị lem màu sang các đối tượng xung quanh. Ngược lại, ảnh do mô hình sinh vừa đúng như mô tả, vừa chân thật hơn.
+    \begin{figure}[htp]
+        	\centering
+        	\begin{tabular}{@{}c@{\hspace{0.2em}}c@{\hspace{0.2em}}c@{\hspace{0.1em}}c@{}}
+
+        		\includegraphics[width=0.2\linewidth]{Figures/prompt/1_L.jpg} & \includegraphics[width=0.2\linewidth]{Figures/prompt/prompt1.png} &  
+        		\includegraphics[width=0.2\linewidth]{Figures/prompt/uni_1_1.png} &  
+        		\includegraphics[width=0.2\linewidth]{Figures/prompt/main_1_1.png} \\ [-3pt]   
+        		
+
+				\includegraphics[width=0.2\linewidth]{Figures/prompt/2_L.jpg} & \includegraphics[width=0.2\linewidth]{Figures/prompt/prompt2.png} &  
+				\includegraphics[width=0.2\linewidth]{Figures/prompt/uni_2_0.png} &    
+				\includegraphics[width=0.2\linewidth]{Figures/prompt/main_2_0.png} \\ [-3pt]   
+				
+				\small Ảnh đầu vào & \small Lời nhắc văn bản & \small UniColor & \small \textbf{ColorFill-LDM-CNet}
+				
+				
+        	\end{tabular}
+        	% \caption{Kết quả so sánh trực quan mô hình của nhóm (chúng tôi) với mô hình tô màu UniColor trên phương thức tô màu dựa trên lời nhắc văn bản. Ảnh đầu vào và lời nhắc văn bản được lấy từ tập thử nghiệm COCO-Stuff được trích xuất.}
+        	\label{fig:sample}
+        \end{figure}
+\end{frame}
+\begin{frame}{So sánh Mô hình tổng quát và các mô hình chuyên biệt}
+% \scriptsize % Reduce font size if needed
+% Về phía cạnh so sánh mô hình tổng quát với các mô hình chuyên biệt
+% nhóm muốn khảo sát 2 vấn đề là:
+% - mức độ phụ thuộc của mô hình vào dữ liệu học
+% - Khi muốn phát triển ứng dụng tô màu trên một miền dữ liệu riêng biệt, thì chúng ta có cần phải cố gắng huấn luyện trên nhiều miền ảnh khác nữa để tăng chất lượng của mô hình không.
+% ở đây nhóm xét trên 3 miền ảnh là khuôn mặt, nội thất và thời trang
+% Nhìn chung thì các mô hình chuyên biệt tốt hơn về độ đo Colorfulness và kém hơn về độ đo FID so với mô hình tổng quát
+% - Lý do mô hình chuyên biệt tốt hơn ở độc đo Colorfulness là, trong một miền ảnh, màu sắc của các đối tượng trong miền ảnh đó được học trên nhiều ảnh hơn với nhiều màu sắc hơn, dẫn đến ảnh sinh ra có độ sặc sỡ cao.
+% - Có thể lý giải cho việc độ đo FID kém rằng tập dữ liệu của các mô hình chuyên biệt đều nhỏ hơn rất nhiều so với tập học của mô hình tổng quát.
+% Kết luận cho so sánh này rằng, độ hiểu quả của mô hình được xuất phụ thuộc rất lớn vào dữ liệu học và khi muốn xây dựng ứng dụng tô màu cho một miền dữ liệu riêng biệt, có thể thể cân nhắc việc chỉ chuẩn bị tập dữ liệu cho một miền đó, nhưng với số lượng ảnh đủ lớn để mô hình có thể sinh ảnh vừa sặc sỡ vừa chân thật.
+\begin{minipage}{0.48\textwidth}
+    \centering
+     \resizebox{\textwidth}{!}{
+     \begin{tabular}{c |c c}
+        \toprule
+        Tập dữ liệu & \multicolumn{2}{c}{LFW} \\
+        \cmidrule(lr){2-3}
+        Độ đo & FID$\downarrow$ & Colorfulness$\uparrow$ \\
+        \midrule
+        Tổng Quát & \textbf{40.9692} & 15.6364 \\
+        Khuôn Mặt & 41.558 & \textbf{27.5432} \\
+        \bottomrule
+    \end{tabular}
+    }
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+     \resizebox{\textwidth}{!}{
+     \begin{tabular}{c |c c}
+        \toprule
+        Tập dữ liệu & \multicolumn{2}{c}{Furniture} \\
+        \cmidrule(lr){2-3}
+        Độ đo & FID$\downarrow$ & Colorfulness$\uparrow$ \\
+        \midrule
+        Tổng Quát & \textbf{3.0013} & 21.8975 \\
+        Nội Thất & 8.9494 & \textbf{44.3698} \\
+        \bottomrule
+    \end{tabular}
+    }
+\end{minipage}
+
+\vspace{1cm}
+
+\centering
+\begin{tabular}{c |c c | c c}
+    \toprule
+    Tập dữ liệu & \multicolumn{2}{c|}{Fashionpedia} & \multicolumn{2}{c}{Clothing}  \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+    Độ đo & FID$\downarrow$ & Colorfulness$\uparrow$ & FID$\downarrow$ & Colorfulness$\uparrow$ \\ 
+    \midrule
+    Tổng Quát &\textbf{12.3768} & 27.528 & 6.7801 & 26.6948 \\
+    Thời Trang & 18.4387 & \textbf{27.575} & \textbf{6.6743} & \textbf{27.8723} \\
+    \bottomrule
+\end{tabular}
+
+\end{frame}
+
+

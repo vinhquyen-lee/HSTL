@@ -1,0 +1,42 @@
+\section{Mô hình đề xuất}
+
+% 2 slides:
+% - Slide 1: Giới thiệu về ControlNet và LDM
+% - Slide 2: Giới thiệu về mô hình huấn luyện và thực thi
+
+\begin{frame}{Kiến trúc ControlNet}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.6\linewidth]{Figures/controlnet_arch.png}
+        % \caption{Kiến trúc mô hình ControlNet}
+    \end{figure}
+
+Kiến trúc ControlNet giúp thêm điều kiện điều khiển không gian vào các mô hình tạo sinh ảnh từ văn bản được huấn luyện sẵn.
+
+\end{frame}
+
+
+\begin{frame}{Mô hình khuếch tán trong không gian tiềm ẩn}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figures/LDM_arch.png}
+     % \caption{Kiến trúc mô hình khuếch tán trong không gian tiềm ẩn}
+\end{figure}
+
+Sử dụng mô hình tiền huấn luyện Stable Diffusion được huấn luyện trên 2 tỉ cặp ảnh và văn bản của tập dữ liệu LAION.
+
+\end{frame}
+
+\begin{frame}{Mô hình đề xuất}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{Figures/main_model.png}
+        % \caption{Kiến trúc mô hình đề xuất}
+    \end{figure}
+
+
+   
+\end{frame}
