@@ -11,7 +11,7 @@ evaluator_cfg:
   enable_distributed: false
   enable_float16: false
   restore_ckpt_strict: true
-  restore_hint: 0
+  restore_hint: 37500
   save_name: p3d-circleloss # HSTL
   sampler:
     batch_size: 1
@@ -23,8 +23,8 @@ loss_cfg:
     # margin: 0.2
     # type: TripletLoss
     # log_prefix: triplet
-    m: 0.25          # margin for gait recognition (from Circle Loss paper)
-    gamma: 128       # scale factor for gait recognition (from Circle Loss paper)
+    m: 0.25 # margin for gait recognition (from Circle Loss paper)
+    gamma: 128 # scale factor for gait recognition (from Circle Loss paper)
     type: CircleLoss
     log_prefix: circle
   - loss_term_weight: 1.0
@@ -59,7 +59,7 @@ trainer_cfg:
   optimizer_reset: false # true - continue with latest state
   scheduler_reset: false # true - continue with latest state
   restore_ckpt_strict: true
-  restore_hint: 0 # keep training with true setup from latest checkpoint - v4
+  restore_hint: 37500 # keep training with true setup from latest checkpoint - v4
   save_iter: 2500 # 10000
   save_name: p3d-circleloss # HSTL
   sync_BN: false # true - CHANGE: no distributed training
@@ -75,7 +75,6 @@ trainer_cfg:
     # sample_method: random_ordered
     sample_type: fixed_ordered
     type: TripletSampler
-
 # # PHẦN QUAN TRỌNG BỊ THIẾU LÚC NÃY
 # transform:
 #   - type: BaseSilCuttingTransform
