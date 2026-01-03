@@ -1,0 +1,30 @@
+\chapter{Kết luận}
+\label{Chapter5}
+
+Tổng kết lại đóng góp của nghiên cứu, các cải tiến, và hạn chế, kèm theo hướng nghiên tương lai (đã đề cập ở phần \textbf{Phân tích kết quả} của \ref{Chapter4}).
+
+\section{Kết luận}
+
+Trong đề tài này, nhóm đã nghiên cứu và phát triển một mô hình tô màu ảnh độ xám dựa trên mô hình khuếch tán. Nguyên lý thêm nhiễu và khử nhiễu của mô hình khuếch tán, kèm thêm khả năng tùy chỉnh các tham số điều khiển giúp cho mô hình có thể tạo sinh đầu ra đa dạng. Mô hình tiền huấn luyện đã học trên số lượng ảnh đủ lớn, nên tri thức về màu sắc của các đối tượng tự nhiên hay nhân tạo gần như đã được kết xuất.
+
+Việc tinh chỉnh mô hình trên các tập dữ liệu chuyên biệt giúp cho các mô hình chuyên biệt tập trung hơn vào một miền dữ liệu cụ thể, tăng cường chất lượng ảnh được tô màu. Mô hình cũng có khả năng hoạt động trong hai chế độ chính: tô màu tự động hoàn toàn, và tô màu có điều kiện tuân theo hướng dẫn bằng lời nhắc văn bản.
+
+Về mặt dữ liệu, nhóm đã thu thập, xử lý và chuẩn bị các tập dữ liệu phục vụ cho huấn luyện các mô hình tô màu chuyên biệt, bao gồm dữ liệu khuôn mặt, nội thất và thời trang.
+
+\section{Bàn luận}
+
+Mô hình tô màu do nhóm đề xuất đã đạt được kết quả khả quan khi tiến hành đánh giá thực nghiệm trên nhiều tập dữ liệu khác nhau. Tuy nhiên, mô hình cũng vẫn còn gặp một số thách thức như:
+
+\begin{itemize}
+	\item Trong những trường hợp mô tả mơ hồ, thiếu ngữ cảnh kết quả vẫn có thể không đúng như mong đợi.
+
+	\item Khả năng hiểu ngôn ngữ phụ thuộc mạnh vào chất lượng bộ mã hóa văn bản.
+
+	\item Khi mô tả văn bản xung đột với đặc trưng hình ảnh, mô hình có thể bị lúng túng giữa việc tin ảnh hay tin văn bản.
+
+	\item Các tập dữ liệu trên các miền chuyên biệt được chuẩn bị chưa quá tốt, dẫn đến kết quả đánh giá của các mô hình chuyên dụng chưa đạt được mong muốn thực tế.
+\end{itemize}
+
+Quá trình thêm điều kiện vào mô hình thông qua các bộ mã hóa đặc trưng và các cơ chế như chú ý chéo góp phần rất quan trọng vào việc cải thiện hiệu suất của mô hình huấn luyện. Nghiên cứu có thể được mở rộng bằng cách thay thế hoặc phát triển các thành phần này để có thể tăng khả năng tô màu của mô hình cũng như tích hợp thêm các điều khiển khác.
+
+Kiến trúc kết hợp điều kiện vào các mô hình khuếch tán cho phép các sự thay đổi linh hoạt trong mô hình. Các hướng nghiên cứu tiếp theo có thể mở rộng sang việc tích hợp thêm các điều kiện không gian khác nhằm tạo ra các mô hình mới trong các lĩnh vực liên quan.

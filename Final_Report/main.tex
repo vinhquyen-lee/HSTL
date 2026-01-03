@@ -1,0 +1,250 @@
+% ===================================================================
+% TEMPLATE BÁO CÁO KHÓA LUẬN TỐT NGHIỆP
+% Trường Đại học Khoa học Tự nhiên - ĐHQG TP.HCM
+% Khoa Công nghệ Thông tin
+% ===================================================================
+%
+% Template này cung cấp cấu trúc và các ví dụ về:
+% - Cách trích dẫn tài liệu tham khảo
+% - Cách chèn hình ảnh với các tùy chỉnh
+% - Cách tạo bảng trong các trường hợp khác nhau
+% - Cách viết công thức toán học và ký hiệu
+% - Cách điều chỉnh khoảng cách dòng và văn bản
+%
+% HƯỚNG DẪN SỬ DỤNG:
+% 1. Đọc file README.md để biết cách sử dụng template
+% 2. Điền thông tin cá nhân vào các biến ở dòng 139-143
+% 3. Thay thế nội dung mẫu trong các chapter bằng nội dung thực tế
+% 4. Build theo thứ tự: BIB > PDF > PDF (hoặc sử dụng LaTeX build chain)
+% ===================================================================
+
+\documentclass[oneside,a4paper,14pt]{extreport}
+
+% Font tiếng Việt
+\usepackage[T5]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[utf8]{vietnam}
+\DeclareTextSymbolDefault{\DH}{T1}
+
+% Tài liệu tham khảo
+%\usepackage[
+%	sorting=nty,
+%	backend=biber,
+%    style=ieee
+%	defernumbers=true]{biblatex}
+\usepackage[style=ieee]{biblatex}
+\usepackage[unicode]{hyperref} % Bookmark tiếng Việt
+\addbibresource{References/references.bib}
+%\bibliographystyle{IEEEtran}
+%\bibliography{IEEEabrv,references}
+\usepackage{nameref} % reference the name
+
+
+\makeatletter
+\def\blx@maxline{77}
+\makeatother
+
+% Chèn hình, các hình trong luận văn được để trong thư mục Images/
+\usepackage{graphicx}
+\graphicspath{ {figures/} }
+
+% Chèn và định dạng mã nguồn
+\usepackage{listings}
+\usepackage{color}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Chèn và định dạng mã giả
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm} % Only include this if you need bold math symbols
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+% Đổi tên các câu lệnh toán học
+\newcommand{\mb}{\mathbf}
+\newcommand{\mc}{\mathcal}
+\newcommand{\ptraj}{q\left( \mb x^{(0\cdots T)} \right)}
+\newcommand{\ptrajtil}{\tilde{q}\left( \mb x^{(0\cdots T)} \right)}
+\newcommand{\qtrajtil}{\tilde{p}\left( \mb x^{(0\cdots T)} \right)}
+\newcommand{\pcondtraj}{q\left( \mb x^{(1\cdots T)} | \mb x^{(0)} \right)}
+\newcommand{\qtraj}{p\left( \mb x^{(0\cdots T)} \right)}
+\newcommand{\ptarget}{\pi\left( \mb x^{(T)} \right)}
+\newcommand{\qmarg}{p\left( \mb x^{(0)} \right)}
+\newcommand{\pmarg}{q\left( \mb x^{(T)} \right)}
+% Bảng biểu
+\usepackage{multirow}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\usepackage{booktabs}
+
+% Vẽ sơ đồ
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, calc, fit, backgrounds,patterns,patterns.meta}
+
+% Đổi tên mặc định
+\renewcommand{\chaptername}{Chương}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\listfigurename}{Danh sách hình}
+\renewcommand{\listtablename}{Danh sách bảng}
+\renewcommand{\appendixname}{Phụ lục}
+
+
+% Kích thước Chapter
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\LARGE\bfseries}
+  {\chaptertitlename\ \thechapter}{18pt}{\huge}
+
+
+% Dãn dòng 1.5
+\usepackage{setspace}
+\onehalfspacing
+
+% Thụt vào đầu dòng
+\usepackage{indentfirst}
+
+% Canh lề
+\usepackage[
+  top=30mm,
+  bottom=25mm,
+  left=30mm,
+  right=20mm,
+  includefoot]{geometry}
+
+% Trang bìa
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\newcommand\HRule{\rule{\textwidth}{1pt}}
+
+% ========================================================================================= %
+% THÔNG TIN CÁ NHÂN - ĐIỀN VÀO ĐÂY                                                         %
+% ========================================================================================= %
+% Lưu ý: Dấu ~ là khoảng trắng không được tách (các chữ nối với nhau bằng dấu ~ sẽ nằm cùng 1 dòng)
+\newcommand{\tenSV}{Phạm~Thái~Huy~-~Nguyễn~Đức~Mạnh~-~Lê~Quang~Vĩnh~Quyền} % Ví dụ: Nguyễn~Văn~A~-~Trần~Thị~B
+\newcommand{\mssv}{21120081~22120204~22120307} % Ví dụ: 21120001~21120002
+\newcommand{\tenKL}{CẢI TIẾN\\NGHIÊN CỨU HỌC BIỂU DIỄN\\KHÔNG GIAN-THỜI GIAN PHÂN CẤP\\CHO BÀI TOÁN NHẬN DẠNG DÁNG ĐI} % Ví dụ: Ứng~dụng~học~sâu~trong~xử~lý~ảnh
+\newcommand{\tenGVHD}{PGS.TS.~Lê~Hoàng~Thái\\ThS.~Dương~Thái~Bảo} % Ví dụ: PGS.TS.~Nguyễn~Văn~X
+\newcommand{\tenBM}{Tên~Bộ~Môn} % Ví dụ: Trí~tuệ~nhân~tạo
+
+\begin{document}
+
+\input{Title/title.tex}
+% Sasu trang Title, các bạn chèn nhận xét gủa GVHD và GVPB. Nhận xét sẽ được giáo vụ phát sau buổi bảo vệ để các bạn đóng quyển.
+
+\cleardoublepage
+
+\pagenumbering{roman} % Đánh số i, ii, iii, ...
+
+
+\phantomsection
+%\addcontentsline{toc}{chapter}{Lời cam đoan}
+%\include{Appendix/reassurances}
+\include{Appendix/commitment}
+
+%\addcontentsline{toc}{chapter}{Thuyết minh chỉnh sửa đề tài}
+%\include{Appendix/edit}
+
+%\addcontentsline{toc}{chapter}{Nhận xét của GV hướng dẫn}
+%\include{Appendix/advisor}
+
+%\addcontentsline{toc}{chapter}{Nhận xét của GV phản biện}
+%\include{Appendix/reviewer}
+
+\addcontentsline{toc}{chapter}{Lời cảm ơn}
+\include{Appendix/thanks}
+
+% \addcontentsline{toc}{chapter}{Đề cương}
+% \include{Appendix/proposal}
+
+% Mục lục, danh sách hình, danh sách bảng
+\addcontentsline{toc}{chapter}{Mục lục}
+
+\tableofcontents
+
+%\listoffigures
+\cleardoublepage
+% \phantomsection
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+
+\cleardoublepage
+% \phantomsection
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+%\listoftables
+
+\addcontentsline{toc}{chapter}{Tóm tắt}
+\include{Appendix/summary}
+
+
+\clearpage
+
+\pagenumbering{arabic} % Đánh số 1, 2, 3, ...
+
+% Các chương nội dung
+\include{Chapter1/chapter1}
+
+\include{Chapter2/chapter2}
+
+\include{Chapter3/chapter3}
+
+\include{Chapter4/chapter4}
+
+\include{Chapter5/chapter5}
+
+% Công trình của tác giả (nếu không có thì comment 02 dòng dưới)
+% \addcontentsline{toc}{chapter}{Danh mục công trình của tác giả}
+% \include{Appendix/publish}
+
+% In tài liệu tham khảo
+\addcontentsline{toc}{chapter}{Tài liệu tham khảo}
+\printbibheading[title={Tài liệu tham khảo}]
+
+
+
+%\printbibliography
+
+\printbibliography[heading=subbibliography, title={Tiếng Việt}, keyword=Viet, resetnumbers=true]
+
+\DeclareNameAlias{sortname}{last-first}
+\DeclareNameAlias{default}{last-first}
+
+\printbibliography[heading=subbibliography, title={Tiếng Anh}, notkeyword=Viet, resetnumbers=1]
+% ===================================================================== %
+% CHÚ Ý: phải gán lại resetnumbers=số tài liệu tham khảo tiếng Việt + 1 %
+% ===================================================================== %
+
+% Phần phụ lục
+\include{Appendix/appendix1}
+% \include{Appendix/appendix2}
+
+\end{document}

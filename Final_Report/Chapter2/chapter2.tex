@@ -1,0 +1,71 @@
+\chapter{Các công trình liên quan}
+\label{Chapter2}
+\textcolor{blue}{Mục này đi sâu hơn vào các nghiên cứu/phương pháp cho chủ đề \textcolor{red}{Nhận dạng dáng đi}. Gợi ý:}
+\begin{itemize}
+    \item \textcolor{blue}{Phần lớn nội dung mục này dựa trên các bài tổng hợp/khảo sát.}
+    \item Liệt kê tất cả các phương pháp đến thời điểm hiện tại \textcolor{red}{2026}. Một số cách trình bày (chắc chắn được dùng trong các bài tổng hợp, nên tham khảo kĩ):
+          \begin{itemize}
+              \item Vẽ lược đồ thời gian công bố của các nghiên cứu.
+              \item Vẽ sơ đồ chia các nghiên cứu theo các nhánh tiếp cận chính.
+          \end{itemize}
+    \item Từng nhánh tiếp cận bài toán sẽ trình bày sâu hơn trong từng mục nhỏ:
+          \begin{itemize}
+              \item  Liệt kê theo trình tự thời gian
+              \item Trình ý tưởng/nguyên lý của từng nghiên cứu được đề cập.
+              \item Kết luận bằng điểm mạnh và hạn chế chung của nhóm các phương pháp.
+          \end{itemize}
+    \item \textcolor{red}{Lưu ý:} Khi trình bày đến nhánh tiếp cận chính (\textcolor{blue}{có chứa nghiên cứu được chọn (HSTL)}), nên trình bày nhiều hơn cả về điểm mạnh (ngầm ý đây là phương pháp được quan tâm) và điểm yếu (ngầm ý đóng góp của nghiên cứu này).
+    \item Đối với các nhánh tiếp cận hoặc nghiên cứu vượt trội nghiên cứu được chọn (\textcolor{blue}{HSTL}) về hiệu năng, hãy nói rõ hạn chế lớn của chúng. Quan trọng hơn hết, hãy trung thực về lý do không lựa chọn đào sâu, ví dụ, chi phí (huấn luyện, lưu trữ dữ liệu) lớn (\textcolor{blue}{gần như là điều hiển nhiên khi chi phí lớn sẽ cho hiệu năng lớn}), \textcolor{blue}{năng lực nghiên cứu hạn chế của nhóm}, \dots
+    \item Để người đọc dễ tiếp cận, nên chèn thêm các hình vẽ minh họa về dữ liệu của từng nhánh tiếp cận.
+    \item \textcolor{red}{Nội dung có sẵn khá lan man, không nên viết theo.}
+\end{itemize}
+
+\section{Sự phát triển của tô màu ảnh độ xám}
+
+Tô màu ảnh độ xám đã trải qua nhiều giai đoạn phát triển, đặc biệt với sự xuất hiện của các công nghệ học sâu. Ban đầu, các phương pháp tô màu chủ yếu dựa vào kỹ thuật thủ công như được đề cập tại bài viết của Ethan \cite{mental_floss_colorization}.
+
+\subsection{Các phương pháp truyền thống}
+
+Trước khi học sâu trở thành xu hướng, các phương pháp tô màu ảnh chủ yếu dựa vào các thuật toán xử lý ảnh truyền thống. Tuy nhiên như được trình bày trong nghiên cứu của Levin và các đồng nghiệp \cite{Levin_Lischinski_Weiss_2004}, những phương pháp này thường gặp nhiều khó khăn trong việc tạo ra màu sắc tự nhiên và chân thực.
+
+\subsection{Sự xuất hiện của mạng nơ-ron tích chập}
+
+Sự phát triển của mạng nơ-ron tích chập đã đánh dấu một bước ngoặt quan trọng. Nghiên cứu của Zhang và các đồng nghiệp \cite{Zhang_Isola_Efros_2016} đã giới thiệu mô hình "Colorful Image Colorization", sử dụng mạng nơ-ron tích chập để tự động dự đoán màu sắc. Nghiên cứu của Iizuka \cite{Iizuka_Simo-Serra_Ishikawa_2016} cũng đã đóng góp với việc phát triển một hệ thống tô màu có khả năng xử lý các bức ảnh với độ phức tạp cao.
+
+\subsection{Mạng đối kháng tạo sinh}
+
+Sự phát triển của các mạng tạo sinh đối kháng đã mở ra những khả năng mới. DeOldify \cite{DeOldify} đã áp dụng mạng này để phục hồi và tô màu cho các bức ảnh lịch sử. BigColor \cite{avidan_bigcolor_2022} và ChromaGAN \cite{vitoria_chromagan_2020} đại diện cho hai hướng tiếp cận bổ sung lẫn nhau trong lĩnh vực này.
+
+\subsection{Kỹ thuật khuếch tán}
+
+Gần đây, kỹ thuật khuếch tán đã được áp dụng vào lĩnh vực tạo sinh ảnh. Các mô hình khuếch tán như DALL-E 2 \cite{Ramesh_Dhariwal_Nichol_Chu_Chen_2022} và Stable Diffusion \cite{LDM_Rombach_Blattmann_Lorenz_Esser_Ommer_2022} đã cho thấy khả năng tạo ra hình ảnh chất lượng cao. Nghiên cứu của Ho và các đồng nghiệp \cite{Ho_Jain_Abbeel_2020} đã chỉ ra rằng mô hình khuếch tán có thể tạo ra các bức ảnh với độ chi tiết và chân thực cao.
+
+Palette \cite{Palette} là một mô hình tiên phong sử dụng kỹ thuật khuếch tán cho các tác vụ dịch ảnh sang ảnh, bao gồm cả tô màu ảnh độ xám. Nghiên cứu này sử dụng kiến trúc U-Net cùng với kỹ thuật tự chú ý để học quá trình loại bỏ nhiễu từ ảnh màu bị nhiễu.
+
+\section{Tô màu bán tự động và tô màu tự động}
+
+Các phương pháp tô màu có thể được phân chia thành hai loại chính: tô màu tự động và tô màu bán tự động.
+
+\subsection{Tô màu tự động}
+
+Tô màu tự động là một quy trình hoàn toàn tự động, trong đó các thuật toán học sâu được sử dụng để chuyển đổi hình ảnh đen trắng thành màu mà không cần sự can thiệp của người dùng. Mô hình của Zhang và các đồng nghiệp \cite{Zhang_Isola_Efros_2016} là một nghiên cứu nổi bật trong lĩnh vực này. Các mô hình dựa trên mạng tạo sinh đối kháng như DeOldify \cite{DeOldify} hay ChromaGAN \cite{vitoria_chromagan_2020} cũng đã được phát triển.
+
+\subsection{Tô màu bán tự động}
+
+Tô màu bán tự động cho phép người dùng can thiệp vào quá trình tô màu thông qua các điều kiện đầu vào khác nhau. Phương pháp này được chia thành ba loại chính:
+
+\textbf{Tô màu dựa trên nét vẽ:} Phương pháp này cho phép người dùng chỉ định màu cho các khu vực cụ thể bằng các nét vẽ. Các mô hình như Icolorit \cite{Yun_Lee_Park_Choo_2022}, UniColor \cite{huang_unicolor_2022} cho phép sử dụng gợi ý nét vẽ trong tô màu.
+
+\textbf{Tô màu dựa trên ảnh mẫu:} Phương pháp này sử dụng một hình ảnh mẫu để điều chỉnh màu sắc cho ảnh độ xám, như trong nghiên cứu của He và các đồng nghiệp \cite{He_Chen_Liao_Sander_Yuan_2018}.
+
+\textbf{Tô màu dựa trên lời nhắc văn bản:} Phương pháp này sử dụng lời nhắc bằng văn bản để hỗ trợ quá trình tô màu. Nghiên cứu của Weng và các đồng nghiệp \cite{lcode_Weng_Wu_Chang_Tang_Li_Shi_2022} đã tách biệt hai thông tin về đối tượng và màu trong câu hướng dẫn.
+
+UniColor \cite{huang_unicolor_2022} là một mô hình đa phương thức đã kết hợp tất cả ba loại điều kiện bằng cách biểu diễn chúng dưới dạng các điểm gợi ý.
+
+\section{Mô hình khuếch tán trong không gian tiềm ẩn}
+
+Mô hình khuếch tán trong không gian tiềm ẩn được nghiên cứu bởi Rombach và các đồng nghiệp \cite{LDM_Rombach_Blattmann_Lorenz_Esser_Ommer_2022} là một cải tiến của các mô hình khuếch tán truyền thống, trong đó quá trình khuếch tán được thực hiện trong không gian tiềm ẩn thay vì không gian điểm ảnh thông thường. Bằng cách này, mô hình có thể giảm thiểu chi phí tính toán và tăng cường khả năng sinh ảnh.
+
+\section{Kết hợp điều kiện không gian}
+
+ControlNet \cite{ControlNet} là một phương pháp tiên tiến cho phép tích hợp các điều kiện vào trong quá trình sinh ảnh của các mô hình tạo sinh ảnh dựa trên văn bản lớn. Phương pháp này cho phép người dùng cung cấp các đầu vào bổ sung, như các bản đồ ngữ nghĩa, ảnh biên cạnh, để kiểm soát quá trình sinh ảnh một cách ổn định hơn. ControlNet \cite{ControlNet} hoạt động bằng cách thêm một mạng con vào cấu trúc của mô hình tạo sinh gốc.

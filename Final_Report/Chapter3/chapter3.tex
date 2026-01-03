@@ -1,0 +1,129 @@
+\chapter{Phương pháp đề xuất}
+\label{Chapter3}
+\textcolor{blue}{Mục này có cách viết đơn giản nhất là sẽ trình bày lại gần như đầy đủ các nội dung của phương pháp được chọn, nhưng những phần hạn chế sẽ được thay thế bằng các cản tiến do nhóm đề xuất. Cụ thể:}
+\begin{itemize}
+	\item Vẽ lại sơ đồ phương pháp đề xuất với các thành phần cải tiến được đề xuất.
+	\item Đối với cải tiến khối \textbf{Conv3D}, báo cáo này không trình bày lại, mà trình bày thẳng về khối \textbf{Pseudo 3D}. Bên cạnh đó, bổ sung các so sánh lý thuyết giữa kỹ thuật đề xuất so với kĩ thuật gốc ( khác biệt về nguyên lý, độ phức tạp thuật toán, chi phí huấn luyện, tổng tham số của mô hình lớn,\dots)
+	\item Tương tự với \textbf{Circle Loss}.
+	\item \textcolor{red}{Tất cả các hình vẽ về các kỹ thuật hay phương pháp đề xuất, phải được chèn vào.}
+	\item \textcolor{red}{Nội dung có sẵn khá lan man, không nên viết theo.}
+\end{itemize}
+\section{Tổng quan về mô hình}
+
+Hình \ref{fig:main_model} thể hiện quy trình huấn luyện tổng quát của mô hình, quy trình này bao gồm 2 giai đoạn:
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=1\linewidth]{figures/main_model.png}
+	\caption{Tổng quan về mô hình tô màu ảnh độ xám dựa trên mô hình tổng hợp ảnh có điều kiện sử dụng quy trình khuếch tán.}
+	\label{fig:main_model}
+\end{figure}
+
+\begin{itemize}
+	\item \textbf{Giai đoạn 1:} Thiết lập tín hiệu điều khiển thông qua câu hướng dẫn và ảnh độ xám đầu vào. Mô hình sử dụng bộ mã hóa văn bản $\mathcal{E}_p$ của CLIP \cite{Radford_CLIP_2021} để mã hóa các lời nhắc văn bản được tạo ra bởi mô hình BLIP \cite{blip}. Mô hình tích hợp một mạng mã hóa điều kiện $\mathcal{E}_c$ để trích xuất đặc trưng từ ảnh điều kiện trước khi đưa vào ControlNet \cite{ControlNet}.
+
+	\item \textbf{Giai đoạn 2:} Quá trình khuếch tán có kết hợp điều kiện không gian. Ảnh màu mục tiêu được mã hóa vào không gian tiềm ẩn bằng bộ mã hóa $\mathcal{E}$ và được thêm các nhiễu Gauss qua $T$ bước, sau đó được đưa vào cả 2 khối ControlNet \cite{ControlNet} và Stable Diffusion \cite{LDM_Rombach_Blattmann_Lorenz_Esser_Ommer_2022} cho quá trình khử nhiễu có điều kiện.
+\end{itemize}
+
+\section{Thiết lập tín hiệu điều khiển}
+
+\subsection{Bộ mã hóa văn bản của CLIP}
+
+CLIP là một mô hình ngôn ngữ - thị giác được nghiên cứu bởi Radford và các đồng nghiệp \cite{Radford_CLIP_2021}, được huấn luyện trên hàng triệu cặp dữ liệu hình ảnh và văn bản. Ý tưởng chính của CLIP \cite{Radford_CLIP_2021} là biểu diễn cả hai thành phần văn bản và hình ảnh vào cùng một không gian vec-tơ. Như được minh họa tại hình \ref{fig:clip_arch}, mô hình CLIP \cite{Radford_CLIP_2021} được xây dựng bao gồm 2 thành phần chính: một bộ mã hóa văn bản và một bộ mã hóa hình ảnh.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/architecture/CLIP_arch.png}
+	\caption{Kiến trúc của mô hình CLIP.}
+	\label{fig:clip_arch}
+\end{figure}
+
+Với tác vụ tô màu ảnh độ xám có hướng dẫn văn bản, mô hình sử dụng bộ mã hóa văn bản của CLIP \cite{Radford_CLIP_2021} để mã hóa các lời nhắc văn bản thành các vec-tơ, sau đó đưa vào mô hình thông qua cơ chế chú ý chéo.
+
+\subsection{Bộ mã hóa điều kiện}
+
+Để mã hóa điều kiện kiểm soát không gian vào không gian tiềm ẩn, mô hình sử dụng một mạng tích chập nhỏ được huấn luyện chung với quá trình đào tạo mô hình chính. Cấu trúc của mạng mã hóa điều kiện $\mathcal{E}_c$ được thể hiện trong hình \ref{fig:c_encoder}.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=0.75\linewidth]{figures/architecture/cond_encoder_arch.png}
+	\caption{Cấu trúc mạng mã hóa điều kiện $\mathcal{E}_c$.}
+	\label{fig:c_encoder}
+\end{figure}
+
+\subsection{Mô hình BLIP}
+
+BLIP \cite{blip} là một mô hình ngôn ngữ - ảnh tiền huấn luyện đa nhiệm. BLIP giải quyết hai hạn chế lớn với hai đề xuất:
+
+\begin{itemize}
+	\item Hỗn hợp các cặp bao gồm bộ mã hóa và giải mã đa phương thức (MED): một kiến trúc có khả năng hỗ trợ quá trình tiền huấn luyện đa nhiệm.
+
+	\item Chú thích và lọc: một kỹ thuật tạo dữ liệu mới nhằm tăng cường khả năng học từ các cặp dữ liệu hình ảnh - văn bản nhiễu.
+\end{itemize}
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/blip/med.pdf}
+	\caption{Kiến trúc của hỗn hợp các cặp bộ mã hóa-giải mã đa phương thức MED.}
+	\label{fig:med}
+\end{figure}
+
+Trong mô hình, nhóm sử dụng mô hình BLIP \cite{blip} để tạo câu mô tả cho ảnh đầu vào, dùng như lời nhắc văn bản cho bộ mã hóa văn bản của CLIP \cite{Radford_CLIP_2021}.
+
+\section{Mô hình tạo sinh ảnh có kết hợp điều kiện không gian}
+
+Mô hình được đề xuất dựa trên mô hình khuếch tán có kết hợp điều kiện được phát triển qua các giai đoạn:
+
+\begin{itemize}
+	\item Sự ra đời và phát triển của mô hình khuếch tán trong lĩnh vực tạo sinh ảnh.
+	\item Quá trình điều chỉnh nhằm giảm độ phức tạp tính toán bằng cách đưa các tài nguyên huấn luyện vào không gian tiềm ẩn \cite{LDM_Rombach_Blattmann_Lorenz_Esser_Ommer_2022}.
+	\item ControlNet \cite{ControlNet} ra đời để kết hợp các điều kiện kiểm soát không gian vào các mô hình khuếch tán đã được huấn luyện sẵn.
+\end{itemize}
+
+\subsection{Mô hình khuếch tán}
+
+Mô hình khuếch tán là một lớp mô hình sinh dữ liệu, được thiết kế để mô phỏng các phân phối dữ liệu phức tạp thông qua việc đảo ngược quá trình khuếch tán. Lấy cảm hứng từ vật lý thống kê phi cân bằng \cite{theorical_framework_of_dm}, các mô hình này định nghĩa quá trình sinh dữ liệu như một chuỗi khử nhiễu dần dần.
+
+Quá trình khuếch tán tiến được định nghĩa như sau:
+
+\begin{equation}
+	q(\mb{x}_t | \mb{x}_{t-1}) = \mathcal{N}(\mb{x}_t; \sqrt{1-\beta_t}\mb{x}_{t-1}, \beta_t \mb{I})
+\end{equation}
+
+Trong đó $\beta_t$ là lịch trình nhiễu tại bước $t$. Mô hình được huấn luyện để dự đoán nhiễu $\boldsymbol{\epsilon}$:
+
+\begin{equation}
+	\mathcal{L} = \mathbb{E}_{t,\mb{x}_0,\boldsymbol{\epsilon}} \left[ \| \boldsymbol{\epsilon} - \boldsymbol{\epsilon}_\theta(\mb{x}_t, t) \|^2 \right]
+\end{equation}
+
+\subsection{Mô hình khuếch tán trong không gian tiềm ẩn}
+
+Mô hình khuếch tán trong không gian tiềm ẩn \cite{LDM_Rombach_Blattmann_Lorenz_Esser_Ommer_2022} thực hiện quá trình khuếch tán trong không gian tiềm ẩn thay vì không gian điểm ảnh. Quá trình này bao gồm:
+
+\begin{enumerate}
+	\item Mã hóa ảnh gốc $\mb{x}$ vào không gian tiềm ẩn: $\mb{z} = \mathcal{E}(\mb{x})$
+	\item Thực hiện khuếch tán trong không gian tiềm ẩn
+	\item Giải mã từ không gian tiềm ẩn: $\mb{x} = \mathcal{D}(\mb{z})$
+\end{enumerate}
+
+Hình \ref{fig:ldm_arch} minh họa kiến trúc của mô hình LDM.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/architecture/LDM_arch.png}
+	\caption{Kiến trúc của mô hình khuếch tán trong không gian tiềm ẩn (LDM).}
+	\label{fig:ldm_arch}
+\end{figure}
+
+\subsection{ControlNet}
+
+ControlNet \cite{ControlNet} cho phép tích hợp các điều kiện không gian vào các mô hình khuếch tán đã được tiền huấn luyện. Kiến trúc của ControlNet được minh họa trong hình \ref{fig:controlnet_arch}.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=0.85\linewidth]{figures/architecture/controlnet_arch.png}
+	\caption{Kiến trúc của ControlNet.}
+	\label{fig:controlnet_arch}
+\end{figure}
+
+ControlNet hoạt động bằng cách tạo một bản sao có thể huấn luyện của các khối encoder và middle block của U-Net, trong khi giữ nguyên các tham số của mô hình gốc. Các lớp tích chập khởi tạo bằng không đảm bảo rằng ở giai đoạn đầu của quá trình huấn luyện, ControlNet không ảnh hưởng đến mô hình gốc.
