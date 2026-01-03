@@ -1,0 +1,41 @@
+\section{Các công trình nghiên cứu liên quan}
+
+% 2 slide:
+% - Slide 1: Biểu đồ thể hiện so sánh một số mô hình
+% - Slide 2: Chi tiết từng bước bằng chữ, gồm: Tạo sinh mã mẫu từ truy vấn, viết lại mã nguồn trong database, truy vấn
+
+\begin{frame}{Một số mô hình tô màu trước đó}
+
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{p{1.4cm}|p{1.5cm}|p{3cm}|p{3cm}|p{3cm}}
+        \toprule
+        Mô hình & Kiến trúc & Phương pháp & Ưu điểm & Hạn chế\\
+        \midrule
+        UniColor & Bộ biến đổi & \small Chuyển các điều kiện đa dạng thành điểm màu gợi ý và tô màu thông qua bộ chuyển đổi & \small Hỗ trợ đa điều kiện; Cho phép chỉnh sửa lại nhiều lần; Kết quả điều khiển khá tốt & \small Phức tạp trong triển khai; Cần xử lý trước mỗi điều kiện riêng biệt \\
+        
+        BigColor & Mạng đối kháng tạo sinh & \small Học cách tạo sinh màu bằng GAN dựa trên cấu trúc không gian sẵn có của ảnh xám đầu vào & \small Có thể sinh ra nhiều kết quả tô màu khác nhau; Hỗ trợ độ phân giải ảnh kết quả linh hoạt & \small Kém hiệu quả với các ảnh phức tạp hoặc chi tiết nhỏ; Không hỗ trợ tương tác trực tiếp \\
+        
+        Palette & Khuếch tán & \small Học một mô hình khuếch tán được huấn luyện bằng điều kiện ảnh độ xám & \small Tổng quát, hiệu năng cao; Kết quả vượt GAN trong nhiều thí nghiệm & \small Chậm do sinh mẫu qua nhiều bước; Không hỗ trợ điều kiện; Tốn nhiều tài nguyên \\
+        \bottomrule
+    \end{tabular}
+    }
+    \label{tab:my_label}
+\end{table}
+
+\end{frame}
+
+
+\begin{frame}{Ý tưởng từ mô hình ControlColor}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{Figures/ControlColor.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \textbf{Khuyết điểm:} Mô hình quá phức tạp cũng như yêu cầu quá nhiều tài nguyên cho quá trình huấn luyện và thực thi để đạt được kết quả tốt.
+\end{frame}
+
+
+
+

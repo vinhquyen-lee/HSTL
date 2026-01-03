@@ -1,0 +1,166 @@
+\documentclass{beamer}
+
+% Language and Encoding
+\usepackage[utf8]{inputenc}
+\usepackage[utf8]{vietnam}
+\uselanguage{vietnamese}
+\languagepath{vietnamese}
+% \usepackage[vietnamese]{babel}
+
+% Beamer Theme and Color Customization
+\mode<presentation> {
+    \usetheme{CambridgeUS}
+    \usecolortheme{rose} % tím
+    \setbeamercolor{frametitle}{fg=black}
+    \definecolor{CambridgeUSRed}{RGB}{163, 31, 52} % Define CambridgeUS theme red color
+    \setbeamercolor{block title}{bg=CambridgeUSRed!90, fg=white} % Block title background red, text white
+    \setbeamercolor{block body}{bg=CambridgeUSRed!8, fg=black} % Block body background light red, text black
+}
+
+% Packages for Formatting and Features
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{media9}
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Table formatting
+\usepackage{amsmath}
+% \usepackage{subfig}
+%\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usepackage{animate}
+\usepackage{mathtools}
+\usepackage{extarrows}
+\usepackage{systeme}
+\usepackage{commath}
+\usepackage{tasks}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{lipsum}
+\usepackage{pifont}
+\usepackage{float}
+\usepackage{adjustbox}
+% \usepackage{enumitem}
+
+% TikZ Libraries
+\usetikzlibrary{shapes.geometric, arrows}
+
+% Custom Translations
+\makeatletter
+\deftranslation[to=vietnamese]{Example}{Ví dụ}
+\deftranslation[to=vietnamese]{Theorem}{Định lý}
+\deftranslation[to=vietnamese]{Definition}{Định nghĩa}
+\makeatother
+
+% Beamer Templates
+\setbeamertemplate{caption}[numbered] % Đánh số hình
+\setbeamertemplate{theorems}[numbered]
+
+% Math Operators
+\DeclareMathOperator*{\argmin}{\arg\min}
+\DeclareMathOperator*{\argmax}{\arg\max}
+
+% Custom Matrix Formatting
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+% Theorem Definitions
+\newtheorem{remark}[theorem]{Nhận xét}
+\newtheorem{tinhchat}[theorem]{Tính chất}
+
+% Table of Contents at Each Subsection
+\AtBeginSubsection[]{
+    \frame<beamer>{
+        \frametitle{Contents}
+        \tableofcontents[currentsection, currentsubsection]
+    }
+}
+
+% Ending Slide
+% \AtEndDocument{
+%     \begin{frame}
+%         \centering
+%         \Large{Chúng em xin cảm ơn Quý Thầy, Cô và các bạn đã lắng nghe phần trình bày.}
+%     \end{frame}
+% }
+
+%--------------------------------------------------------
+%	TITLE PAGE
+%--------------------------------------------------------
+\begin{document}
+
+\setbeamerfont{institute}{size=\large}
+\title[Khóa luận tốt nghiệp]{TÔ MÀU ẢNH ĐỘ XÁM \\ DỰA TRÊN MÔ HÌNH KHUẾCH TÁN}
+
+\author[KL-2025-TTNT010]{Phạm Thái Huy - MSSV: 21120081 \\
+Tiêu Ân Tuấn - MSSV: 21120161 \\ }
+
+\institute[CNTT]{\textbf{Giảng viên hướng dẫn:}\\ PGS.TS. Lý Quốc Ngọc và ThS. Đỗ Thị Thanh Hà}
+
+\date[\today]{TP. Hồ Chí Minh, \today}
+
+\addtobeamertemplate{title page}{
+  \vspace*{0.2cm}
+  \begin{center}
+    TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN, ĐHQG-HCM\\[0.5em]
+    KHOA CÔNG NGHỆ THÔNG TIN
+  \end{center}
+}{}
+
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{Mục Lục}
+    \tableofcontents[part=1, hideallsubsections]
+    \tableofcontents[part=2, hideallsubsections]
+    \tableofcontents[part=3, hideallsubsections]
+    \tableofcontents[part=4, hideallsubsections]
+    \tableofcontents[part=5, hideallsubsections]
+    \tableofcontents[part=6, hideallsubsections]
+    % \tableofcontents[part=7, hideallsubsections]
+\end{frame}
+
+%-------------------------------------------------------
+%	PRESENTATION SLIDES
+%-------------------------------------------------------
+
+%=======================================================
+\part{Introduction}
+\tableofcontents[part=1]
+\include{Sections/sec1}
+% ======================================= %
+\part{Method}
+\tableofcontents[part=2]
+\include{Sections/sec2}
+%----------------------------------------
+\part{Similarity metrics}
+\tableofcontents[part=3]
+\include{Sections/sec3}
+%----------------------------------------
+\part{Experiment and Evaluation}
+\tableofcontents[part=4]
+\include{Sections/sec4}
+%----------------------------------------
+\part{Demo}
+\tableofcontents[part=5]
+\include{Sections/sec5}
+----------------------------------------
+\part{Conclusion and Future Work}
+\tableofcontents[part=6]
+\include{Sections/sec6}
+%  %
+%----------------------------------------
+% \part{Appendix}
+% \tableofcontents[part=7]
+% \include{Sections/appendix}
+
+\end{document}
