@@ -4,3 +4,9 @@
 **/__pycache__
 /logs
 /utils
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.toc
+midterm_report/proposal.pdf
