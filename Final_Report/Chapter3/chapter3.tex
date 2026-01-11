@@ -25,50 +25,61 @@ Hình \ref{fig:main_model} thể hiện quy trình huấn luyện tổng quát c
 	\item \textbf{Giai đoạn 2:} Quá trình khuếch tán có kết hợp điều kiện không gian. Ảnh màu mục tiêu được mã hóa vào không gian tiềm ẩn bằng bộ mã hóa $\mathcal{E}$ và được thêm các nhiễu Gauss qua $T$ bước, sau đó được đưa vào cả 2 khối ControlNet \cite{ControlNet} và Stable Diffusion \cite{LDM_Rombach_Blattmann_Lorenz_Esser_Ommer_2022} cho quá trình khử nhiễu có điều kiện.
 \end{itemize}
 
-\section{Thiết lập tín hiệu điều khiển}
+\section{Thay thế kỹ thuật ARME thành P3D\cite{qiu2017learningspatiotemporalrepresentationpseudo3d}}
 
-\subsection{Bộ mã hóa văn bản của CLIP}
+\subsection{Nguyên lý}
 
-CLIP là một mô hình ngôn ngữ - thị giác được nghiên cứu bởi Radford và các đồng nghiệp \cite{Radford_CLIP_2021}, được huấn luyện trên hàng triệu cặp dữ liệu hình ảnh và văn bản. Ý tưởng chính của CLIP \cite{Radford_CLIP_2021} là biểu diễn cả hai thành phần văn bản và hình ảnh vào cùng một không gian vec-tơ. Như được minh họa tại hình \ref{fig:clip_arch}, mô hình CLIP \cite{Radford_CLIP_2021} được xây dựng bao gồm 2 thành phần chính: một bộ mã hóa văn bản và một bộ mã hóa hình ảnh.
+Xét một thao tác tích chập trên một vùng cơ thể thứ $j$ tại cấp độ $l$. Giả sử đầu vào là tensor $X \in \mathbb{R}^{C_{in} \times T \times H \times W}$.
+Bộ lọc có kích thước không gian $k \times k$  và thời gian $d$.
 
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=0.8\linewidth]{figures/architecture/CLIP_arch.png}
-	\caption{Kiến trúc của mô hình CLIP.}
-	\label{fig:clip_arch}
-\end{figure}
-
-Với tác vụ tô màu ảnh độ xám có hướng dẫn văn bản, mô hình sử dụng bộ mã hóa văn bản của CLIP \cite{Radford_CLIP_2021} để mã hóa các lời nhắc văn bản thành các vec-tơ, sau đó đưa vào mô hình thông qua cơ chế chú ý chéo.
-
-\subsection{Bộ mã hóa điều kiện}
-
-Để mã hóa điều kiện kiểm soát không gian vào không gian tiềm ẩn, mô hình sử dụng một mạng tích chập nhỏ được huấn luyện chung với quá trình đào tạo mô hình chính. Cấu trúc của mạng mã hóa điều kiện $\mathcal{E}_c$ được thể hiện trong hình \ref{fig:c_encoder}.
-
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=0.75\linewidth]{figures/architecture/cond_encoder_arch.png}
-	\caption{Cấu trúc mạng mã hóa điều kiện $\mathcal{E}_c$.}
-	\label{fig:c_encoder}
-\end{figure}
-
-\subsection{Mô hình BLIP}
-
-BLIP \cite{blip} là một mô hình ngôn ngữ - ảnh tiền huấn luyện đa nhiệm. BLIP giải quyết hai hạn chế lớn với hai đề xuất:
-
+P3D tách một nhân 3D kích thước $d \times k \times k$ thành hai nhân riêng biệt: một nhân không gian ($1 \times k \times k$) và một nhân thời gian ($d \times 1 \times 1$).
+Theo cơ chế như sau:
 \begin{itemize}
-	\item Hỗn hợp các cặp bao gồm bộ mã hóa và giải mã đa phương thức (MED): một kiến trúc có khả năng hỗ trợ quá trình tiền huấn luyện đa nhiệm.
-
-	\item Chú thích và lọc: một kỹ thuật tạo dữ liệu mới nhằm tăng cường khả năng học từ các cặp dữ liệu hình ảnh - văn bản nhiễu.
+    \item Nhân không gian ($S$): Sử dụng bộ lọc kích thước $1 \times k \times k$, tương đương với mạng nơ-ron tích chập 2D để học các đặc trưng hình ảnh.
+    \item Nhân thời gian ($T$): Sử dụng các bộ lọc $d \times 1 \times 1$ để xây dựng các kết nối thời gian giữa các bản đồ đặc trưng liền kề.
 \end{itemize}
 
+Ta thực hiện tuần tự, thay vì tính toán trực tiếp như trong ARME:
+$$Y_{Spatial} = S(X_j) = W_{S} \ast X_j \quad (\text{Nhân } 1 \times k \times k)$$
+$$Y_{j} = T(Y_{Spatial}) = W_{T} \ast Y_{Spatial} \quad (\text{Nhân } d \times 1 \times 1)$$
+
+Trong đó $W_{S} \in \mathbb{R}^{C_{out} \times C_{in} \times 1 \times k \times k}$ và $W_{T} \in \mathbb{R}^{C_{out} \times C_{out} \times d \times 1 \times 1}$.\\
+Trong nghiên cứu này, chúng tôi áp dụng cấu trúc của P3D-A. Cụ thể là thành phần thời gian (T) đi trực tiếp sau thành phần không gian (S) trên cùng một đường dẫn. Đầu ra của không gian là đầu vào của thời gian.
+
+$$x_{t+1} = (I + T \cdot S) \cdot x_t = x_t + T(S(x_t))$$
+
 \begin{figure}[htp]
-	\centering
-	\includegraphics[width=\textwidth]{figures/blip/med.pdf}
-	\caption{Kiến trúc của hỗn hợp các cặp bộ mã hóa-giải mã đa phương thức MED.}
-	\label{fig:med}
+    \centering
+    \includegraphics[width=0.3\linewidth]{figures/architecture/p3d_a.jpg}
+    \caption{Kiến trúc của khối P3D-A: Các bộ lọc không gian (S) và thời gian (T) được sắp xếp nối tiếp.}
+    \label{fig:p3d_a}
 \end{figure}
 
-Trong mô hình, nhóm sử dụng mô hình BLIP \cite{blip} để tạo câu mô tả cho ảnh đầu vào, dùng như lời nhắc văn bản cho bộ mã hóa văn bản của CLIP \cite{Radford_CLIP_2021}.
+
+\subsection{Độ phức tạp tính toán}
+
+Ở mô-đun ARME trong HSTL, các đặc trưng chuyển động được trích xuất thông qua các bộ lọc tích chập 3D với kích thước $3 \times 3 \times 3$. Điều này đòi hỏi số lượng phép tính dấu phẩy động lớn do phải xử lý đồng thời thông tin không gian và thời gian. 
+Trong khi đó, P3D cải tiến giải quyết vấn đề này bằng cách phân rã phép tích chập 3D thành hai thao tác tuần tự: tích chập không gian 2D ($1 \times k \times k$) và tích chập thời gian 1D ($d \times 1 \times 1$). 
+Về mặt lý thuyết, tỷ lệ giảm thiểu khối lượng tính toán $R_{comp}$ được ước lượng như sau:
+$$R_{comp} = \frac{\text{Chi phí}_{3D}}{\text{Chi phí}_{P3D}} \approx \frac{d \cdot k \cdot k}{(1 \cdot k \cdot k) + (d \cdot 1 \cdot 1)} = \frac{3 \cdot 3 \cdot 3}{9 + 3} = \frac{27}{12} \approx 2.25$$
+Như vậy cho thấy P3D đã giúp giảm độ phức tạp tính toán khoảng 2.25 lần so với kỹ thuật ARME đã dùng trước đó, giúp tăng tốc độ suy luận của hệ thống.
+
+\subsection{Tổng tham số của mô hình}
+
+Một trong những thách thức lớn nhất của kiến trúc HSTL là sự gia tăng số lượng tham số do đặc thù sử dụng các bộ lọc tích chập độc lập cho từng vùng cơ thể. Do đó, việc tối ưu hóa cấu trúc nhân tại mô-đun này sẽ mang lại hiệu quả giảm tải trực tiếp cho toàn bộ mô hình. 
+
+Đối với mô-đun ARME, việc sử dụng tích chập 3D thuần túy đồng nghĩa với việc mỗi nhân phải học một khối trọng số kích thước $3 \times 3 \times 3$, tương đương với 27 tham số cho mỗi kênh đặc trưng trên mỗi vùng cơ thể. Khi số lượng vùng cơ thể $K$ tăng lên để trích xuất đặc trưng chi tiết hơn, tổng lượng tham số của mô hình sẽ vô cùng lớn, dẫn đến nguy cơ quá khớp cao và kích thước tệp lưu trữ lớn.
+
+Ngược lại, kiến trúc P3D đề xuất tiếp cận vấn đề bằng cách phân rã nhân 3D thành hai thành phần trực giao: một bộ lọc không gian kích thước $1 \times 3 \times 3$ và một bộ lọc thời gian kích thước $3 \times 1 \times 1$. Tổng số tham số cần thiết cho cấu trúc tách biệt này chỉ là $9 + 3 = 12$ tham số.
+
+Như vậy, ta có thể thấy kiến trúc đề xuất giúp loại bỏ khoảng 55.6\% lượng tham số dư thừa tại các lớp tích chập ($(27 - 12) / 27$). Sự tinh giản này giúp HSTL trở nên gọn nhẹ hơn đáng kể, đồng thời đóng buộc mô hình phải học các đặc trưng cốt lõi hiệu quả hơn thay vì ghi nhớ nhiễu từ dữ liệu huấn luyện.
+
+
+\subsection{Chi phí huấn luyện}
+
+Mặc dù P3D tách biệt các thành phần không gian và thời gian, việc tích hợp các kết nối tắt trong khối P3D giúp quá trình lan truyền ngược đạo hàm diễn ra hiệu quả hơn so với mạng tích chập 3D thuần túy. Nhờ đó, mô hình đạt được khả năng hội tụ ổn định hơn, ngay cả khi độ sâu của mạng được gia tăng.
+
+Nhờ số lượng tham số được giảm đáng kể, mô hình đề xuất tiêu thụ ít bộ nhớ đồ họa hơn trong quá trình lan truyền ngược. Điều này cho phép sử dụng kích thước lô huấn luyện lớn hơn trên cùng một cấu hình phần cứng. Trong các bài toán học đo lường, chẳng hạn như nhận dạng dáng đi, việc sử dụng kích thước lô lớn đóng vai trò then chốt, giúp mô hình học được các mẫu khó hiệu quả hơn, từ đó gián tiếp cải thiện độ chính xác.
 
 \section{Mô hình tạo sinh ảnh có kết hợp điều kiện không gian}
 
