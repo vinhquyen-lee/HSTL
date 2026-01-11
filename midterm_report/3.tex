@@ -1,0 +1,134 @@
+
+\newpage
+
+\subsection{Hướng nghiên cứu và thực nghiệm}
+
+% Hướng nghiên cứu: Dựa trên phân tích về hạn chế tiềm ẩn, nhóm đều xuất các giải pháp thay thế, tái thực nghiệm, so sánh với phương pháp gốc, phân tích và bàn luận.
+
+\subsubsection{Thay thế kỹ thuật ARME thành P3D}
+\textbf{Cơ sơ sở lý thuyết}
+
+Xét một thao tác tích chập trên một vùng cơ thể thứ $j$ tại cấp độ $l$. Giả sử đầu vào là tensor $X \in \mathbb{R}^{C_{in} \times T \times H \times W}$.
+Bộ lọc có kích thước không gian $k \times k$  và thời gian $d$.
+
+Đối với kĩ thuật ARME, thì ARME sử dụng tích chập 3D tiêu chuẩn để trích xuất đặc trưng không gian và thời gian đồng thời.
+Cụ thể là dùng một kernel 3D kích thước $d \times k \times k$ trượt trên cả ba chiều (thời gian, chiều cao, chiều rộng).\\
+Với mỗi vùng $j$, đầu ra $Y_j$ được tính bằng:$$Y_j = f_j(X_j) = W_{3D} \ast X_j + b$$Trong đó $W_{3D} \in \mathbb{R}^{C_{out} \times C_{in} \times d \times k \times k}$.
+
+
+
+Đối với kĩ thuật P3D, P3D tách một kernel 3D kích thước $d \times k \times k$ thành hai kernel riêng biệt: một kernel không gian ($1 \times k \times k$) và một kernel thời gian ($d \times 1 \times 1$).
+Theo cơ chế như sau:
+\begin{itemize}
+    \item Kernel không gian ($S$): Sử dụng bộ lọc kích thước $1 \times k \times k$, tương đương với 2D CNN để học các đặc trưng hình ảnh.
+    \item Kernel thời gian ($T$): Sử dụng các bộ lọc $d \times 1 \times 1$ để xây dựng các kết nối thời gian giữa các bản đồ đặc trưng liền kề.
+\end{itemize}
+
+Thay vì tính trực tiếp, ta thực hiện tuần tự:
+$$Y_{Spatial} = S(X_j) = W_{S} \ast X_j \quad (\text{kernel } 1 \times k \times k)$$
+$$Y_{j} = T(Y_{Spatial}) = W_{T} \ast Y_{Spatial} \quad (\text{kernel } d \times 1 \times 1)$$
+
+Trong đó $W_{S} \in \mathbb{R}^{C_{out} \times C_{in} \times 1 \times k \times k}$ và $W_{T} \in \mathbb{R}^{C_{out} \times C_{out} \times d \times 1 \times 1}$.\\
+Trong nghiên cứu này, tôi áp dụng cấu trúc Residual của P3D-A. Cụ thể là thành phần thời gian (T) đi trực tiếp sau thành phần không gian (S) trên cùng một đường dẫn. Đầu ra của không gian là đầu vào của thời gian.
+
+$$x_{t+1} = (I + T \cdot S) \cdot x_t = x_t + T(S(x_t))$$
+
+\begin{figure}[h]
+    \centering
+
+    \includegraphics[width=0.3\linewidth]{images/p3d_a.jpg}
+
+    \caption{Kiến trúc của khối P3D-A: Các bộ lọc không gian (S) và thời gian (T) được sắp xếp nối tiếp.}
+
+    \label{fig:p3d_a}
+\end{figure}
+
+\textbf{Ưu nhược điểm và độ phức tạp tính toán}
+
+Về mặt tính toán, module ARME trong HSTL sử dụng tích chập 3D tiêu chuẩn ($3 \times 3 \times 3$) nên tốn kém tài nguyên với số lượng tham số tỷ lệ thuận với $3 \times 3 \times 3$ = 27. Trong khi đó, kỹ thuật P3D tách kernel này thành hai phần riêng biệt:
+không gian ($1 \times 3 \times 3$) và thời gian ($3 \times 1 \times 1$), giúp giảm số lượng tham số xuống chỉ còn tỷ lệ với $1 \times 3 \times 3$ + $3 \times 1 \times 1$ = 12. Như vậy, việc chuyển sang P3D giúp giảm khối lượng tính toán và tham số khoảng 2.25 lần. Sự tối ưu này
+cực kỳ quan trọng đối với kiến trúc chia vùng của HSTL, cho phép bạn xây dựng mô hình sâu hơn hoặc xử lý dữ liệu lớn hơn mà không bị quá tải bộ nhớ.
+
+Mặc dù P3D đã giảm đáng kể số lượng tham số và chi phí tính toán, tuy nhiên việc tách biệt không gian và thời gian có thể làm giảm khả năng học các mối tương quan chặt chẽ tức thời giữa hai miền này so với ARME.
+
+\textbf{Mức độ cải thiện kỳ vọng}
+
+Việc thay thế ARME bằng P3D được kỳ vọng sẽ mang lại các lợi ích sau:
+\begin{itemize}
+    \item Giảm đáng kể chi phí tính toán và bộ nhớ, cho phép mô hình xử lý các chuỗi video dài hơn hoặc nhiều vùng cơ thể hơn mà không bị quá tải.
+    \item Vì P3D sẽ có khả năng khái quát hóa cực tốt trên nhiều tác vụ video và bộ dữ liệu khác nhau như Sports-1M, UCF101. Khi đưa vào HSTL, nó có thể giúp mô hình hoạt động ổn định hơn trên các tập dữ liệu ngoài thực tế.
+    \item Trong nhận diện dáng người, việc sử dụng tích chập P3D trong tập CASIA-B hy vọng sẽ cải thiện độ chính xác như trong DeepGaitV2-P3D đã cải thiện độ chính xác tới 9.1\% so với phiên bản 2D thuần túy trên một số bộ dữ liệu.
+
+\end{itemize}
+
+
+% Lưu ý:
+% \begin{itemize}
+%     \item Phân tích chi tiết giữa kĩ thuật gốc và kĩ thuật đề xuất (ưu nhược điểm, độ phức tạp, biểu thức toán, mức độ cải thiện kỳ vọng đóng góp vào hiệu suất của toàn mô hình).
+%     \item \textcolor{red}{Không chèn mã nguồn vào báo cáo}.
+% \end{itemize}
+% \begin{table}[H]
+%     \centering
+%     \begin{tabular}{|l|l|}
+%         \hline
+%         \textbf{Hướng đề xuất}                               & \textbf{Người phụ trách} \\ \hline
+%         Thay \textbf{Conv3D} bằng \textbf{P3D}               & Mạnh, Quyền              \\ \hline
+%         Thay \textbf{Triplet Loss} bằng \textbf{Circle Loss} & Huy                      \\ \hline
+%     \end{tabular}
+% \end{table}
+
+
+\subsubsection{Thay thế Triplet Loss thành Circle Loss}
+
+\paragraph{1. Cơ Sở Lý Thuyết}
+
+\subparagraph{A. Batch-Hard Triplet Loss (HSTL Hiện Tại)}
+
+HSTL sử dụng đặc trưng dáng đi \(x \in \mathbb{R}^d\) được chuẩn hóa Batch (không chuẩn hóa L2). Mục tiêu: giảm khoảng cách Euclidean \(d(a, p)\) giữa mỏ neo \(a\) và dương \(p\), tăng \(d(a, n)\) với âm \(n\).
+
+Công thức:
+\[
+\mathcal{L}_{tri} = \sum_{(a,p,n) \in \mathcal{T}} \left[ d(a, p) - d(a, n) + m \right]_+
+\]
+Với \(d(x, y) = ||x - y||_2\), \(m = 0.2\).
+
+Hạn chế:
+1. Tối ưu hóa lười biếng: Gradient bằng 0 khi biên thỏa mãn, không siết chặt cụm.
+2. Không gian không ràng buộc: Có thể phóng đại độ lớn đặc trưng thay vì học góc phân biệt.
+
+\subparagraph{B. Circle Loss Đề Xuất}
+
+Chuẩn hóa L2 nghiêm ngặt: \(x \leftarrow \frac{x}{||x||_2}\). Sử dụng độ tương tự \(s_p = \cos(a, p)\), \(s_n = \cos(a, n)\).
+
+Công thức:
+\[
+\mathcal{L}_{circle} = \log \left( 1 + \sum_{n \in \mathcal{N}} \sum_{p \in \mathcal{P}} \exp \left( \gamma (\alpha_n s_n - \alpha_p s_p) \right) \right)
+\]
+Với \(\alpha_p = [O_p - s_p]_+\), \(\alpha_n = [s_n - O_n]_+\), \(O_p = 1 + m\), \(O_n = -m\).
+
+Lý do "Circle": Biên quyết định hình tròn trong không gian \((s_n, s_p)\), cho phép tối ưu hóa tham lam.
+
+\hrule
+
+\paragraph{2. Ưu/Nhược Điểm Và Độ Phức Tạp}
+
+\subparagraph{Ưu Điểm}
+1. Tối ưu hóa tham lam: Không vùng chết, đẩy \(s_p \to 1\), \(s_n \to 0\) liên tục.
+2. Thống nhất học cấp lớp và cặp đôi: Tăng tổng quát hóa trên góc nhìn mới.
+3. Gradient thích ứng: Tăng trọng số cho mẫu khó.
+
+\subparagraph{Nhược Điểm}
+1. Bùng nổ gradient: Cần cân bằng (loss_weight: 0.05).
+2. Nhạy cảm siêu tham số: Tương tác $\gamma$ và \(m\).
+3. Mất thông tin độ lớn vector: Có thể ảnh hưởng độ tin cậy.
+
+\subparagraph{Độ Phức Tạp}
+- Huấn luyện: Hơi cao hơn do exp/log, nhưng không đáng kể.
+- Suy luận: Giống hệt, dùng cosine similarity.
+
+\hrule
+
+\paragraph{3. Cải Thiện Dự Kiến}
+1. Hội tụ nhanh: 76.3\% Rank-1 (NM) tại iter 1000, nhờ tổ chức nhúng sớm.
+2. Chính xác cao hơn trên CL/BG: +1-3\%, do phạt phương sai nội lớp liên tục.
+3. Cấu trúc hình học tốt: Nhúng trên siêu cầu, hiệu quả cho truy vấn lớn.
