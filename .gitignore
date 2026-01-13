@@ -4,6 +4,14 @@
 **/__pycache__
 /logs
 /utils
+<<<<<<< HEAD
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.toc
+midterm_report/proposal.pdf
+=======
 **/*.aux
 **/*.bbl
 **/*.blg
@@ -18,3 +26,4 @@
 **/*.nav
 **/*.sn
 **/*.snm
+>>>>>>> bed1c766999445f308b6093c91041a1c4bd9dc87
