@@ -4,15 +4,29 @@
 % - Slide 1: Giới thiệu về ControlNet và LDM
 % - Slide 2: Giới thiệu về mô hình huấn luyện và thực thi
 
-\begin{frame}{Kiến trúc ControlNet}
+\begin{frame}{Mô-đun Pseudo 3D (P3D)}
 
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.6\linewidth]{Figures/controlnet_arch.png}
-        % \caption{Kiến trúc mô hình ControlNet}
-    \end{figure}
+    \begin{columns}[c] 
+        
+        \begin{column}{0.55\textwidth}
+            Phân rã nhân tích chập 3D ($d \times k \times k$) thành 2 thành phần nối tiếp:
+            \begin{itemize}
+                \item Nhân không gian (S): $(1 \times k \times k)$
+                \item Nhân thời gian (T): $(d \times 1 \times 1)$ 
+            \end{itemize}
+            Thực hiện tuần tự, không đồng thời.
+        \end{column}
+        
+        \begin{column}{0.3\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{Figures/p3d_a.jpg}
+        \end{column}
+        
+    \end{columns}
 
-Kiến trúc ControlNet giúp thêm điều kiện điều khiển không gian vào các mô hình tạo sinh ảnh từ văn bản được huấn luyện sẵn.
+    \vspace{0.2cm}
+    
+    Mô-đun P3D đã giúp giảm độ phức tạp tính toán khoảng 2.25 lần so với kỹ thuật ARME đã dùng trước đó, giúp tăng tốc độ suy luận của hệ thống.
 
 \end{frame}
 

@@ -29,58 +29,102 @@
 \begin{frame}{Giới thiệu bài toán}
 \begin{figure}
     \centering
-     \includegraphics[width=0.7\linewidth]{Figures/mother-during-the-great-depression-1963.jpg}
+     \includegraphics[width=0.7\linewidth]{Figures/gait_recognition.png}
 \end{figure}
-Tô màu ảnh độ xám là quá trình dự đoán các giá trị màu cho một ảnh độ xám, sao cho ảnh kết quả phù hợp nhất với nhu cầu sử dụng.
+Nhận dạng dáng đi là bài toán truy xuất người dựa trên chuỗi chuyển động khi đi bộ, nhằm xác định danh tính bằng cách so khớp chuỗi hình ảnh dáng đi đầu vào với các mẫu đã biết trong cơ sở dữ liệu.
 
 \end{frame}
 
 \begin{frame}{Bối cảnh và động lực nghiên cứu}
 \begin{figure}
     \centering
-     \includegraphics[width=0.75\linewidth]{Figures/boicanh.png}
+     \includegraphics[width=1\linewidth]{Figures/boicanh.png}
 \end{figure}
-Phục hồi ảnh lịch sử, ảnh chân dung, ảnh trắng đen lúc trước,...
+
+\begin{itemize}
+    \item Nguồn dữ liệu dồi dào.
+    \item Các phương pháp sinh trắc học truyền thống không phù hợp cho giám sát từ xa và bắt buộc phải yêu cầu tương tác trực tiếp với thiết bị.
+\end{itemize}
+
 \end{frame}
+
 
 \begin{frame}{Bối cảnh và động lực nghiên cứu}
 \begin{figure}
     \centering
-     \includegraphics[width=0.5\linewidth]{Figures/boicanh2.png}
+     \includegraphics[width=0.75\linewidth]{Figures/dongluc.png}
 \end{figure}
-Thay đổi màu của các đối tượng như đồ nội thất, trang phục, trang sức,...
+
+\begin{itemize}
+    \item Nhận dạng dáng đi cho phép nhận dạng ở khoảng cách xa, ngay cả khi quay lưng hoặc che mặt.
+    \item Dáng đi khó ngụy trang và có thể thu thập dữ liệu thụ động, phù hợp cho các hệ thống giám sát thực tế.
+\end{itemize}
 \end{frame}
+
+% \begin{frame}{Phát biểu bài toán}
+%     \begin{table}
+%         \centering
+%         \begin{tabular}{ccc}
+%            \includegraphics[width=0.35\linewidth]{Figures/Input.png}  & \includegraphics[width=0.1\linewidth]{Figures/rightarrow.png} &  \includegraphics[width=0.35\linewidth]{Figures/Output.png} \\
+%            Ảnh xám ($I_g$) và điều kiện (c) & & Ảnh được tô màu ($I_{rgb}$)
+%         \end{tabular}
+%         \label{tab:my_label}
+%     \end{table}
+%     Vì đây là bài toán không đơn trị nên ta có thể mô hình hóa quá trình tô màu như một bài toán sinh mẫu từ một phân phối xác suất có điều kiện:
+%     \begin{equation*}
+%              I_{rgb} \sim P(I_{rgb}|I_g,c),
+%     \end{equation*}
+%     với c là điều kiện điều khiển quá trình tô màu (nếu có).
+% \end{frame}
 
 \begin{frame}{Phát biểu bài toán}
-    \begin{table}
-        \centering
-        \begin{tabular}{ccc}
-           \includegraphics[width=0.35\linewidth]{Figures/Picture1.png}  & \includegraphics[width=0.1\linewidth]{Figures/rightarrow.png} &  \includegraphics[width=0.35\linewidth]{Figures/2305_result.png} \\
-           Ảnh xám ($I_g$) và điều kiện (c) & & Ảnh được tô màu ($I_{rgb}$)
-        \end{tabular}
-        \label{tab:my_label}
-    \end{table}
-    Vì đây là bài toán không đơn trị nên ta có thể mô hình hóa quá trình tô màu như một bài toán sinh mẫu từ một phân phối xác suất có điều kiện:
+    \begin{columns}[c] 
+        
+        \begin{column}{0.45\textwidth}
+            \centering
+            \includegraphics[height=3cm]{Figures/Input.png} 
+            \\ \vspace{0.2cm}
+            \footnotesize Chuỗi ảnh hình bóng biểu diễn chuyển động dáng đi ($S_P$)
+        \end{column}
+        
+        \begin{column}{0.1\textwidth}
+            \centering
+            \includegraphics[width=1\linewidth]{Figures/rightarrow.png}
+        \end{column}
+        
+        \begin{column}{0.45\textwidth}
+            \centering
+            \includegraphics[height=3cm]{Figures/Output.png} 
+            \\ \vspace{0.2cm}
+            \footnotesize Danh tính của đối tượng hoặc điểm số tương đồng cao nhất.
+        \end{column}
+        
+    \end{columns}
+
+    \vspace{0.5cm} 
+    
+    Quá trình nhận dạng được thực hiện bằng cách so khớp chuỗi thăm dò ($S_P$) với các chuỗi mẫu trong thư viện ($S_G$) để đánh giá độ tương đồng.
+
     \begin{equation*}
-             I_{rgb} \sim P(I_{rgb}|I_g,c),
+         Sim(S_P, S_G) = Median(\max Corr(S_P, S_G))
     \end{equation*}
-    với c là điều kiện điều khiển quá trình tô màu (nếu có).
+
 \end{frame}
+
 
 \begin{frame}{Các thách thức của bài toán}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\linewidth]{Figures/hanche.png}
+    \includegraphics[width=1\linewidth]{Figures/thachthuc.png}
     \label{fig:enter-label}
 \end{figure}
 
 \begin{itemize}
-    \item Đây là bài toán không đơn trị.
-
-    \item Dễ gặp các lỗi lem màu, tô màu sai.
-
-    \item Yêu cầu tương tác, tốn nhiều thời gian công sức.
+    \item Thay đổi góc nhìn.
+    \item Trang phục, mang vác, tốc độ đi.
+    \item Thay đổi địa hình, thời gian dài giữa các lần thu thập.
+    \item Vấn đề quyền riêng tư và chi phí tính toán
 \end{itemize}
     
 \end{frame}
