@@ -4,6 +4,29 @@
 % - Slide 1: Biểu đồ thể hiện so sánh một số mô hình
 % - Slide 2: Chi tiết từng bước bằng chữ, gồm: Tạo sinh mã mẫu từ truy vấn, viết lại mã nguồn trong database, truy vấn
 
+\begin{frame}{Các công trình nghiên cứu liên quan (2020 - 2021)}
+
+\begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{p{1.6cm}|p{1.8cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}}
+        \toprule
+        \textbf{Mô hình} & \textbf{Kiến trúc} & \textbf{Phương pháp} & \textbf{Ưu điểm} & \textbf{Hạn chế}\\
+        \midrule
+        GaitPart \newline (CVPR20) & CNN + FConv & \small Sử dụng \textit{Focal Convolution} chia đặc trưng thành các phần ngang để nắm bắt chi tiết cục bộ & \small Hiệu quả trích xuất chi tiết bộ phận; Đạt kết quả cao trên dữ liệu phòng thí nghiệm (CASIA-B) & \small Cửa sổ FConv nhạy cảm với nhiễu; Hiệu quả kém trên dữ liệu thực tế (Gait3D) do lỗi phân đoạn \\
+        \midrule
+        GaitGL \newline (CVPR21) & 3D CNN & \small Kết hợp hai nhánh song song: Toàn cục (Global) và Cục bộ (Local) để tổng hợp thông tin & \small Đạt kết quả rất cao trên các chuẩn đánh giá trong nhà (CASIA-B, OU-MVLP) & \small Nhánh cục bộ phức tạp nhưng không hiệu quả với nhiễu môi trường thực tế (Gait3D) \\
+        \midrule
+        GaitGraph \newline (ICIP21) & GCN (Đồ thị) & \small Dùng đồ thị khung xương 2D (khớp là nút, xương là cạnh) để học mô hình chuyển động & \small Mô hình gọn nhẹ; Lý thuyết kháng lại sự thay đổi trang phục tốt hơn ảnh bóng & \small Độ chính xác thấp hơn nhiều so với phương pháp ảnh bóng do thiếu thông tin hình dáng cơ thể \\
+        \midrule
+        SMPL \newline (ACCV20) & HMR (Lưới 3D) & \small Tinh chỉnh mạng khôi phục lưới người để trích xuất đặc trưng từ mô hình 3D SMPL & \small Tận dụng được các kiến thức tiên nghiệm về cấu trúc 3D của cơ thể người & \small Khó ước tính chính xác từ 1 camera; Vector đặc trưng quá thưa để định danh \\
+        \bottomrule
+    \end{tabular}
+    }
+    \label{tab:gait_comparison}
+\end{table}
+
+\end{frame}
 
 \begin{frame}{Một số phương pháp nhận dạng dáng đi từ năm 2022-2023}
     \begin{table}

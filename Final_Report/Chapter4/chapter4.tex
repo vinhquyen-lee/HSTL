@@ -30,12 +30,12 @@ Tập dữ liệu bao gồm các video ghi lại dáng đi của \textbf{124 ch�
 Tuân theo giao thức chuẩn được sử dụng trong các nghiên cứu trước đây, dữ liệu được phân chia như sau:
 
 \begin{enumerate}
-    \item \textbf{Phân chia Train/Test:} 
+    \item \textbf{Phân chia Train/Test:}
     \begin{itemize}
         \item \textbf{Tập huấn luyện (Training Set):} Bao gồm 74 chủ thể đầu tiên.
         \item \textbf{Tập kiểm tra (Testing Set):} Bao gồm 50 chủ thể còn lại.
     \end{itemize}
-    
+
     \item \textbf{Thiết lập Gallery và Probe trong quá trình kiểm thử:}
     \begin{itemize}
         \item \textbf{Tập tham chiếu (Gallery Set):} Sử dụng 4 chuỗi đầu tiên của điều kiện đi bình thường (NM \#01 -- \#04).
@@ -52,7 +52,7 @@ Hiệu năng của mô hình được đánh giá dựa trên độ chính xác 
 Dữ liệu đầu vào là các chuỗi ảnh dáng đi đã được căn chỉnh.
 \begin{itemize}
     \item \textbf{Kích thước ảnh:} Mỗi khung hình được cắt và thay đổi kích thước về $64 \times 44$ pixel.
-    \item \textbf{Lấy mẫu (Sampling):} 
+    \item \textbf{Lấy mẫu (Sampling):}
     \begin{itemize}
         \item Trong quá trình \textit{huấn luyện}, 30 khung hình được lấy mẫu ngẫu nhiên từ mỗi chuỗi video để đảm bảo tính đa dạng.
         \item Trong quá trình \textit{kiểm thử}, toàn bộ các khung hình của chuỗi video được đưa vào mô hình để trích xuất đặc trưng.
@@ -78,7 +78,7 @@ Quá trình huấn luyện được thực hiện với các siêu tham số sau
 \begin{itemize}
     \item \textbf{Hàm mất mát (Loss Function):} Kết hợp giữa Triplet Loss và Cross-Entropy Loss.
     \item \textbf{Bộ tối ưu hóa (Optimizer):} Sử dụng \textbf{Adam}.
-    \item \textbf{Learning Rate (LR):} 
+    \item \textbf{Learning Rate (LR):}
     \begin{itemize}
         \item Khởi tạo tại $1e-5$.
         \item Giảm 10 lần tại vòng lặp thứ 70,000.
@@ -101,17 +101,17 @@ Kết quả độ chính xác Rank-1 được trình bày chi tiết trong Bản
 \setlength{\tabcolsep}{8pt}
 \begin{tabular}{lcccc}
 \hline
-\textbf{Phương pháp} & \textbf{NM} & \textbf{BG} & \textbf{CL} & \textbf{Trung bình} \\ 
+\textbf{Phương pháp} & \textbf{NM} & \textbf{BG} & \textbf{CL} & \textbf{Trung bình} \\
 \hline
 GaitGL (Baseline) & 97.4 & 94.5 & 83.6 & 91.8 \\
 HSTL (Original 3D Conv) & \textbf{97.6} & 94.6 & \textbf{88.9} & \textbf{93.7} \\
 \hline
-\textbf{HSTL-P3D (Ours)} & 97.4 & \textbf{94.8} & 85.2 & 92.5 \\ 
+\textbf{HSTL-P3D (Ours)} & 97.4 & \textbf{94.8} & 85.2 & 92.5 \\
 \hline
 \end{tabular}
 \end{table}
 
-\textbf{Nhận xét:} 
+\textbf{Nhận xét:}
 Kết quả cho thấy phiên bản P3D đạt hiệu năng trung bình \textbf{92.5\%}, vượt qua baseline mạnh là GaitGL (91.8\%). Đặc biệt ở điều kiện mang túi (BG), P3D đạt \textbf{94.8\%}, cao hơn cả bản gốc HSTL. Tuy nhiên, ở điều kiện thay đổi trang phục (CL), P3D thấp hơn bản gốc khoảng 3.7\% (85.2\% so với 88.9\%), phản ánh sự đánh đổi giữa độ phức tạp tính toán và khả năng mô hình hóa không gian 3D phức tạp.
 
 \section{Phân tích kết quả và Đánh giá chi tiết}
@@ -133,23 +133,23 @@ Quá trình hội tụ được chia làm hai giai đoạn rõ rệt (Xem Hình 
     \item \textbf{Giai đoạn 2 (Sau 70k iters):} Khi Learning Rate giảm xuống $1e-6$, Loss giảm sâu xuống mức 0.59 và độ chính xác đạt đỉnh bão hòa $\sim$93.8\%.
 \end{itemize}
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/evaluate/evaluate.png} 
-    \caption{Biểu đồ biến thiên của hàm mất mát và độ chính xác trong quá trình huấn luyện.}
-    \label{fig:training_loss}
-\end{figure}
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/evaluate/evaluate.png}
+%     \caption{Biểu đồ biến thiên của hàm mất mát và độ chính xác trong quá trình huấn luyện.}
+%     \label{fig:training_loss}
+% \end{figure}
 
 \subsection{Phân tích lỗi và Hạn chế của P3D (Failure Analysis)}
 Khi đi sâu phân tích từng trường hợp cụ thể, mô hình bộc lộ một số điểm yếu so với kiến trúc 3D chuẩn:
 
 \begin{enumerate}
-    \item \textbf{Suy giảm ở góc nhìn ngang ($90^{\circ}$):} 
+    \item \textbf{Suy giảm ở góc nhìn ngang ($90^{\circ}$):}
     Độ chính xác tại góc $90^{\circ}$ chỉ đạt 95.5\%, thấp hơn so với các góc nghiêng ($36^{\circ}$ đạt 99.1\%).
     \begin{itemize}
         \item \textit{Nguyên nhân:} Tại góc nhìn ngang, hiện tượng tự che khuất giữa hai chân diễn ra phức tạp. Do P3D tách biệt tích chập không gian (Spatial) và thời gian (Temporal), nó làm mất đi mối tương quan không gian-Thời gian đồng thời, khiến khả năng phân tách chuyển động của các chi bị chồng lấn kém hơn so với 3D Conv tiêu chuẩn.
     \end{itemize}
-    
+
     \item \textbf{Hạn chế trong điều kiện CL (Áo khoác):}
     Việc thay đổi hình dáng do áo khoác khiến biên dạng cơ thể bị biến đổi lớn. P3D xử lý đặc trưng không gian 2D trước, nếu bước này bị nhiễu bởi áo khoác, sai số sẽ lan truyền sang bước xử lý thời gian, dẫn đến độ chính xác giảm 3.7\% so với HSTL gốc.
 \end{enumerate}

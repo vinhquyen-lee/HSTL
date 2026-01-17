@@ -11,46 +11,112 @@
 % - tập dữ liệu ImageNet100k dùng để huấn luyện mô hình tổng quát, với mong muốn tô màu trên nhiều miền ảnh nhất có thể.
 % - ba tập dữ liệu còn lại dùng để huấn luyện các mô hình tô màu trên miền ảnh chuyên biệt, bao gồm thời trang, nội thất, và khuôn mặt
 
-\begin{frame}{Tập dữ liệu}
-\begin{itemize}
-    \item \textbf{ImageNet100k}: bao gồm 100K ảnh được chọn ngẫu nhiên từ tập dữ liệu huấn luyện ImageNet.
-    \item \textbf{Fashion Product Images}: bao gồm khoảng 44K ảnh, mỗi ảnh chứa một loại phụ kiện thời trang chính, có thể được chụp với người mẫu hoặc chụp trên nền trắng.
-    \item \textbf{Furniture Image}: bao gồm 15K ảnh của 5 loại nội thất khác nhau (tủ quần áo, ghế, tủ lạnh, bàn, tivi).
-    \item \textbf{VN-celeb}: bao gồm khoảng 23K khuôn mặt của 1.020 người nổi tiếng ở Việt Nam có thế tìm thấy trên mạng, cụ thể là Wikipedia Việt Nam.
-\end{itemize}    
+\begin{frame}{Tập dữ liệu và Giao thức đánh giá}
+    \begin{block}{Tập dữ liệu CASIA-B}
+        Tập dữ liệu chuẩn phổ biến nhất cho bài toán nhận diện dáng đi trong phòng Lab.
+        \begin{itemize}
+            \item \textbf{Số lượng:} 124 chủ thể (Subjects).
+            \item \textbf{Góc nhìn (Viewpoints):} 11 góc ($0^{\circ}$ đến $180^{\circ}$, bước nhảy $18^{\circ}$).
+            \item \textbf{Điều kiện đi bộ (3 loại):}
+            \begin{itemize}
+                \item \textbf{NM (Normal):} Đi bình thường (6 video/người).
+                \item \textbf{BG (Bag):} Mang túi xách (2 video/người).
+                \item \textbf{CL (Coat):} Mặc áo khoác dày (2 video/người).
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+\begin{frame}{Tập dữ liệu và Giao thức đánh giá}
+    \begin{alertblock}{Giao thức đánh giá (Evaluation Protocol)}
+        \begin{itemize}
+            \item \textbf{Phân chia:} Train (74 chủ thể đầu) / Test (50 chủ thể còn lại).
+            \item \textbf{Trong tập Test:}
+            \begin{itemize}
+                \item \textit{Gallery (Tham chiếu):} 4 video NM đầu tiên (\#01--\#04).
+                \item \textit{Probe (Truy vấn):} Các video còn lại (NM \#05-06, BG, CL).
+            \end{itemize}
+            \item \textbf{Độ đo:} Rank-1 Accuracy (loại trừ các cặp cùng góc nhìn).
+        \end{itemize}
+    \end{alertblock}
 \end{frame}
 % các tập dữ liệu sẽ được tiền xử lý qua 3 bước:
 % - lọc các ảnh tương đối xám, chỉ giữa lại các ảnh  màu sắc ổn định để huấn luyện
 % - điều chỉnh về cùng 1 độ phân giải
 % - tạo sinh câu mô tả bằng mô hình BLIP để làm điều kiện cho quá trình huấn luyệnluyện
 
-\begin{frame}{Tiền xử lý dữ liệu}
-    \begin{enumerate}
-        \item Lọc ảnh độ xám: loại bỏ các ảnh có màu sắc tương đối xám, chỉ giữ lại các ảnh có màu sắc ổn định cho việc huấn luyện.
-        \[
-          E(Var(C_i,C_j)) = \frac{1}{3}\sum_{(i,j) \in \{(R,G),(G,B),(B,R)\}} Var(C_i - C_j) < t
-        \]
-        \item Thay đổi độ phân giải: về cùng kích thước $512 \times 512$.
-        \item Tạo sinh câu mô tả: sử dụng mô hình BLIP sinh câu mô tả để làm điều kiện trong quá trình huấn luyện.
-    \end{enumerate}
-\vspace{0.3cm}
-Dữ liệu cho việc huấn luyện được tổ chức theo bộ ba tương ứng là: \textbf{ảnh xám, ảnh màu, câu mô tả}.
-\vspace{-3mm}
-\begin{table}[ht]
-    \centering
-    \resizebox{\textwidth}{!}{
-    \begin{tabular}{c|cccc}
-        \toprule
-        Tập dữ liệu & ImageNet100k & Fashion Product Images & Furniture Image & VN-celeb \\
-        \midrule
-        Số lượng ảnh & 97,590 & 38,284 & 13,525 & 22,284 \\
-        \bottomrule
-    \end{tabular}
-}
-    % \caption{Thống kê số lượng ảnh theo từng tập huấn luyện sau khi tiền xử lý.}
-    % \label{tab:train-dataset}
-\end{table}
+\begin{frame}{Cài đặt thực nghiệm}
+    \begin{block}{Quy trình tiền xử lý (Data Preprocessing)}
+        Dữ liệu đầu vào là các chuỗi ảnh dáng đi (Silhouette) được xử lý như sau:
+        
+        \vspace{0.3cm} % Tạo khoảng cách cho thoáng
+        \begin{itemize}
+            \setlength\itemsep{1em} % Tăng khoảng cách giữa các gạch đầu dòng
+            \item \textbf{Đầu vào (Input):} 
+            Chuỗi ảnh dáng đi đã được căn chỉnh (aligned) và chuẩn hóa.
+            
+            \item \textbf{Kích thước ảnh:} 
+            Mỗi khung hình được cắt và thay đổi kích thước về \alert{$64 \times 44$ pixel}.
+            
+            \item \textbf{Chiến lược lấy mẫu (Sampling Strategy):}
+            \begin{itemize}
+                \vspace{0.2cm}
+                \item \textbf{Huấn luyện (Train):} Chọn ngẫu nhiên \textbf{30 khung hình} từ mỗi chuỗi video để đảm bảo tính đa dạng dữ liệu.
+                \item \textbf{Kiểm thử (Test):} Sử dụng \textbf{toàn bộ} các khung hình trong chuỗi để trích xuất đặc trưng đầy đủ nhất.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
 
+% --- SLIDE 2: CẤU HÌNH MÔ HÌNH ---
+\begin{frame}{Cài đặt thực nghiệm}
+    \begin{exampleblock}{Cấu hình kiến trúc HSTL-P3D}
+        Mô hình được thiết kế chuyên biệt cho CASIA-B với các thông số chi tiết:
+        
+        \vspace{0.3cm}
+        \begin{itemize}
+            \setlength\itemsep{1em}
+            \item \textbf{Phân hoạch không gian:} 
+            Cơ thể được chia thành \textbf{$K=8$ phần} theo chiều dọc (Horizontal Mapping).
+            
+            \item \textbf{Kiến trúc phân cấp (Hierarchical Structure):}
+            Hệ thống gồm 4 tầng xử lý chính:
+            \begin{enumerate}
+                \setlength\itemsep{0.5em} % Tăng khoảng cách giữa các số 1,2,3,4
+                \item \textbf{Level 1:} ARME Module (Output Channels: 32).
+                \item \textbf{Level 2:} ARME Module (Output Channels: 64) + Nén thời gian (FTA).
+                \item \textbf{Level 3:} ARME Module (Output Channels: 128) + Gom nhóm bộ phận.
+                \item \textbf{Level 4:} Phân hoạch đều (Uniform Partition) để tạo vector đặc trưng.
+            \end{enumerate}
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+% --- SLIDE 3: QUÁ TRÌNH HUẤN LUYỆN ---
+\begin{frame}{Thông số quá trình huấn luyện}
+    Quá trình huấn luyện sử dụng GPU với các siêu tham số được tối ưu hóa:
+
+    \begin{table}
+        \centering
+        \begin{tabular}{l|l}
+            \toprule
+            \textbf{Tham số} & \textbf{Giá trị thiết lập} \\
+            \midrule
+            Hàm mất mát & Triplet Loss + Cross-Entropy Loss \\
+            Optimizer & Adam \\
+            Learning Rate & $1e-5$ (Giảm 10 lần tại vòng lặp 70k) \\
+            Iterations & 100,000 vòng lặp \\
+            Batch Size & $(8, 8)$ (8 chủ thể $\times$ 8 mẫu) \\
+            Weight Decay & $5e-4$ \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+    
+    \vspace{0.2cm}
+    \textbf{Tài nguyên tiêu thụ:}
+    \begin{itemize}
+        \item Thời gian: $\approx 171s$ / 100 iters.
+        \item Tổng thời gian: $\approx 47.5$ giờ (cho 100k iters).
+    \end{itemize}
 \end{frame}
 
 % \begin{frame}{Triển khai}
@@ -68,6 +134,32 @@ Dữ liệu cho việc huấn luyện được tổ chức theo bộ ba tương 
 % \begin{frame}{Kết quả quá trình huấn luyện}
 %     Có nên viết hay không ?
 % \end{frame}
+
+\begin{frame}{Kết quả thực nghiệm}
+    So sánh độ chính xác Rank-1 (\%) giữa mô hình đề xuất (dùng Pseudo-3D) và các phương pháp khác.
+
+    \begin{table}[h!]
+        \centering
+        \setlength{\tabcolsep}{12pt}
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Phương pháp} & \textbf{NM} & \textbf{BG} & \textbf{CL} & \textbf{Mean} \\ 
+        \midrule
+        GaitGL (Baseline) & 97.4 & 94.5 & 83.6 & 91.8 \\
+        HSTL (Original 3D) & \textbf{97.6} & 94.6 & \textbf{88.9} & \textbf{93.7} \\
+        \midrule
+        \textbf{HSTL-P3D (Ours)} & 97.4 & \textbf{94.8} & 85.2 & 92.5 \\ 
+        \bottomrule
+        \end{tabular}
+    \end{table}
+
+    \begin{itemize}
+        \item \textbf{Hiệu quả:} P3D đạt trung bình \textbf{92.5\%}, vượt qua SOTA GaitGL (91.8\%).
+        \item \textbf{Điểm sáng:} Điều kiện mang túi (BG) đạt \textbf{94.8\%}, cao nhất trong các mô hình.
+        \item \textbf{Đánh đổi:} Thấp hơn bản gốc (3D Conv) ở điều kiện áo khoác (CL) do giảm độ phức tạp tính toán.
+    \end{itemize}
+\end{frame}
 
 \subsection*{Đánh giá}
 % - Độ đo FID và Colorfulness được dùng để đánh giá tất cả phương thức tô màu của mô hình
