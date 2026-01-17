@@ -96,7 +96,7 @@ def imgs2pickle(img_groups: Tuple, output_path: Path, img_size: int = 64, verbos
 
 
 
-def pretreat(input_path: Path, output_path: Path, img_size: int = 64, workers: int = 4, verbose: bool = False, dataset: str = 'CASIAB') -> None:
+def pretreat(input_path: Path, output_path: Path, img_size: int = 64, workers: int = 4, verbose: bool = False, dataset: str = 'CASIAB', start_id: str = None, end_id: str = None) -> None:
     """Reads a dataset and saves the data in pickle format.
 
     Args:
@@ -105,6 +105,9 @@ def pretreat(input_path: Path, output_path: Path, img_size: int = 64, workers: i
         img_size (int, optional): Image resizing size. Defaults to 64.
         workers (int, optional): Number of thread workers. Defaults to 4.
         verbose (bool, optional): Display debug info. Defaults to False.
+        dataset (str, optional): Dataset name. Defaults to 'CASIAB'.
+        start_id (str, optional): Start subject ID for filtering (CASIA-B only). Defaults to None.
+        end_id (str, optional): End subject ID for filtering (CASIA-B only). Defaults to None.
     """
     img_groups = defaultdict(list)
     logging.info(f'Listing {input_path}')
@@ -115,10 +118,20 @@ def pretreat(input_path: Path, output_path: Path, img_size: int = 64, workers: i
         if verbose:
             logging.debug(f'Adding {img_path}')
         *_, sid, seq, view, _ = img_path.as_posix().split('/')
+        
+        # Filter by subject ID range for CASIA-B
+        if dataset.upper() == 'CASIAB' and (start_id is not None or end_id is not None):
+            if start_id and sid < start_id:
+                continue
+            if end_id and sid > end_id:
+                continue
+        
         img_groups[(sid, seq, view)].append(img_path)
         total_files += 1
 
     logging.info(f'Total files listed: {total_files}')
+    if dataset.upper() == 'CASIAB' and (start_id or end_id):
+        logging.info(f'Filtered for subject IDs: {start_id or "start"} to {end_id or "end"}')
 
     progress = tqdm(total=len(img_groups), desc='Pretreating', unit='folder')
 
@@ -256,6 +269,8 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--dataset', default='CASIAB', type=str, help='Dataset for pretreatment.')
     parser.add_argument('-v', '--verbose', default=False, action='store_true', help='Display debug info.')
     parser.add_argument('-p', '--pose', default=False, action='store_true', help='Processing pose.')
+    parser.add_argument('--start_id', default=None, type=str, help='Start subject ID for partial processing (CASIA-B only). Example: 091')
+    parser.add_argument('--end_id', default=None, type=str, help='End subject ID for partial processing (CASIA-B only). Example: 124')
     parser.add_argument('-oid', '--oumvlp_index_dir', default='', type=str, 
                         help='Path of the directory containing all index files for extracting oumvlp pose pkl, which is necessary to promise the temporal consistency of extracted pose sequence. ' 
                         + 'Note: this argument is only used when extracting oumvlp pose pkl, more info please refer to Step4-2 in datasets/OUMVLP/README.md. ')
@@ -290,4 +305,4 @@ if __name__ == '__main__':
             oumvlp_index_dir=args.oumvlp_index_dir
         )
     else:
-        pretreat(input_path=Path(args.input_path), output_path=Path(args.output_path), img_size=args.img_size, workers=args.n_workers, verbose=args.verbose, dataset=args.dataset)
+        pretreat(input_path=Path(args.input_path), output_path=Path(args.output_path), img_size=args.img_size, workers=args.n_workers, verbose=args.verbose, dataset=args.dataset, start_id=args.start_id, end_id=args.end_id)
