@@ -1,0 +1,53 @@
+# Batch Testing Configuration
+# Define models and checkpoint iterations to test
+
+# Dataset configuration (same for all tests)
+dataset_root: /kaggle/input/casiab # D:/biometrics/gait-reg/dataset/CASIA-B-pkl  # Update this to your dataset path
+dataset_partition: ./misc/partitions/CASIA-B_include_005.json
+
+# Models to test
+# Format: model_name: [list of iterations]
+models:
+  HSTL:
+    iterations: [80000] # actually 90K
+    save_name: HSTL
+    checkpoint_path: /kaggle/input/project-hstl/output/CASIA-B/HSTL/HSTL/checkpoints
+    # checkpoint_path: ./output/CASIA-B/HSTL/HSTL/checkpoints
+    backbone_type: conv3d
+    loss_type: triplet
+
+  kaggle:
+    iterations: [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000, 85000, 90000, 95000, 100000]
+    save_name: kaggle
+    checkpoint_path: /kaggle/input/project-hstl/output/CASIA-B/HSTL/kaggle/checkpoints
+    # checkpoint_path: ./output/CASIA-B/HSTL/kaggle/checkpoints
+    backbone_type: conv3d
+    loss_type: triplet
+
+  p3d:
+    iterations: [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000, 85000, 90000, 95000, 100000]
+    save_name: p3d
+    checkpoint_path: /kaggle/input/project-hstl/output/CASIA-B/HSTL/p3d/checkpoints
+    # checkpoint_path: ./output/CASIA-B/HSTL/p3d/checkpoints
+    backbone_type: p3d
+    loss_type: triplet
+
+  med-circleloss:
+    iterations: [5000, 10000, 15000, 18000, 21000, 24000, 27000, 30000, 33000, 36000, 39000, 42000, 45000, 48000, 51000, 54000, 57000, 60000, 63000, 66000, 69000, 72000, 75000, 78000, 81000, 84000, 87000, 90000, 92500, 95000, 97500, 100000]
+    save_name: med-circleloss
+    checkpoint_path: /kaggle/input/project-hstl/output/CASIA-B/HSTL/med-circleloss/checkpoints
+    # checkpoint_path: ./output/CASIA-B/HSTL/med-circleloss/checkpoints
+    backbone_type: conv3d
+    loss_type: circle
+
+  p3d-circleloss:
+    iterations: [2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500, 35000, 37500, 40000, 42500, 45000, 47500, 50000, 52500, 55000, 57500, 60000, 62500, 65000, 67500, 70000, 72500, 75000, 77500, 80000, 82500, 85000, 87500, 90000, 92500, 95000, 97500, 100000]
+    save_name: p3d-circleloss
+    checkpoint_path: /kaggle/input/project-hstl/output/CASIA-B/HSTL/p3d-circleloss/checkpoints
+    # checkpoint_path: ./output/CASIA-B/HSTL/p3d-circleloss/checkpoints
+    backbone_type: p3d
+    loss_type: circle
+
+# Output configuration
+output_dir: ./batch_test_results
+log_to_file: true
