@@ -21,8 +21,8 @@ evaluator_cfg:
 loss_cfg:
   - loss_term_weight: 0.05 # 1.0 (for triplet loss), circle loss returns higher values (around 80) --> reduce to match with softmax values
     # margin: 0.2
-    # type: TripletLoss
-    # log_prefix: triplet
+    # type: TripletLoss # Options: TripletLoss, CircleLoss
+    # log_prefix: triplet # Options: triplet, circle
     m: 0.25 # margin for gait recognition (from Circle Loss paper)
     gamma: 128 # scale factor for gait recognition (from Circle Loss paper)
     type: CircleLoss
@@ -38,6 +38,8 @@ model_cfg:
   model: HSTL
   channels: [32, 64, 128]
   class_num: 74
+  backbone_type: conv3d # Options: conv3d, p3d
+  loss_type: triplet # Options: triplet, circle
 
 optimizer_cfg:
   lr: 1.0e-4
