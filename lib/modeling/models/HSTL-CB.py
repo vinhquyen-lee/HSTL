@@ -200,6 +200,13 @@ class HSTL(BaseModel):
     def build_network(self, model_cfg):
         in_c = model_cfg['channels']
         class_num = model_cfg['class_num']
+
+        # Get backbone type from config (default to conv3d for backward compatibility)
+        backbone_type = model_cfg.get('backbone_type', 'conv3d')
+        
+        # Get loss type from config (default to triplet)
+        self.loss_type = model_cfg.get('loss_type', 'triplet')
+            
         # For CASIA-B dataset.
         self.arme1 = nn.Sequential(
             BasicConv3d(1, in_c[0], kernel_size=(3, 3, 3),
@@ -209,19 +216,21 @@ class HSTL(BaseModel):
 
         self.astp1 = ASTP(split_param=[64], m=1, in_channels=in_c[0], out_channels=in_c[-1])
 
-        # self.arme2 = nn.Sequential(
-        #     ARME_Conv(in_c[0], in_c[0], split_param=[40, 24], m=2, kernel_size=(
-        #         3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
-        #     ARME_Conv(in_c[0], in_c[1], split_param=[40, 24], m=2, kernel_size=(
-        #         3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
-        # )
-
-        self.arme2 = nn.Sequential(
-            ARME_P3D(in_c[0], in_c[0], split_param=[40, 24], m=2, kernel_size=(
-                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
-            ARME_P3D(in_c[0], in_c[1], split_param=[40, 24], m=2, kernel_size=(
-                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
-        )
+        # ARME2 - conditional based on backbone_type
+        if backbone_type == 'conv3d':
+            self.arme2 = nn.Sequential(
+                ARME_Conv(in_c[0], in_c[0], split_param=[40, 24], m=2, kernel_size=(
+                    3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
+                ARME_Conv(in_c[0], in_c[1], split_param=[40, 24], m=2, kernel_size=(
+                    3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+            )
+        else: # p3d
+            self.arme2 = nn.Sequential(
+                ARME_P3D(in_c[0], in_c[0], split_param=[40, 24], m=2, kernel_size=(
+                    3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
+                ARME_P3D(in_c[0], in_c[1], split_param=[40, 24], m=2, kernel_size=(
+                    3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+            )
 
         self.astp2 = ASTP(split_param=[40, 24], m=2, in_channels=in_c[1], out_channels=in_c[-1])
 
@@ -229,19 +238,21 @@ class HSTL(BaseModel):
 
         self.astp2_fta = ASTP(split_param=[40, 24], m=2, in_channels=in_c[1], out_channels=in_c[-1])
 
-        # self.arme3 = nn.Sequential(
-        #     ARME_Conv(in_c[1], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
-        #         3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
-        #     ARME_Conv(in_c[2], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
-        #         3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
-        # )
-
-        self.arme3 = nn.Sequential(
-            ARME_P3D(in_c[1], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
-                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
-            ARME_P3D(in_c[2], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
-                3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
-        )
+        # ARME3 - conditional based on backbone_type
+        if backbone_type == 'conv3d':
+            self.arme3 = nn.Sequential(
+                ARME_Conv(in_c[1], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
+                    3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
+                ARME_Conv(in_c[2], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
+                    3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+            )
+        else: # p3d
+            self.arme3 = nn.Sequential(
+                ARME_P3D(in_c[1], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
+                    3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
+                ARME_P3D(in_c[2], in_c[2], split_param=[8, 32, 16, 8], m=4, kernel_size=(
+                    3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+            )
 
         self.astp3 = ASTP(split_param=[8, 32, 16, 8], m=4, in_channels=in_c[2], out_channels=in_c[-1], flag=False)
 
@@ -300,12 +311,20 @@ class HSTL(BaseModel):
         # print(logi.size())
 
         n, _, s, h, w = sils.size()
+
+        # Conditional return based on loss type
+        training_feat = {}
+        if self.loss_type == 'triplet':
+            training_feat['triplet'] = {'embeddings': bnft, 'labels': labs}
+        elif self.loss_type == 'circle':
+            training_feat['circle'] = {'embeddings': bnft, 'labels': labs}
+        else:
+            raise ValueError(f"Invalid loss type: {self.loss_type if self.loss_type is not None else 'None'}")
+        
+        training_feat['softmax'] = {'logits': logi, 'labels': labs}
+
         retval = {
-            'training_feat': {
-                # 'triplet': {'embeddings': bnft, 'labels': labs},
-                'circle': {'embeddings': bnft, 'labels': labs},
-                'softmax': {'logits': logi, 'labels': labs}
-            },
+            'training_feat': training_feat,
             'visual_summary': {
                 'image/sils': sils.view(n * s, 1, h, w)
             },
