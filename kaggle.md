@@ -108,6 +108,7 @@ kaggle kernels status your_kaggle_username/my-project # poll execution status
 
 ```bash
 kaggle kernels output your_kaggle_username/my-project -p outputs_local # download everything from `kaggle/working`
+kaggle kernels output huypt94/improved-hstl -p logs/test # download everything from `kaggle/working`
 ```
 
 **Note: download log with different encoding by using cmd (if using Windows)**
