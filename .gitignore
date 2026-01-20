@@ -2,9 +2,10 @@
 /datasets/CASIA-B-pkl
 /venv
 **/__pycache__
-# /logs
+/logs
 /utils
-# /output
+/output
 /logs
 /Final_Report
 /Template_Slide
+/debug
