@@ -1,0 +1,164 @@
+\chapter{Thực nghiệm}
+\label{Chapter4}
+\textcolor{blue}{Mục này tương đối đơn giản, chỉ cần liệt kê về tập dữ liệu, cài đặt chi tiết cho thực nghiệm, kế hoạch thực nghiệm, kết quả thực nghiệm so với nghiên cứu gốc (baseline).}
+
+Ở mục phân tích kết quả, ngoài việc phân tích về sự cải thiện trên kết quả, cần xem xét các khía cạnh khác như:
+\begin{itemize}
+    \item Thời gian huấn luyện ra mô hình cuối cùng (100K).
+    \item Chi phí của quá trình con (ví dụ, 100 iterations mất bao lâu).
+    \item Sự biến thiên của hàm mất mát, độ chính xác (dựa trên log, vẽ biểu đồ đường thì càng tốt).
+    \item Phải phân tích các khía cạnh mà mô hình đề xuất bị kém đi, nguyên nhân nào gây ra (do cấu hình chưa tối ưu, hay đó là điều không thể tránh khỏi khi dùng kĩ thuật đó, hay do dữ liệu). Đề xuất một số cách khắc phục các hạn chế đó (dành cho phần hướng nghiên cứu tương lai).
+\end{itemize}
+\section{Tập dữ liệu và Giao thức đánh giá}
+
+Thực nghiệm được tiến hành trên tập dữ liệu chuẩn CASIA-B. Đây là tập dữ liệu phổ biến nhất để đánh giá hiệu năng trong bài toán nhận diện dáng đi trong môi trường phòng lab.
+
+\subsection{Tổng quan về tập dữ liệu CASIA-B}
+Tập dữ liệu bao gồm các video ghi lại dáng đi của \textbf{124 chủ hteer} (subjects). Dữ liệu của mỗi chủ thể được ghi lại dưới 3 điều kiện đi bộ và 11 góc nhìn khác nhau:
+
+\begin{itemize}
+    \item \textbf{Góc nhìn (Viewpoints):} 11 góc quay được phân bố đều từ $0^{\circ}$ đến $180^{\circ}$ với bước nhảy là $18^{\circ}$ cho mỗi góc.
+    \item \textbf{Điều kiện đi bộ (Walking Conditions):}
+    \begin{itemize}
+        \item \textbf{NM (Normal Walking):} Đi bộ bình thường (6 chuỗi video/chủ thể).
+        \item \textbf{BG (Walking with Bag):} Đi bộ có mang túi xách (2 chuỗi video/chủ thể).
+        \item \textbf{CL (Walking in Coat):} Đi bộ mặc áo khoác dày (2 chuỗi video/chủ thể).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Giao thức đánh giá (Evaluation Protocol)}
+Tuân theo giao thức chuẩn được sử dụng trong các nghiên cứu trước đây, dữ liệu được phân chia như sau:
+
+\begin{enumerate}
+    \item \textbf{Phân chia Train/Test:}
+    \begin{itemize}
+        \item \textbf{Tập huấn luyện (Training Set):} Bao gồm 74 chủ thể đầu tiên.
+        \item \textbf{Tập kiểm tra (Testing Set):} Bao gồm 50 chủ thể còn lại.
+    \end{itemize}
+
+    \item \textbf{Thiết lập Gallery và Probe trong quá trình kiểm thử:}
+    \begin{itemize}
+        \item \textbf{Tập tham chiếu (Gallery Set):} Sử dụng 4 chuỗi đầu tiên của điều kiện đi bình thường (NM \#01 -- \#04).
+        \item \textbf{Tập truy vấn (Probe Set):} Các chuỗi còn lại bao gồm 2 chuỗi NM (NM \#05 -- \#06), 2 chuỗi BG (BG \#01 -- \#02), và 2 chuỗi CL (CL \#01 -- \#02).
+    \end{itemize}
+\end{enumerate}
+
+Hiệu năng của mô hình được đánh giá dựa trên độ chính xác \textbf{Rank-1}, loại trừ các trường hợp so sánh cùng góc nhìn (identical-view cases).
+
+
+\section{Cài đặt chi tiết cho thực nghiệm}
+
+\subsection{Tiền xử lý dữ liệu (Data Preprocessing)}
+Dữ liệu đầu vào là các chuỗi ảnh dáng đi đã được căn chỉnh.
+\begin{itemize}
+    \item \textbf{Kích thước ảnh:} Mỗi khung hình được cắt và thay đổi kích thước về $64 \times 44$ pixel.
+    \item \textbf{Lấy mẫu (Sampling):}
+    \begin{itemize}
+        \item Trong quá trình \textit{huấn luyện}, 30 khung hình được lấy mẫu ngẫu nhiên từ mỗi chuỗi video để đảm bảo tính đa dạng.
+        \item Trong quá trình \textit{kiểm thử}, toàn bộ các khung hình của chuỗi video được đưa vào mô hình để trích xuất đặc trưng.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Cấu hình mô hình}
+Kiến trúc mạng HSTL được thiết lập dành riêng cho tập CASIA-B với các thông số cụ thể:
+\begin{itemize}
+    \item \textbf{Số lượng phân hoạch ($K$):} Tại tầng dưới cùng của mô hình, cơ thể được chia thành $k=8$ phần theo chiều dọc.
+    \item \textbf{Kênh đặc trưng (Channels):} Số lượng kênh đầu ra của các module ARME qua các tầng lần lượt là 32, 64, và 128.
+    \item \textbf{Cấu trúc phân cấp:}
+    \begin{itemize}
+        \item \textit{Level 1:} ARME với Kernel $(3,3,3)$, Output Channels: 32.
+        \item \textit{Level 2:} ARME (Output: 64) kết hợp với module FTA để nén thời gian (giảm chiều $T$ xuống $T/3$).
+        \item \textit{Level 3:} ARME (Output: 128) với phân hoạch nhóm các bộ phận cơ thể.
+        \item \textit{Level 4:} Sử dụng phân hoạch đều (Uniform partition) cho đặc trưng cuối cùng.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Chi tiết huấn luyện }
+Quá trình huấn luyện được thực hiện với các siêu tham số sau:
+\begin{itemize}
+    \item \textbf{Hàm mất mát (Loss Function):} Kết hợp giữa Triplet Loss và Cross-Entropy Loss.
+    \item \textbf{Bộ tối ưu hóa (Optimizer):} Sử dụng \textbf{Adam}.
+    \item \textbf{Learning Rate (LR):}
+    \begin{itemize}
+        \item Khởi tạo tại $1e-5$.
+        \item Giảm 10 lần tại vòng lặp thứ 70,000.
+    \end{itemize}
+    \item \textbf{Tổng số vòng lặp (Iterations):} 100,000.
+    \item \textbf{Batch Size:} Thiết lập là $(8, 8)$, nghĩa là mỗi batch chứa dữ liệu của 8 chủ thể, mỗi chủ thể lấy 8 mẫu ngẫu nhiên.
+    \item \textbf{Weight Decay:} $5e-4$.
+\end{itemize}
+
+\section{Kết quả thực nghiệm với bộ trích xuất P3D}
+
+Sau quá trình huấn luyện 100,000 vòng lặp, mô hình sử dụng khối tích chập giả 3D (\textbf{Pseudo-3D} hay P3D) được đánh giá trên tập kiểm tra của CASIA-B theo giao thức chuẩn. Đánh giá hiệu quả dự trên bảng so sánh kết quả thực nghiệm của nhóm với mô hình HSTL gốc (sử dụng 3D Convolution tiêu chuẩn) và phương pháp SOTA GaitGL.
+
+Kết quả độ chính xác Rank-1 được trình bày chi tiết trong Bảng \ref{tab:result_comparison}.
+
+\begin{table}[h!]
+\centering
+\caption{So sánh độ chính xác Rank-1 (\%) giữa mô hình đề xuất (dùng P3D) và các phương pháp Baseline.}
+\label{tab:result_comparison}
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Phương pháp} & \textbf{NM} & \textbf{BG} & \textbf{CL} & \textbf{Trung bình} \\
+\hline
+GaitGL (Baseline) & 97.4 & 94.5 & 83.6 & 91.8 \\
+HSTL (Original 3D Conv) & \textbf{97.6} & 94.6 & \textbf{88.9} & \textbf{93.7} \\
+\hline
+\textbf{HSTL-P3D (Ours)} & 97.4 & \textbf{94.8} & 85.2 & 92.5 \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Nhận xét:}
+Kết quả cho thấy phiên bản P3D đạt hiệu năng trung bình \textbf{92.5\%}, vượt qua baseline mạnh là GaitGL (91.8\%). Đặc biệt ở điều kiện mang túi (BG), P3D đạt \textbf{94.8\%}, cao hơn cả bản gốc HSTL. Tuy nhiên, ở điều kiện thay đổi trang phục (CL), P3D thấp hơn bản gốc khoảng 3.7\% (85.2\% so với 88.9\%), phản ánh sự đánh đổi giữa độ phức tạp tính toán và khả năng mô hình hóa không gian 3D phức tạp.
+
+\section{Phân tích kết quả và Đánh giá chi tiết}
+
+\subsection{Chi phí và Thời gian huấn luyện}
+Phân tích chi phí tài nguyên thực tế để đánh giá tính khả thi khi triển khai :
+\begin{itemize}
+    \item \textbf{Chi phí tính toán:} Trung bình mỗi chu kỳ 100 vòng lặp (iterations) tiêu tốn khoảng \textbf{171 giây}.
+    \item \textbf{Tổng thời gian huấn luyện:} Để hoàn thành 100,000 vòng lặp hội tụ mô hình, tổng thời gian xử lý trên GPU là:
+    $$ T_{total} \approx \frac{171 \times 1,000}{3600} \approx 47.5 \text{ giờ} $$
+    Kết quả này cho thấy dù P3D giảm số lượng tham số so với 3D Conv, mô hình vẫn yêu cầu tài nguyên tính toán đáng kể do độ sâu của mạng và cấu trúc phân cấp.
+\end{itemize}
+
+\subsection{Sự biến thiên của hàm mất mát và độ chính xác}
+Quá trình hội tụ được chia làm hai giai đoạn rõ rệt (Xem Hình \ref{fig:training_loss}):
+
+\begin{itemize}
+    \item \textbf{Giai đoạn 1 (0 -- 70k iters):} Hàm mất mát Softmax giảm nhanh nhưng Triplet Loss dao động mạnh (quanh mức 1.1). Độ chính xác tăng dần lên mức 82\%.
+    \item \textbf{Giai đoạn 2 (Sau 70k iters):} Khi Learning Rate giảm xuống $1e-6$, Loss giảm sâu xuống mức 0.59 và độ chính xác đạt đỉnh bão hòa $\sim$93.8\%.
+\end{itemize}
+
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/evaluate/evaluate.png}
+%     \caption{Biểu đồ biến thiên của hàm mất mát và độ chính xác trong quá trình huấn luyện.}
+%     \label{fig:training_loss}
+% \end{figure}
+
+\subsection{Phân tích lỗi và Hạn chế của P3D (Failure Analysis)}
+Khi đi sâu phân tích từng trường hợp cụ thể, mô hình bộc lộ một số điểm yếu so với kiến trúc 3D chuẩn:
+
+\begin{enumerate}
+    \item \textbf{Suy giảm ở góc nhìn ngang ($90^{\circ}$):}
+    Độ chính xác tại góc $90^{\circ}$ chỉ đạt 95.5\%, thấp hơn so với các góc nghiêng ($36^{\circ}$ đạt 99.1\%).
+    \begin{itemize}
+        \item \textit{Nguyên nhân:} Tại góc nhìn ngang, hiện tượng tự che khuất giữa hai chân diễn ra phức tạp. Do P3D tách biệt tích chập không gian (Spatial) và thời gian (Temporal), nó làm mất đi mối tương quan không gian-Thời gian đồng thời, khiến khả năng phân tách chuyển động của các chi bị chồng lấn kém hơn so với 3D Conv tiêu chuẩn.
+    \end{itemize}
+
+    \item \textbf{Hạn chế trong điều kiện CL (Áo khoác):}
+    Việc thay đổi hình dáng do áo khoác khiến biên dạng cơ thể bị biến đổi lớn. P3D xử lý đặc trưng không gian 2D trước, nếu bước này bị nhiễu bởi áo khoác, sai số sẽ lan truyền sang bước xử lý thời gian, dẫn đến độ chính xác giảm 3.7\% so với HSTL gốc.
+\end{enumerate}
+
+\subsection{Kết luận và Hướng phát triển}
+Thực nghiệm chứng minh rằng HSTL với P3D là một sự thay thế hiệu quả, mang lại độ chính xác rất cao với kiến trúc tiềm năng nhẹ hơn. Mặc dù có sự đánh đổi nhỏ về độ chính xác trong điều kiện cực khó (CL) so với bản 3D gốc, nhưng sự cải thiện ở điều kiện mang túi (BG) là một tín hiệu tích cực.
+
+\textbf{Đề xuất tương lai:}
+\begin{itemize}
+    \item Tối ưu hóa mã nguồn để giảm thời gian huấn luyện 47.5 giờ, tận dụng lợi thế ít tham số của P3D.
+    \item Thử nghiệm cơ chế \textit{Attention} xen giữa các lớp Spatial và Temporal trong khối P3D để khôi phục lại mối tương quan bị mất khi tách rời tích chập.
+\end{itemize}

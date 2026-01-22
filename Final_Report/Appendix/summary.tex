@@ -1,0 +1,17 @@
+\chapter*{Tóm tắt}
+\label{summary}
+
+\textcolor{red}{Phần quy định chung khi trình bày báo cáo:}
+\begin{itemize}
+    \item Tất cả biểu thức toán phải được đánh số.
+    \item Tất cả hình vẽ, bảng biểu phải có chú thích, và đánh dấu để tham chiếu trong mục lục.
+    \item Hạn chế tối đa việc dùng tiếng anh,kể cả các thuật ngữ chuyên môn, có gắng dịch sang tiếng việt với từ ngữ dễ hiểu. Trong trường hợp quá khó để phiên dịch, được phép dùng tiếng anh, nhưng phải bổ sung ở bảng \ref{tab:vietanh} trong phần \textbf{Phụ lục}.
+    \item Các tài liệu đính kèm phải theo một chuẩn duy nhất, không tham khảo loạn xạ. Có nhiều cách để lấy định dạng chuẩn, cách đơn giản nhất là tìm bài báo đó trên trang \textbf{\href{https://arxiv.org/}{arxiv}}, tìm dòng \textbf{export BibTeX citation}, sao chép định dạng đó vào file \textbf{references.bib}.
+\end{itemize}
+
+\textcolor{blue}{Viết theo mẫu bên dưới\\}
+Tô màu ảnh độ xám là quá trình ước lượng các giá trị màu RGB cho từng điểm trong ảnh độ xám, nhằm chuyển đổi chúng thành ảnh màu. Tô màu ảnh độ xám được chia thành hai nhóm lớn: tô màu tự động và tô màu bán tự động. Tuy nhiên, hầu hết các mô hình hiện tại chỉ tập trung vào một phương thức duy nhất, điều này hạn chế tính năng mà người dùng mong muốn.
+
+Trong nghiên cứu này, nhóm giới thiệu một mô hình tô màu ảnh độ xám kết hợp cả hai phương thức tự động và bán tự động (dựa trên lời nhắc văn bản) được phát triển dựa trên kiến trúc mô hình ControlNet. ControlNet là một kiến trúc mạng nơ-ron được thiết kế nhằm tích hợp các điều kiện điều khiển không gian vào các mô hình tạo sinh ảnh từ văn bản đã được huấn luyện trước.
+
+Nhóm đã tiến hành huấn luyện mô hình trên bốn tập dữ liệu cho các mục đích khác nhau. Sau đó nhóm tiến hành thử nghiệm mô hình tô màu chính trên ba tập dữ liệu đánh giá khác nhau. Kết quả đánh giá cho thấy, mô hình của nhóm đã vượt qua hầu hết các phương pháp tô màu tiên tiến trước đó trên phương thức tô màu tự động về chỉ số Colorfulness. Cuối cùng, nhóm xây dựng thêm một giao diện đơn giản để người dùng có thể sử dụng và ứng dụng các mô hình vào các công việc có liên quan đến tô màu ảnh độ xám.
