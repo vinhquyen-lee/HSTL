@@ -151,13 +151,13 @@
 % Lưu ý: Dấu ~ là khoảng trắng không được tách (các chữ nối với nhau bằng dấu ~ sẽ nằm cùng 1 dòng)
 \newcommand{\tenSV}{Phạm~Thái~Huy~-~Nguyễn~Đức~Mạnh~-~Lê~Quang~Vĩnh~Quyền} % Ví dụ: Nguyễn~Văn~A~-~Trần~Thị~B
 \newcommand{\mssv}{21120081~22120204~22120307} % Ví dụ: 21120001~21120002
-\newcommand{\tenKL}{CẢI TIẾN\\NGHIÊN CỨU HỌC BIỂU DIỄN\\KHÔNG GIAN-THỜI GIAN PHÂN CẤP\\CHO BÀI TOÁN NHẬN DẠNG DÁNG ĐI} % Ví dụ: Ứng~dụng~học~sâu~trong~xử~lý~ảnh
+\newcommand{\tenKL}{KHẢO SÁT\\NHỮNG KỸ THUẬT TƯƠNG TỰ TRONG\\NGHIÊN CỨU HỌC BIỂU DIỄN\\KHÔNG GIAN-THỜI GIAN PHÂN CẤP\\CHO BÀI TOÁN NHẬN DẠNG DÁNG ĐI} % Ví dụ: Ứng~dụng~học~sâu~trong~xử~lý~ảnh
 \newcommand{\tenGVHD}{PGS.TS.~Lê~Hoàng~Thái\\ThS.~Dương~Thái~Bảo} % Ví dụ: PGS.TS.~Nguyễn~Văn~X
 \newcommand{\tenBM}{Tên~Bộ~Môn} % Ví dụ: Trí~tuệ~nhân~tạo
 
 \begin{document}
 
-\input{Title/title.tex}
+% \input{Title/title.tex}
 % Sasu trang Title, các bạn chèn nhận xét gủa GVHD và GVPB. Nhận xét sẽ được giáo vụ phát sau buổi bảo vệ để các bạn đóng quyển.
 
 \cleardoublepage
@@ -168,7 +168,7 @@
 \phantomsection
 %\addcontentsline{toc}{chapter}{Lời cam đoan}
 %\include{Appendix/reassurances}
-\include{Appendix/commitment}
+% \include{Appendix/commitment}
 
 %\addcontentsline{toc}{chapter}{Thuyết minh chỉnh sửa đề tài}
 %\include{Appendix/edit}
@@ -179,31 +179,31 @@
 %\addcontentsline{toc}{chapter}{Nhận xét của GV phản biện}
 %\include{Appendix/reviewer}
 
-\addcontentsline{toc}{chapter}{Lời cảm ơn}
-\include{Appendix/thanks}
+% \addcontentsline{toc}{chapter}{Lời cảm ơn}
+% \include{Appendix/thanks}
 
-% \addcontentsline{toc}{chapter}{Đề cương}
-% \include{Appendix/proposal}
+% % \addcontentsline{toc}{chapter}{Đề cương}
+% % \include{Appendix/proposal}
 
-% Mục lục, danh sách hình, danh sách bảng
-\addcontentsline{toc}{chapter}{Mục lục}
+% % Mục lục, danh sách hình, danh sách bảng
+% \addcontentsline{toc}{chapter}{Mục lục}
 
-\tableofcontents
+% \tableofcontents
 
-%\listoffigures
-\cleardoublepage
-% \phantomsection
-\addcontentsline{toc}{chapter}{\listfigurename}
-\listoffigures
+% %\listoffigures
+% \cleardoublepage
+% % \phantomsection
+% \addcontentsline{toc}{chapter}{\listfigurename}
+% \listoffigures
 
-\cleardoublepage
-% \phantomsection
-\addcontentsline{toc}{chapter}{\listtablename}
-\listoftables
-%\listoftables
+% \cleardoublepage
+% % \phantomsection
+% \addcontentsline{toc}{chapter}{\listtablename}
+% \listoftables
+% %\listoftables
 
-\addcontentsline{toc}{chapter}{Tóm tắt}
-\include{Appendix/summary}
+% \addcontentsline{toc}{chapter}{Tóm tắt}
+% \include{Appendix/summary}
 
 
 \clearpage
@@ -211,40 +211,40 @@
 \pagenumbering{arabic} % Đánh số 1, 2, 3, ...
 
 % Các chương nội dung
-\include{Chapter1/chapter1}
+% \include{Chapter1/chapter1}
 
-\include{Chapter2/chapter2}
+% \include{Chapter2/chapter2}
 
 \include{Chapter3/chapter3}
 
-\include{Chapter4/chapter4}
+% \include{Chapter4/chapter4}
 
-\include{Chapter5/chapter5}
+% \include{Chapter5/chapter5}
 
 % Công trình của tác giả (nếu không có thì comment 02 dòng dưới)
 % \addcontentsline{toc}{chapter}{Danh mục công trình của tác giả}
 % \include{Appendix/publish}
 
-% In tài liệu tham khảo
-\addcontentsline{toc}{chapter}{Tài liệu tham khảo}
-\printbibheading[title={Tài liệu tham khảo}]
+% % In tài liệu tham khảo
+% \addcontentsline{toc}{chapter}{Tài liệu tham khảo}
+% \printbibheading[title={Tài liệu tham khảo}]
 
 
 
-%\printbibliography
+% %\printbibliography
 
-\printbibliography[heading=subbibliography, title={Tiếng Việt}, keyword=Viet, resetnumbers=true]
+% \printbibliography[heading=subbibliography, title={Tiếng Việt}, keyword=Viet, resetnumbers=true]
 
-\DeclareNameAlias{sortname}{last-first}
-\DeclareNameAlias{default}{last-first}
+% \DeclareNameAlias{sortname}{last-first}
+% \DeclareNameAlias{default}{last-first}
 
-\printbibliography[heading=subbibliography, title={Tiếng Anh}, notkeyword=Viet, resetnumbers=1]
+% \printbibliography[heading=subbibliography, title={Tiếng Anh}, notkeyword=Viet, resetnumbers=1]
 % ===================================================================== %
 % CHÚ Ý: phải gán lại resetnumbers=số tài liệu tham khảo tiếng Việt + 1 %
 % ===================================================================== %
 
 % Phần phụ lục
-\include{Appendix/appendix1}
-% \include{Appendix/appendix2}
+% \include{Appendix/appendix1}
+% % \include{Appendix/appendix2}
 
 \end{document}
