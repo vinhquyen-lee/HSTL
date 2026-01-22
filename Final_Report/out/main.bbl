@@ -1,0 +1,271 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{p3d}{misc}{}{}
+      \name{author}{3}{}{%
+        {{hash=60d4f38541c9bd66fd190112e5a2e106}{%
+           family={Qiu},
+           familyi={Q\bibinitperiod},
+           given={Zhaofan},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=d311c791ddcb4210f1c08db0855e054d}{%
+           family={Yao},
+           familyi={Y\bibinitperiod},
+           given={Ting},
+           giveni={T\bibinitperiod}}}%
+        {{hash=de1c1ab4ad3b6904d54368d83000758c}{%
+           family={Mei},
+           familyi={M\bibinitperiod},
+           given={Tao},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{17d81b64edd4498ba647d658bbaa79b1}
+      \strng{fullhash}{2c8394f079620068a156a19ae8ab0387}
+      \strng{fullhashraw}{2c8394f079620068a156a19ae8ab0387}
+      \strng{bibnamehash}{2c8394f079620068a156a19ae8ab0387}
+      \strng{authorbibnamehash}{2c8394f079620068a156a19ae8ab0387}
+      \strng{authornamehash}{17d81b64edd4498ba647d658bbaa79b1}
+      \strng{authorfullhash}{2c8394f079620068a156a19ae8ab0387}
+      \strng{authorfullhashraw}{2c8394f079620068a156a19ae8ab0387}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.CV}
+      \field{eprinttype}{arXiv}
+      \field{title}{Learning Spatio-Temporal Representation with Pseudo-3D Residual Networks}
+      \field{year}{2017}
+      \verb{eprint}
+      \verb 1711.10305
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1711.10305
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1711.10305
+      \endverb
+    \endentry
+    \entry{radenovic2018fine}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=02ea665f13df496149f6f1b87ea5c046}{%
+           family={Radenović},
+           familyi={R\bibinitperiod},
+           given={Filip},
+           giveni={F\bibinitperiod}}}%
+        {{hash=b2cfb2113b7b76cb56cad50823a6f323}{%
+           family={Tolias},
+           familyi={T\bibinitperiod},
+           given={Giorgos},
+           giveni={G\bibinitperiod}}}%
+        {{hash=d7b83a642c8096bdc436f47835635444}{%
+           family={Chum},
+           familyi={C\bibinitperiod},
+           given={Ondřej},
+           giveni={O\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{9f60926d07b04dbb8a8f47b9dd03d3d5}
+      \strng{fullhash}{cf8913d566ed0dbce8de40f562d733dc}
+      \strng{fullhashraw}{cf8913d566ed0dbce8de40f562d733dc}
+      \strng{bibnamehash}{cf8913d566ed0dbce8de40f562d733dc}
+      \strng{authorbibnamehash}{cf8913d566ed0dbce8de40f562d733dc}
+      \strng{authornamehash}{9f60926d07b04dbb8a8f47b9dd03d3d5}
+      \strng{authorfullhash}{cf8913d566ed0dbce8de40f562d733dc}
+      \strng{authorfullhashraw}{cf8913d566ed0dbce8de40f562d733dc}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{7}
+      \field{title}{Fine-tuning CNN image retrieval with no human annotation}
+      \field{volume}{41}
+      \field{year}{2018}
+      \field{pages}{1655\bibrangedash 1668}
+      \range{pages}{14}
+    \endentry
+    \entry{hstl}{misc}{}{}
+      \name{author}{4}{}{%
+        {{hash=1f647bb6da8304b7be380ec58eb6373a}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Lei},
+           giveni={L\bibinitperiod}}}%
+        {{hash=fa97927921a403cfe822973e31081dca}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Bo},
+           giveni={B\bibinitperiod}}}%
+        {{hash=1e1d1960ba2288dcd7b1ff7d399ad83f}{%
+           family={Liang},
+           familyi={L\bibinitperiod},
+           given={Fangfang},
+           giveni={F\bibinitperiod}}}%
+        {{hash=643e3b817b3884403c256b4c91cf9ca2}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Bincheng},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{10814f16ce9673476ec6de14dc6cea6e}
+      \strng{fullhash}{a78cbb39852a57d8ddc3f4a8eda62214}
+      \strng{fullhashraw}{a78cbb39852a57d8ddc3f4a8eda62214}
+      \strng{bibnamehash}{a78cbb39852a57d8ddc3f4a8eda62214}
+      \strng{authorbibnamehash}{a78cbb39852a57d8ddc3f4a8eda62214}
+      \strng{authornamehash}{10814f16ce9673476ec6de14dc6cea6e}
+      \strng{authorfullhash}{a78cbb39852a57d8ddc3f4a8eda62214}
+      \strng{authorfullhashraw}{a78cbb39852a57d8ddc3f4a8eda62214}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.CV}
+      \field{eprinttype}{arXiv}
+      \field{title}{Hierarchical Spatio-Temporal Representation Learning for Gait Recognition}
+      \field{year}{2023}
+      \verb{eprint}
+      \verb 2307.09856
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2307.09856
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2307.09856
+      \endverb
+    \endentry
+    \entry{triplet}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=c62e96f68033a3d3cd4639e35a2de4da}{%
+           family={Schroff},
+           familyi={S\bibinitperiod},
+           given={Florian},
+           giveni={F\bibinitperiod}}}%
+        {{hash=6cbb997a11c6922af719c32863261918}{%
+           family={Kalenichenko},
+           familyi={K\bibinitperiod},
+           given={Dmitry},
+           giveni={D\bibinitperiod}}}%
+        {{hash=1e9a1d678032dfffb4e871a0f622e030}{%
+           family={Philbin},
+           familyi={P\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{5eafdb6c00f832f72d64a3a8c5e2fa1c}
+      \strng{fullhash}{474363fec59aa6cdd11f5b6b8275a8f2}
+      \strng{fullhashraw}{474363fec59aa6cdd11f5b6b8275a8f2}
+      \strng{bibnamehash}{474363fec59aa6cdd11f5b6b8275a8f2}
+      \strng{authorbibnamehash}{474363fec59aa6cdd11f5b6b8275a8f2}
+      \strng{authornamehash}{5eafdb6c00f832f72d64a3a8c5e2fa1c}
+      \strng{authorfullhash}{474363fec59aa6cdd11f5b6b8275a8f2}
+      \strng{authorfullhashraw}{474363fec59aa6cdd11f5b6b8275a8f2}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2015 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}
+      \field{month}{6}
+      \field{title}{FaceNet: A unified embedding for face recognition and clustering}
+      \field{year}{2015}
+      \field{pages}{815\bibrangedash 823}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1109/cvpr.2015.7298682
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1109/CVPR.2015.7298682
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1109/CVPR.2015.7298682
+      \endverb
+    \endentry
+    \entry{circle}{misc}{}{}
+      \name{author}{7}{}{%
+        {{hash=727938c60e783da449b4314fcefc4b67}{%
+           family={Sun},
+           familyi={S\bibinitperiod},
+           given={Yifan},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=dadb9e5219bf5cd4f63e162d88258493}{%
+           family={Cheng},
+           familyi={C\bibinitperiod},
+           given={Changmao},
+           giveni={C\bibinitperiod}}}%
+        {{hash=a56af66ec399fd8ca9e5ccca445915ad}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Yuhan},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=dab90d227b512e9cedb41532e46ba87a}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Chi},
+           giveni={C\bibinitperiod}}}%
+        {{hash=7f1ed47c0c1b22e46324b0745b5b65eb}{%
+           family={Zheng},
+           familyi={Z\bibinitperiod},
+           given={Liang},
+           giveni={L\bibinitperiod}}}%
+        {{hash=ca0724a3010f0a8c774baf95fdd595df}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Zhongdao},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=3a3772ff910cd5647014fa1f8c9fb007}{%
+           family={Wei},
+           familyi={W\bibinitperiod},
+           given={Yichen},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{d2ab7a2a823cf185790687a6f0a9a924}
+      \strng{fullhash}{00d10db747972d1aeeb40cca1229225e}
+      \strng{fullhashraw}{00d10db747972d1aeeb40cca1229225e}
+      \strng{bibnamehash}{d2ab7a2a823cf185790687a6f0a9a924}
+      \strng{authorbibnamehash}{d2ab7a2a823cf185790687a6f0a9a924}
+      \strng{authornamehash}{d2ab7a2a823cf185790687a6f0a9a924}
+      \strng{authorfullhash}{00d10db747972d1aeeb40cca1229225e}
+      \strng{authorfullhashraw}{00d10db747972d1aeeb40cca1229225e}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.CV}
+      \field{eprinttype}{arXiv}
+      \field{title}{Circle Loss: A Unified Perspective of Pair Similarity Optimization}
+      \field{year}{2020}
+      \verb{eprint}
+      \verb 2002.10857
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2002.10857
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2002.10857
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

@@ -1,0 +1,399 @@
+\chapter{Phương pháp đề xuất}
+\label{Chapter3}
+\textcolor{blue}{Mục này có cách viết đơn giản nhất là sẽ trình bày lại gần như đầy đủ các nội dung của phương pháp được chọn, nhưng những phần hạn chế sẽ được thay thế bằng các cản tiến do nhóm đề xuất. Cụ thể:}
+\begin{itemize}
+    \item Vẽ lại sơ đồ phương pháp đề xuất với các thành phần cải tiến được đề xuất.
+    \item Đối với cải tiến khối \textbf{Conv3D}, báo cáo này không trình bày lại, mà trình bày thẳng về khối \textbf{Pseudo 3D}. Bên cạnh đó, bổ sung các so sánh lý thuyết giữa kỹ thuật đề xuất so với kĩ thuật gốc ( khác biệt về nguyên lý, độ phức tạp thuật toán, chi phí huấn luyện, tổng tham số của mô hình lớn,\dots)
+    \item Tương tự với \textbf{Circle Loss}.
+    \item \textcolor{red}{Tất cả các hình vẽ về các kỹ thuật hay phương pháp đề xuất, phải được chèn vào.}
+    \item \textcolor{red}{Nội dung có sẵn khá lan man, không nên viết theo.}
+\end{itemize}
+\section{Tổng quan về mô hình}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=1\linewidth]{figures/HSTL.png}
+    \caption{Tổng quan về mô hình Học biểu diễn không gian phân cấp (HSTL).}
+    \label{fig:main_model}
+\end{figure}
+
+
+% \begin{enumerate}
+\subsection{Quy trình chung}
+
+Hình \ref{fig:main_model} trình bày quy trình \textbf{HSTL}. Cho tập dữ liệu $\mathcal{D}=\{{S_i}\}_{i=1}^{N} $, gồm $N$ chuỗi dáng đi, mỗi chuỗi $S_i \in \mathbb{R}^{C \times T \times H \times W}$ được biểu diễn bằng tensor 4 chiều bao gồm $C$ kênh, $T$ khung hình, và kích thước $H \times W$. Ở bước tiền xử lý, mỗi chuỗi được chia đều theo chiều ngang thành $k$ phần rồi dùng thuật toán phân cụm phân cấp (cụ thể là DBSCAN) để tạo một thứ bậc chuyển động $\mathcal{P}=\{\mathcal{P}^{(l)}\}_{l=1}^{L}$, với $L$ là số bậc trong phân cấp và $\mathcal{P}^{(l)} = \{\mathcal{P}_1^{(l),\dots,\mathcal{P}_{K_l}^{(l)}}\}$ là tập các phân vùng ở mức $l$. Sự phân cấp là một thuộc tính có cấu trúc của các mẫu chuyển động dáng đi và dùng để hướng dẫn quy trình trích xuất đặc trưng dáng đi. \textbf{HSTL} xếp chồng các mô-đun theo cấu trúc phân cấp đó. Xét đầu vào $S_{in}$, nhánh chính của \textbf{HSTL} được biểu diễn như sau:
+
+\begin{equation}
+    \label{eq:pipeline}
+    Y^{M}=\Gamma^{(L)} \circ \Psi^{(L-1)} \circ \cdots \circ \Omega^{(2)} \circ \Psi^{(2)} \circ \Psi^{(1)}(S_{in})
+\end{equation}
+
+, trong đó $\Psi^{(l)}$, $\Gamma^{(l)}$, và $\Omega^{(l)}$ lần lượt là các mô-đun \textbf{ARME}, \textbf{ASTP} và \textbf{FTA} ở mức thứ $l$ của $\mathcal{P}$.  Vì \textbf{FTA} nén dữ liệu giữa các khung hình, nên chỉ được dùng một lần duy nhất tại mức $l_{\Omega}$ trong $\mathcal{P}$ (ví dụ, $l_{\Omega}=2$ trong biểu thức \ref{eq:pipeline}) để tránh mất thông tin quá mức.
+
+Các đặc trưng dáng đi ở các phân cấp khác được thu thập bằng cách truyền vào $\Gamma^{(l)}$ tương ứng:
+\begin{itemize}
+    \item Đầu ra $Y^{(l)}$ của từng $\Psi^{(l)}$ ở mức $l \in \{1, 2, \ldots, L-1\}$,
+    \item và đầu ra $Y_{\Omega}^{(l_{\Omega})}$ của $\Omega^{(l_{\Omega})}$ ở mức $l_{\Omega}$.
+\end{itemize}
+
+Đầu ra cuối cùng của quy trình \textbf{HSTL} được hình thành bằng cách ghép nối các đặc trưng, biểu diễn như sau:
+
+\begin{align}
+    Y =  \biggl[ & Y^{M}, \Gamma^{(L-1)}\left(Y^{(L-1)}\right),  \ldots , \nonumber                                                                         \\
+                 & \Gamma^{(l_{\Omega})}\left(Y_{\Omega}^{(l_{\Omega})}\right), \Gamma^{(2)}\left(Y^{(2)}\right), \Gamma^{(1)}\left(Y^{(1)}\right) \biggl],
+\end{align}
+
+Sau đó, $Y$ được truyền qua các lớp kết nối đầy đủ (\textbf{FC}), trước khi tối ưu bằng tổ hợp hàm mất mát tròn $\mathcal{L}_{circle}$ và hàm mất mát entropy chéo $\mathcal{L}_{ce}$.
+
+\subsection{Mô-đun trích xuất chuyển động theo vùng có khả năng thích ứng - \textbf{ARME}}
+
+Mục tiêu của \textbf{ARME} là trích xuất các mẫu không gian-thời gian tương ứng với từng vùng cơ thể, và chúng phải độc lập với nhau. Dựa trên phân cấp $\mathcal{P}$, đầu vào $X$ được phân thành $K_l$ vùng tại mức $l$, ký hiệu là $\{X_{j}^{(l)}\}_{j=1}^{K_l}$, với $X_{j}^{(l)} \in \mathbb{R}^{C \times T \times H_j^{(l)} \times W}$ và $H^{(l)}_j=\frac{\left|P_j^{(l)}\right|}{k}H$ là chiều cao vùng $j$ ở mức $l$. Mức $l$ của \textbf{ARME}, $\Psi^{(l)}$ được biểu diễn như sauL
+
+\begin{equation}
+    Y^{(l)}_{\Psi}=\Psi^{(l)}(X^{(l)})=\left[f_{1}(X_{1}^{(l)}), f_{2}(X_{2}^{(l)}) ,\ldots, f_{K_l}(X_{K_l}^{(l)})  \right],
+\end{equation}
+
+trong đó, $f_{j}\left(\cdot\right)$ là phép tích chập giả 3 chiều (\textbf{gọi tắt là P3D}) \textcolor{red}{(không chia sẻ) ???} ứng với vùng $j$. Đầu ra $Y^{(l)}_{\Psi} \in \mathbb{R}^{C^{(l)} \times T \times H \times W}$ của mức $l$ có $C^{(l)}$ kênh, và giữ nguyên độ phân giải không gian và thời gian.
+
+Kĩ thuật tích chập 3 chiều học đồng thời đặc trưng không gian và thời gian từ dữ liệu đoạn phim (tức các khung hình liên tiếp), tương tự với chuỗi các khung hình được dùng trong nghiên cứu này. Phương pháp này rất hiệu quả, nhưng lại có hạn chế rõ ràng, bao gồm chi phí tính toán cao và cần sử dụng bộ nhớ lớn. Nghiên cứu \cite{p3d} đã giải quyết các hạn chế này bằng cách mô phỏng một bộ tích chập 3 chiều thông qua ghép một bộ tích chập 2 chiều với một bộ tích chập bổ trợ. Bộ tích chập 2 chiều học riêng biệt đặc trưng không gian, trong khi đó, bộ tích chập bổ trợ học mối liên hệ theo thời gian của hai bản đồ đặc trưng không gian liên tiếp nhau. Chúng ta sẽ phân tích kĩ thuật tích chập giả 3 chiều trên một số khía cạnh.
+\begin{enumerate}
+    \item \textbf{Nguyên lý}
+
+          Xét $f_{j}\left(\cdot\right)$ là phép tích chập giả 3 chiều, với đầu vào $X_{j}^{(l)} \in \mathbb{R}^{C \times T \times H_j^{(l)} \times W}$ là vùng $j$ ở mức $l$. Bộ lọc có kích thước không gian $k_h \times k_w$  và thời gian $k_t$.
+
+
+          \textbf{Bỏ -} Xét một thao tác tích chập trên một vùng cơ thể thứ $j$ tại cấp độ $l$. Giả sử đầu vào là tensor $X \in \mathbb{R}^{C_{in} \times T \times H \times W}$.
+
+          P3D tách một nhân 3 chiều kích thước $k_t \times k_h \times k_w$ thành hai nhân riêng biệt, một nhân không gian và một nhân thời gian. Theo cơ chế như sau:
+
+          \begin{itemize}
+              \item Nhân không gian S: Ký hiệu $f^s\left(\cdot\right)$, sử dụng bộ lọc kích thước $1 \times k_h \times k_w$, tương đương với mạng nơ-ron tích chập hai chiều để học các đặc trưng không gian.
+              \item Nhân thời gian T: Ký hiệu $f^t\left(\cdot\right)$, sử dụng các bộ lọc $k_t \times 1 \times 1$ để xây dựng các kết nối thời gian giữa các bản đồ đặc trưng liền kề.
+          \end{itemize}
+
+          Biểu diễn không gian và thời gian, thay vì được học đồng thời bằng kỹ thuật tích chập 3 chiều, chúng được học tuần tự theo thứ tự sau:
+          \begin{equation}
+              A_s = f_{j}^s\left(X_{j}^{(l)}\right) = W_{s} \ast X_{j}^{(l)}
+          \end{equation}
+
+          \begin{equation}
+              A_t = f_{j}^t\left(A_s\right) = W_{t} \ast A_s
+          \end{equation}
+
+          Trong đó $W_{s} \in \mathbb{R}^{C_{out} \times C_{in} \times 1 \times k_h \times k_w}$ và $W_{t} \in \mathbb{R}^{C_{out} \times C_{out} \times k_t \times 1 \times 1}$.\\
+          Trong nghiên cứu này, chúng tôi áp dụng kĩ thuật tích chập giả 3 chiều, cấu trúc nối tiếp, viết tắt là P3D-A. Cụ thể là thành phần thời gian (T) đi trực tiếp sau thành phần không gian (S) trên cùng một luồng xử lý. Biểu diễn đầy đủ của phép này với đầu vào $X_{j}^{(l)}$:
+          \begin{equation}
+              Y_{j}^{(l)} = X_{j}^{(l)} + f_{j}\left(X_{j}^{(l)}\right) = X_{j}^{(l)} + f_{j}^t \circ f_{j}^s \left(X_{j}^{(l)}\right)
+          \end{equation}
+
+
+          \begin{figure}[htp]
+              \centering
+              \includegraphics[width=0.3\linewidth]{figures/architecture/p3d_a.jpg}
+              \caption{Kiến trúc của khối P3D-A: Các bộ lọc không gian S và thời gian T được sắp xếp nối tiếp.}
+              \label{fig:p3d_a}
+          \end{figure}
+
+
+    \item \textbf{Độ phức tạp tính toán}
+
+          Ở mô-đun ARME gốc trong HSTL, độ phức tạp của phép tích chập 3 chiều là $O(k_t \cdot k_h \cdot k_w)$. Trong khí đó, độ phức tạp của phép tích chập giả 3 chiều là $O(k_h \cdot k_w + k_t)$. Trong nghiên cứu này, $k_t,\;k_h,\;k_w$ đều bằng $k$, và là số nguyên. Chúng ta dễ dàng thấy rằng $O(k^3) > O (k^2 + k)$, khoảng cách càng lớn khi $k$ tăng dần. Chúng ta thử ước lượng với cùng giá trị $k=3$ được dùng. Về mặt lý thuyết, tỷ lệ giảm thiểu khối lượng tính toán $R_{comp}$ được ước lượng như sau:
+          $$
+              R_{comp} = \frac{\text{Chi phí}_{Conv3D}}{\text{Chi phí}_{P3D}} \approx \frac{d \cdot k \cdot k}{(1 \cdot k \cdot k) + (d \cdot 1 \cdot 1)} = \frac{3 \cdot 3 \cdot 3}{9 + 3} = \frac{27}{12} \approx 2.25
+          $$
+          Như vậy cho thấy P3D đã giúp giảm độ phức tạp tính toán khoảng 2.25 lần so với kỹ thuật Conv3D đã dùng trước đó, giúp tăng tốc độ suy luận của hệ thống.
+
+          % \item \textbf{Tổng tham số của mô hình}
+
+          %       Một trong những thách thức lớn nhất của kiến trúc HSTL là sự gia tăng số lượng tham số do đặc thù sử dụng các bộ lọc tích chập độc lập cho từng vùng cơ thể. Do đó, việc tối ưu hóa cấu trúc nhân tại mô-đun này sẽ mang lại hiệu quả giảm tải trực tiếp cho toàn bộ mô hình.
+
+          %       Đối với mô-đun ARME, việc sử dụng tích chập 3D thuần túy đồng nghĩa với việc mỗi nhân phải học một khối trọng số kích thước $3 \times 3 \times 3$, tương đương với 27 tham số cho mỗi kênh đặc trưng trên mỗi vùng cơ thể. Khi số lượng vùng cơ thể $K_l$ tăng lên để trích xuất đặc trưng chi tiết hơn, tổng lượng tham số của mô hình sẽ vô cùng lớn, dẫn đến nguy cơ quá khớp cao và kích thước tệp lưu trữ lớn.
+
+          %       Ngược lại, kiến trúc P3D đề xuất tiếp cận vấn đề bằng cách phân rã nhân 3D thành hai thành phần trực giao: một bộ lọc không gian kích thước $1 \times 3 \times 3$ và một bộ lọc thời gian kích thước $3 \times 1 \times 1$. Tổng số tham số cần thiết cho cấu trúc tách biệt này chỉ là $9 + 3 = 12$ tham số.
+
+          %       Như vậy, ta có thể thấy kiến trúc đề xuất giúp loại bỏ khoảng 55.6\% lượng tham số dư thừa tại các lớp tích chập ($(27 - 12) / 27$). Sự tinh giản này giúp HSTL trở nên gọn nhẹ hơn đáng kể, đồng thời đóng buộc mô hình phải học các đặc trưng cốt lõi hiệu quả hơn thay vì ghi nhớ nhiễu từ dữ liệu huấn luyện.
+
+    \item \textbf{Nhận định về quá trình huấn luyện}
+
+          Mặc dù P3D tách biệt các thành phần không gian và thời gian, việc tích hợp các kết nối tắt trong khối P3D giúp quá trình lan truyền ngược đạo hàm diễn ra hiệu quả hơn so với mạng tích chập 3D thuần túy. Nhờ đó, mô hình đạt được khả năng hội tụ ổn định hơn, ngay cả khi độ sâu của mạng được gia tăng.
+
+          Nhờ số lượng tham số được giảm đáng kể, mô hình đề xuất tiêu thụ ít bộ nhớ đồ họa hơn trong quá trình lan truyền ngược. Điều này cho phép sử dụng kích thước lô huấn luyện lớn hơn trên cùng một cấu hình phần cứng. Trong các bài toán học đo lường, chẳng hạn như nhận dạng dáng đi, việc sử dụng kích thước lô lớn đóng vai trò then chốt, giúp mô hình học được các mẫu khó hiệu quả hơn, từ đó gián tiếp cải thiện độ chính xác.
+\end{enumerate}
+
+\subsection{Mô-đun gộp không gian-thời gian có khả năng thích ứng - \textbf{ASTP}}
+
+\textbf{ASTP} thực hiện ánh xạ đặc trưng phân cấp bằng cách áp dụng kĩ thuật gộp (\textbf{pooling}) không đều lên các vùng thu được từ $\mathcal{P}$. Với vùng $j$ của mức $l$, $X_j^{(l)}$, mô-đun \textbf{ASTP} tại mức $l$, $\Gamma^{(l)}$, được biểu diễn như sau:
+\begin{equation}
+    Y_{\Gamma,j}^{(l)}=\Gamma_j^{(l)}(X_j^{(l)})=\text{GeM}_j \circ \text{FC} \circ \text{Max}(X_j^{(l)}),
+\end{equation}
+trong đó, $\text{Max}(\cdot)$ là phép gộp dựa trên giá trị lớn nhất (\text{max pooling}) dọc theo trục thời gian, $\text{FC}(\cdot)$ là lớp kết nối đầy đủ, $\text{GeM}_j(\cdot)$ là phép gộp trung bình tổng quát (generalized mean pooling - GeM) \cite{radenovic2018fine} cho vùng $j$. Chuỗi phép ánh xạ của $\Gamma_j$ như sau: $\Gamma_j:\mathbb{R}^{C \times T \times H_j^{(l)} \times W} \mapsto \mathbb{R}^{C \times 1 \times H_j^{(l)} \times W} \mapsto \mathbb{R}^{C^{(l)} \times 1 \times H_j^{(l)} \times W} \mapsto \mathbb{R}^{C^{(l)} \times 1 \times 1 \times 1}$. Nối các $Y_{\Gamma,j}^{(l)}$ theo thứ tự, thu được $Y_{\Gamma}^{(l)}=\left[Y_{\Gamma,1}^{(l)},Y_{\Gamma,2}^{(l)},\ldots,Y_{\Gamma,K_l}^{(l)}\right]$, với $Y_{\Gamma}^{(l)} \in \mathbb{R}^{C_{}^{(l)}\times 1 \times  K_l \times 1}$ là đầu ra của \textbf{ASTP} ở mức $l$.
+
+\subsection{Mô-đun tổng hợp đặc trưng theo thời gian ở mức khung hình - \textbf{FTA}}
+
+\textbf{FTA} nén các khung hình cục bộ để loại bỏ khung dư thừa bằng cách kết hợp đa tỉ lệ thời gian và chọn khung tại mức khung hình. Với vùng $X_{j}^{(l)}$, hai phép gộp theo thời gian với nhân $3 \times 1 \times 1$ và $5 \times 1 \times 1$ (với cùng độ trượt $3 \times 1 \times 1$) sinh ra $U_{j,1}^{(l)}$ và $U_{j,2}^{(l)}$, biểu diễn như sau:
+
+\begin{equation}
+    \begin{aligned}
+        \hat{U}_{j}^{(l)} & =U_{j,1}^{(l)}+U_{j,2}^{(l)} \\ &=\text{Max}_{3 \times 1 \times 1}^{3\times 1 \times 1}\left(X_{j}^{(l)}\right)
+        +\text{Max}_{5 \times 1 \times 1}^{3\times 1 \times 1}\left(X_{j}^{(l)}\right),
+    \end{aligned}
+    % \hat{U}_{j}^{(l)}=U_{j,1}^{(l)}=\sum_{v=1}^{V}\psi_{v}\left(X_{j}^{(l)}\right),v\in \left\{1,2,\cdots,V\right\},
+    \label{equ:poolfeature}
+\end{equation}
+
+trong đó, $\text{Max}_{3 \times 1 \times 1}^{3\times 1 \times 1}\left(\cdot\right)$ và $\text{Max}_{5 \times 1 \times 1}^{3\times 1 \times 1}\left(\cdot\right)$ là phép gộp dựa trên giá trị lớn nhất. $\hat{U}_{j}^{(l)}$, $U_{j,1}^{(l)}$ và $U_{j,2}^{(l)}$ có cùng kích thước $(C,\frac{T}{3},H_j^{(l)},W)$.
+
+Tiếp đó, \textbf{FTA} sinh trọng số lựa trong khung:
+
+\begin{equation}
+    \begin{gathered}
+        Z_{j,1}^{(l)}=\text{FC}_{j,1}^{(l)}\left(\text{GAP}\left(\hat{U}_j^{(l)}\right)\right),\\
+        Z_{j,2}^{(l)}=\text{FC}_{j,2}^{(l)}\left(\text{GAP}\left(\hat{U}_j^{(l)}\right)\right),
+    \end{gathered}
+    % \hat{U}_j^{(l)}&=g\left(\sum_{n=1}^N U_{j,n}^{(l)}\right)\\
+    \label{equ:weight}
+\end{equation}
+trong đó, $\text{GAP}\left(\cdot\right)$  là phép gộp trụng bình toàn cục dọc theo chiều không gian, $Z_{j,1}^{(l)}$ và $ Z_{j,2}^{(l)} \in \mathbb{R}^{C  \times \frac{T}{3} \times 1 \times 1}$. Trọng số được chuẩn hóa chéo trên 2 tỉ lệ, được biểu diễn như sau:
+\begin{equation}
+    \label{equ:normalize}
+    \mathcal{W}_{j,s,c,t}^{(l)}=\frac{e^{Z_{j,s,c,t}^{(l)}}}{e^{Z_{j,1,c,t}^{(l)}}+e^{Z_{j,2,c,t}^{(l)}}}   \quad s\in \{1,2\},
+\end{equation}
+trong đó, $\mathcal{W}_{j,s,c,t}^{(l)} \in \mathbb{R}^{1 \times 1 \times 1 \times 1}$ là trọng số của kênh $c$của khung hình $t$.
+%,w_{j,2,c,t}^{(l)}=\frac{e^{z_{j,2,c,t}^{(l)}}}{e^{z_{j,1,c,t}^{(l)}}+e^{z_{j,2,c,t}^{(l)}}},
+Kết hợp biểu thức (\ref{equ:poolfeature}) và biểu thức (\ref{equ:normalize}), đầu ra vùng $j$, $Y_{\Omega,j}^{(l)} \in \mathbb{R}^{C^{(l)} \times \frac{T}{3} \times H_j^{(l)} \times W}$ ở mức $l$ \textbf{FTA} được biểu diễn như sau:
+\begin{equation}
+    % Y_{\Omega,j}^{(l)}=\sum_{v=1}^{V}\left(\mathcal{W}_{j,v}^{(l)} \odot U_{j,n}^{(l)}\right)
+    Y_{\Omega,j}^{(l)}=\mathcal{W}_{j,1}^{(l)}\odot U_{j,1}^{(l)}+\mathcal{W}_{j,2}^{(l)}\odot U_{j,2}^{(l)},
+\end{equation}
+trong đó $\mathcal{W}_{j,1}^{(l)}, \mathcal{W}_{j,2}^{(l)} \in \mathbb{R}^{C \times \frac{T}{3} \times 1 \times 1}$ là 2 tensor trọng số được  tính theo biểu thức (\ref{equ:poolfeature}), và $\odot$ là phép nhân trên từng phần tử. Kết quả của \textbf{FTA}, $Y^{(l)}_{\Omega}\in \mathbb{R}^{C \times \frac{T}{3} \times H \times W}$ được tạo bằng cách ghép nối $K_l$ vùng của mức $l$, với $Y^{(l)}_{\Omega}=\left[Y_{\Omega,1}^{(l)},Y_{\Omega,2}^{(l)},\ldots,Y_{\Omega,K_l}^{(l)}\right]$.
+
+
+
+\begin{figure}[t]%
+    \centering
+    \includegraphics[width=\textwidth]{../utils/arXiv-2307.09856v1/mma.pdf}
+    \caption{Minh họa mô-đun \textbf{FTA}.
+    }
+    \label{fig:mma}
+\end{figure}
+
+
+
+
+% \section{Thay thế kỹ thuật ARME thành P3D\cite{p3d}}
+
+% \subsection{Nguyên lý}
+
+% Xét một thao tác tích chập trên một vùng cơ thể thứ $j$ tại cấp độ $l$. Giả sử đầu vào là tensor $X \in \mathbb{R}^{C_{in} \times T \times H \times W}$.
+% Bộ lọc có kích thước không gian $k \times k$  và thời gian $d$.
+
+% P3D tách một nhân 3D kích thước $d \times k \times k$ thành hai nhân riêng biệt: một nhân không gian ($1 \times k \times k$) và một nhân thời gian ($d \times 1 \times 1$).
+% Theo cơ chế như sau:
+% \begin{itemize}
+%     \item Nhân không gian ($S$): Sử dụng bộ lọc kích thước $1 \times k \times k$, tương đương với mạng nơ-ron tích chập 2D để học các đặc trưng hình ảnh.
+%     \item Nhân thời gian ($T$): Sử dụng các bộ lọc $d \times 1 \times 1$ để xây dựng các kết nối thời gian giữa các bản đồ đặc trưng liền kề.
+% \end{itemize}
+
+% Ta thực hiện tuần tự, thay vì tính toán trực tiếp như trong ARME:
+% $$Y_{Spatial} = S(X_j) = W_{S} \ast X_j \quad (\text{Nhân } 1 \times k \times k)$$
+% $$Y_{j} = T(Y_{Spatial}) = W_{T} \ast Y_{Spatial} \quad (\text{Nhân } d \times 1 \times 1)$$
+
+% Trong đó $W_{S} \in \mathbb{R}^{C_{out} \times C_{in} \times 1 \times k \times k}$ và $W_{T} \in \mathbb{R}^{C_{out} \times C_{out} \times d \times 1 \times 1}$.\\
+% Trong nghiên cứu này, chúng tôi áp dụng cấu trúc của P3D-A. Cụ thể là thành phần thời gian (T) đi trực tiếp sau thành phần không gian (S) trên cùng một đường dẫn. Đầu ra của không gian là đầu vào của thời gian.
+
+% $$x_{t+1} = (I + T \cdot S) \cdot x_t = x_t + T(S(x_t))$$
+
+% \begin{figure}[htp]
+%     \centering
+%     \includegraphics[width=0.3\linewidth]{figures/architecture/p3d_a.jpg}
+%     \caption{Kiến trúc của khối P3D-A: Các bộ lọc không gian (S) và thời gian (T) được sắp xếp nối tiếp.}
+%     \label{fig:p3d_a}
+% \end{figure}
+
+
+% \subsection{Độ phức tạp tính toán}
+
+% Ở mô-đun ARME trong HSTL, các đặc trưng chuyển động được trích xuất thông qua các bộ lọc tích chập 3D với kích thước $3 \times 3 \times 3$. Điều này đòi hỏi số lượng phép tính dấu phẩy động lớn do phải xử lý đồng thời thông tin không gian và thời gian.
+% Trong khi đó, P3D cải tiến giải quyết vấn đề này bằng cách phân rã phép tích chập 3D thành hai thao tác tuần tự: tích chập không gian 2D ($1 \times k \times k$) và tích chập thời gian 1D ($d \times 1 \times 1$).
+% Về mặt lý thuyết, tỷ lệ giảm thiểu khối lượng tính toán $R_{comp}$ được ước lượng như sau:
+% $$R_{comp} = \frac{\text{Chi phí}_{3D}}{\text{Chi phí}_{P3D}} \approx \frac{d \cdot k \cdot k}{(1 \cdot k \cdot k) + (d \cdot 1 \cdot 1)} = \frac{3 \cdot 3 \cdot 3}{9 + 3} = \frac{27}{12} \approx 2.25$$
+% Như vậy cho thấy P3D đã giúp giảm độ phức tạp tính toán khoảng 2.25 lần so với kỹ thuật ARME đã dùng trước đó, giúp tăng tốc độ suy luận của hệ thống.
+
+% \subsection{Tổng tham số của mô hình}
+
+% Một trong những thách thức lớn nhất của kiến trúc HSTL là sự gia tăng số lượng tham số do đặc thù sử dụng các bộ lọc tích chập độc lập cho từng vùng cơ thể. Do đó, việc tối ưu hóa cấu trúc nhân tại mô-đun này sẽ mang lại hiệu quả giảm tải trực tiếp cho toàn bộ mô hình.
+
+% Đối với mô-đun ARME, việc sử dụng tích chập 3D thuần túy đồng nghĩa với việc mỗi nhân phải học một khối trọng số kích thước $3 \times 3 \times 3$, tương đương với 27 tham số cho mỗi kênh đặc trưng trên mỗi vùng cơ thể. Khi số lượng vùng cơ thể $K$ tăng lên để trích xuất đặc trưng chi tiết hơn, tổng lượng tham số của mô hình sẽ vô cùng lớn, dẫn đến nguy cơ quá khớp cao và kích thước tệp lưu trữ lớn.
+
+% Ngược lại, kiến trúc P3D đề xuất tiếp cận vấn đề bằng cách phân rã nhân 3D thành hai thành phần trực giao: một bộ lọc không gian kích thước $1 \times 3 \times 3$ và một bộ lọc thời gian kích thước $3 \times 1 \times 1$. Tổng số tham số cần thiết cho cấu trúc tách biệt này chỉ là $9 + 3 = 12$ tham số.
+
+% Như vậy, ta có thể thấy kiến trúc đề xuất giúp loại bỏ khoảng 55.6\% lượng tham số dư thừa tại các lớp tích chập ($(27 - 12) / 27$). Sự tinh giản này giúp HSTL trở nên gọn nhẹ hơn đáng kể, đồng thời đóng buộc mô hình phải học các đặc trưng cốt lõi hiệu quả hơn thay vì ghi nhớ nhiễu từ dữ liệu huấn luyện.
+
+% \subsection{Chi phí huấn luyện}
+
+% Mặc dù P3D tách biệt các thành phần không gian và thời gian, việc tích hợp các kết nối tắt trong khối P3D giúp quá trình lan truyền ngược đạo hàm diễn ra hiệu quả hơn so với mạng tích chập 3D thuần túy. Nhờ đó, mô hình đạt được khả năng hội tụ ổn định hơn, ngay cả khi độ sâu của mạng được gia tăng.
+
+% Nhờ số lượng tham số được giảm đáng kể, mô hình đề xuất tiêu thụ ít bộ nhớ đồ họa hơn trong quá trình lan truyền ngược. Điều này cho phép sử dụng kích thước lô huấn luyện lớn hơn trên cùng một cấu hình phần cứng. Trong các bài toán học đo lường, chẳng hạn như nhận dạng dáng đi, việc sử dụng kích thước lô lớn đóng vai trò then chốt, giúp mô hình học được các mẫu khó hiệu quả hơn, từ đó gián tiếp cải thiện độ chính xác.
+
+\subsection{Hàm mất mát}
+
+Mô hình \cite{hstl} gốc sử dụng đồng thời hàm mất mát bộ ba $\mathcal{L}_{triplet}$ \cite{triplet} và hàm mất mát entropy chéo $\mathcal{L}_{ce}$, là bộ hàm mất mát phổ biến được dùng trong hầu hết nghiên cứu về nhận dạng dáng đi. Việc sử dụng kết hợp hai hàm này, dựa trên các nghiên cứu trong nhận diện khuôn mặt, tái định danh người, hay truy vấn ảnh, ... . Điểm chung chính là bài toán nhận diện dựa trên sự tương đồng và phân loại. Cụ thể hơn, hàm mất mát bộ ba, hay nhóm các hàm mất mát trong bài toán học nhãn theo cặp, bằng tối thiểu hóa khoảng cách giữa điểm neo với mẫu dương (cùng danh tính, hay cùng lớp), đồng thời tối đại hóa khoảng cách giữa điểm neo với mẫu âm (không cùng danh tính, hay khác lớp), trong không gian đặc trưng, cụ thể là không gian Eucledian. Hàm mất mát entropy chéo đóng vai trò bổ trợ phân loại, hoạt động song song với hàm mất mát bộ ba. Nó giúp ổn định quá trình huấn luyện bằng cách buộc mô hình học các đặc trưng có khả năng phân biệt danh tính cụ thể trong tập huấn luyện, thay vì chỉ tối ưu khoảng cách tương đối.
+
+\subsubsection{Hàm mất mát bộ ba (Triplet Loss)}
+
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=1\linewidth]{figures/triplet.png}
+    \caption{Minh họa nguyên lý của hàm mất mát bộ ba.}
+    \label{fig:triplet}
+\end{figure}
+
+
+Hàm mất mát bộ ba được thiết kế để học các embedding phân biệt bằng cách đảm bảo rằng khoảng cách giữa mẫu anchor và mẫu positive (cùng danh tính) nhỏ hơn khoảng cách giữa mẫu anchor và mẫu negative (khác danh tính) với một biên độ nhất định. Hàm mất mát được định nghĩa như sau:
+
+\begin{equation}
+\mathcal{L}_{triplet} = \frac{1}{N_{valid}} \sum_{i=1}^{N_{triplet}} \max(0, d(f(x^a_i), f(a^p_i)) - d(f(x^a_i), f(x^n_i)) + m)
+\end{equation}
+
+\noindent trong đó:
+\begin{itemize}
+    \item $f_a^i, f_p^i, f_n^i$ lần lượt là các embedding của mẫu anchor, positive và negative trong bộ ba thứ $i$
+    \item $d(\cdot, \cdot)$ là hàm khoảng cách Euclidean được tính theo công thức:
+    \begin{equation}
+    d(x, y) = ||f(x)-f(y)||_2^2 %  \sqrt{\|x\|^2 + \|y\|^2 - 2\langle x, y \rangle}
+    \end{equation}
+    \item $m$ là tham số biên độ (margin) để tách biệt các mẫu cùng lớp và khác lớp
+    \item $N_{triplet}$ là tổng số bộ ba được tạo ra từ batch
+    \item $N_{valid}$ là số lượng bộ ba có vi phạm (loss $> 0$), tức là các hard triplets
+\end{itemize}
+
+Việc chỉ tính trung bình trên các bộ ba có vi phạm giúp mô hình tập trung học từ các mẫu khó, từ đó cải thiện khả năng phân biệt.
+
+\subsubsection{Hàm mất mát Entropy chéo (Cross-Entropy Loss)}
+
+Hàm mất mát entropy chéo được sử dụng để phân loại các embedding vào các lớp danh tính tương ứng. Mô hình áp dụng kỹ thuật temperature scaling và label smoothing để cải thiện khả năng tổng quát hóa:
+
+\begin{equation}
+\mathcal{L}_{ce} = -\frac{1}{V \cdot N} \sum_{v=1}^{V} \sum_{j=1}^{N} \left[ (1-\epsilon) \sum_{k=1}^{C} y_{jk} \log p_{vjk} + \epsilon \cdot H(p_{vj}) \right]
+\end{equation}
+
+\noindent trong đó:
+\begin{itemize}
+    \item $N$ là kích thước batch
+    \item $V$ là số lượng views (quan điểm không gian-thời gian) được trích xuất từ mỗi mẫu
+    \item $C$ là số lượng lớp danh tính
+    \item $y_{jk}$ là one-hot label của mẫu thứ $j$ cho lớp $k$
+    \item $p_{vjk}$ là xác suất dự đoán được tính từ softmax với temperature scaling:
+    \begin{equation}
+    p_{vjk} = \frac{\exp(s \cdot z_{vjk})}{\sum_{k'=1}^{C} \exp(s \cdot z_{vj k'})}
+    \end{equation}
+    với $z_{vjk}$ là logit đầu ra và $s$ là hệ số temperature scaling
+    \item $\epsilon$ là hệ số label smoothing
+    \item $H(p_{vj}) = -\frac{1}{C}\sum_{k=1}^{C} \log p_{vjk}$ là entropy của phân phối dự đoán, khuyến khích phân phối đồng đều hơn
+\end{itemize}
+
+Label smoothing với hệ số $\epsilon$ giúp tránh overfitting bằng cách ngăn mô hình quá tự tin vào các dự đoán, trong khi temperature scaling với hệ số $s$ điều chỉnh độ mượt của phân phối xác suất đầu ra.
+
+\subsubsection{Hàm mất mát tổng hợp}
+
+Hàm mất mát tổng thể là tổng có trọng số của hai hàm mất mát trên:
+
+\begin{equation}
+\mathcal{L}_{total} = \lambda_{triplet} \mathcal{L}_{triplet} + \lambda_{ce} \mathcal{L}_{ce}
+\end{equation}
+
+\noindent trong đó $\lambda_{triplet}$ và $\lambda_{ce}$ lần lượt là trọng số của hàm mất mát bộ ba và hàm mất mát entropy chéo. Sự kết hợp này cho phép mô hình vừa học được các embedding phân biệt thông qua metric learning ($\mathcal{L}_{triplet}$), vừa được hướng dẫn bởi thông tin phân lớp rõ ràng ($\mathcal{L}_{ce}$), tạo ra một không gian đặc trưng mạnh mẽ cho bài toán nhận dạng dáng đi.
+
+
+
+\subsubsection{Hạn chế của hàm mất mát bộ ba}
+
+Mặc dù được sử dụng rộng rãi trong các bài toán học đo lường, hàm mất mát bộ ba tồn tại một số hạn chế quan trọng:
+
+\begin{enumerate}
+    \item \textbf{Tối ưu hóa cứng nhắc:} Triplet Loss áp dụng cùng một cường độ phạt (gradient có độ lớn bằng 1 hoặc -1) cho mọi bộ ba vi phạm margin, bất kể mức độ vi phạm. Một mẫu rất khó (hard sample với $d(a,p) \approx d(a,n)$) và một mẫu gần đạt biên độ (marginal sample) đều nhận được mức độ quan tâm như nhau từ hàm gradient, gây lãng phí tài nguyên tính toán.
+
+    \item \textbf{Mục tiêu hội tụ mơ hồ:} Hàm này chỉ quan tâm đến khoảng cách tương đối $d(a,n) - d(a,p) > \alpha$, dẫn đến việc mô hình có thể dừng tối ưu khi đạt điều kiện margin mà không đảm bảo $d(a,p)$ đủ nhỏ (mẫu cùng lớp chưa đủ gần) hoặc $d(a,n)$ đủ lớn (mẫu khác lớp chưa đủ xa). Điều này tạo ra nhiều cấu hình thỏa mãn điều kiện nhưng chất lượng embedding khác nhau.
+
+    \item \textbf{Phụ thuộc vào hard negative mining:} Hiệu quả của Triplet Loss phụ thuộc rất lớn vào chiến lược chọn bộ ba (semi-hard mining, hard mining, online mining). Quá trình này tốn kém tính toán (phải tính distance cho tất cả các cặp trong batch) và dễ gây mất ổn định trong training nếu chọn mẫu quá khó.
+\end{enumerate}
+
+\subsubsection{Hàm mất mát Circle (Circle Loss)}
+
+Để khắc phục các hạn chế của hàm mất mát bộ ba, đặc biệt là sự thiếu linh hoạt trong tối ưu hóa và mục tiêu hội tụ không rõ ràng, chúng tôi đề xuất khảo sát việc sử dụng Circle Loss \cite{circle}. Hàm mất mát này được thiết kế với cơ chế tự động điều chỉnh cường độ phạt dựa trên mức độ tối ưu của từng cặp tương đồng (similarity pair).
+
+\textbf{Công thức toán học:}
+
+\begin{equation}
+\mathcal{L}_{circle} = \log\left( 1 + \sum_{j=1}^{M} e^{\gamma \alpha_{n,j} (s_{n,j} - \Delta_n)} \cdot \sum_{i=1}^{N} e^{-\gamma \alpha_{p,i} (s_{p,i} - \Delta_p)} \right)
+\label{eq:circle_loss}
+\end{equation}
+
+\noindent trong đó:
+\begin{itemize}
+    \item $s_{p,i}$ và $s_{n,j}$ lần lượt là độ tương đồng cosine (cosine similarity) của cặp positive thứ $i$ và cặp negative thứ $j$ trong batch.
+    \item $\alpha_{p,i} = \max(0, O_p - s_{p,i})$ và $\alpha_{n,j} = \max(0, s_{n,j} - O_n)$ là các hệ số trọng số tự điều chỉnh (self-paced weighting factors).
+    \item $O_p$ và $O_n$ lần lượt là các giá trị tối ưu mục tiêu cho độ tương đồng positive và negative. Trong thực nghiệm, chúng tôi sử dụng $O_p = 1$ và $O_n = 0$.
+    \item $\Delta_p$ và $\Delta_n$ là các biên độ (margins) nội lớp và ngoại lớp, kiểm soát vùng an toàn quanh các giá trị tối ưu.
+    \item $\gamma$ là hệ số quy mô (scale factor), có vai trò tương tự temperature trong softmax.
+    \item $N$ và $M$ lần lượt là số lượng cặp positive và negative trong batch.
+\end{itemize}
+
+\textbf{Cơ chế hoạt động:}
+
+Khác với Triplet Loss áp dụng cường độ phạt đồng đều, Circle Loss gán trọng số $\alpha_{p,i}$ và $\alpha_{n,j}$ một cách động. Cụ thể:
+\begin{itemize}
+    \item Các cặp positive có $s_{p,i}$ thấp (xa giá trị tối ưu $O_p$) sẽ có $\alpha_{p,i}$ lớn, dẫn đến gradient mạnh hơn, thúc đẩy mô hình ưu tiên tối ưu hóa các mẫu khó này.
+    \item Ngược lại, các cặp negative có $s_{n,j}$ cao (gần với positive, nguy hiểm) sẽ có $\alpha_{n,j}$ lớn, tạo áp lực mạnh để đẩy chúng xa hơn.
+    \item Các cặp đã gần đạt tối ưu sẽ tự động nhận trọng số nhỏ, tránh lãng phí tài nguyên tính toán.
+\end{itemize}
+
+Điều này tạo ra một quá trình học \textit{tự điều chỉnh} (self-paced learning), trong đó mô hình tự động tập trung vào các mẫu quan trọng mà không cần chiến lược hard mining phức tạp như trong Triplet Loss. Hơn nữa, Circle Loss hướng đến mục tiêu hội tụ xác định: $s_p \rightarrow 1$ và $s_n \rightarrow 0$, thay vì chỉ quan tâm đến chênh lệch tương đối, giúp tạo ra không gian embedding với ranh giới quyết định rõ ràng hơn.
+
+\subsubsection{So sánh Triplet Loss và Circle Loss}
+
+Bảng \ref{tab:triplet_vs_circle} trình bày so sánh chi tiết giữa hai hàm mất mát:
+
+\begin{table}[h]
+\centering
+\caption{So sánh Triplet Loss và Circle Loss}
+\label{tab:triplet_vs_circle}
+\begin{tabular}{|l|p{5.5cm}|p{5.5cm}|}
+\hline
+\textbf{Khía cạnh} & \textbf{Triplet Loss} & \textbf{Circle Loss} \\
+\hline
+Đơn vị đo & Khoảng cách Euclidean & Độ tương đồng Cosine \\
+\hline
+Cường độ phạt & Đồng đều cho mọi vi phạm & Trọng số động theo mức độ vi phạm \\
+\hline
+Mục tiêu hội tụ & Tương đối: $d(a,n) - d(a,p) > \alpha$ & Tuyệt đối: $s_p \rightarrow 1$, $s_n \rightarrow 0$ \\
+\hline
+Hard mining & Yêu cầu chiến lược mining & Tự động qua self-paced weighting \\
+\hline
+Gradient & Hằng số cho mỗi vi phạm & Adaptive theo trọng số tự điều chỉnh \\
+\hline
+Ranh giới quyết định & Tuyến tính & Hình tròn (circular) \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Kỳ vọng với bài toán nhận dạng dáng đi:}
+
+Trong ngữ cảnh nhận dạng dáng đi với biến thể lớn về góc nhìn, trang phục và điều kiện di chuyển, Circle Loss hứa hẹn mang lại những lợi thế sau:
+\begin{enumerate}
+    \item \textbf{Xử lý tốt hơn biến thể nội lớp:} Cơ chế self-paced weighting giúp mô hình tự động làm nổi bật các trường hợp khó (ví dụ: cùng người nhưng góc nhìn 90° so với 0°, hoặc mặc áo khoác dày), từ đó học được các đặc trưng bất biến vững chắc hơn.
+    \item \textbf{Không gian embedding rõ ràng hơn:} Mục tiêu hội tụ xác định ($s_p \rightarrow 1$, $s_n \rightarrow 0$) thay vì chỉ quan tâm đến chênh lệch tương đối, giúp tạo ra ranh giới quyết định rõ ràng giữa các lớp, đặc biệt quan trọng trong kiến trúc phân cấp của HSTL.
+    \item \textbf{Ổn định và hiệu quả hơn trong training:} Không phụ thuộc vào chiến lược hard triplet mining phức tạp, Circle Loss đơn giản hóa quá trình huấn luyện và giảm thiểu nguy cơ training collapse, đồng thời kỳ vọng đạt được tốc độ hội tụ nhanh hơn.
+\end{enumerate}
+
+\subsubsection{Hàm mất mát tổng hợp với Circle Loss}
+
+Tương tự như cấu hình gốc, hàm mất mát tổng thể trong nghiên cứu này kết hợp Circle Loss với Cross-Entropy Loss:
+
+\begin{equation}
+\mathcal{L}_{total} = \lambda_{circle} \mathcal{L}_{circle} + \lambda_{ce} \mathcal{L}_{ce}
+\label{eq:total_loss_circle}
+\end{equation}
+
+\noindent trong đó $\lambda_{circle}$ và $\lambda_{ce}$ lần lượt là trọng số của hàm mất mát Circle và hàm mất mát entropy chéo. Sự kết hợp này cho phép mô hình vừa học được các embedding phân biệt với khả năng tự điều chỉnh thông qua metric learning ($\mathcal{L}_{circle}$), vừa được hướng dẫn bởi thông tin phân lớp rõ ràng ($\mathcal{L}_{ce}$), tạo ra một không gian đặc trưng mạnh mẽ và tối ưu hơn cho bài toán nhận dạng dáng đi.

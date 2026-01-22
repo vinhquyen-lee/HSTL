@@ -1,0 +1,68 @@
+\chapter{Giới thiệu}
+\label{Chapter1}
+\textcolor{blue}{Mục này được viết dựa trên các bài khảo sát (survey) để giới thiệu tổng quan về chủ đề lớn \textcolor{red}{Nhận dạng dáng đi} được nghiên cứu. Cách tổ chức nội dung bên dưới có thể tham khảo, hoặc chỉnh sửa tùy cho phù hợp ngữ cảnh.}
+\section{Bối cảnh chung}
+
+Trong kỷ nguyên xây dựng các thành phố thông minh và xã hội số hóa hiện nay, hệ thống camera giám sát đã bùng nổ về số lượng và trở thành một phần không thể thiếu của hạ tầng an ninh công cộng. Với hàng triệu giờ chuỗi khung hình được ghi lại mỗi ngày, việc dựa vào sức người để theo dõi là bất khả thi, đặt ra nhu cầu cấp thiết về các hệ thống nhận diện tự động, thông minh để truy vết tội phạm và đảm bảo an toàn xã hội. Tuy nhiên, các phương pháp sinh trắc học truyền thống như vân tay hay mống mắt lại không thể áp dụng trong các tình huống giám sát thụ động từ xa.
+
+Chính từ nhu cầu thực tiễn đó, Nhận dạng dáng đi đã nổi lên như một giải pháp tối ưu. Đây là kỹ thuật sinh trắc học hành vi nhằm xác định danh tính của cá nhân dựa trên dáng đi của con người. Bởi vì dáng đi được hình thành từ cấu trúc cơ xương độc nhất và thói quen vận động của mỗi người, tạo nên một dấu ấn riêng biệt có khả năng phân biệt cao. Ngay từ những năm 1970, các nghiên cứu tâm lý học nền tảng của Cutting và Kozlowski đã chứng minh rằng con người có khả năng nhận diện người quen chỉ thông qua sự chuyển động của các điểm sáng mô phỏng dáng đi mà không cần bất kỳ thông tin chi tiết nào về ngoại hình hay khuôn mặt\cite{Sarkar_Gait_Handbook_2008}.
+
+\section{Động lực}
+
+Động lực mạnh mẽ nhất thúc đẩy sự phát triển của nhận dạng dáng đi nằm ở khả năng nhận dạng tầm xa hoặc trong các điều kiện khó khăn. Trong khi các đặc điểm sinh trắc học vật lý như khuôn mặt, vân tay, mống mắt thường yêu cầu sự hợp tác của chủ thể, tiếp xúc gần, hoặc hình ảnh đầu vào có độ phân giải rất cao, thì dáng đi là đặc điểm sinh trắc học duy nhất có thể nhận diện được từ khoảng cách xa hàng chục mét và ngay cả trong điều kiện hình ảnh chất lượng thấp. Điều này cho phép hệ thống xác định danh tính đối tượng ngay cả khi họ quay lưng lại với camera, che mặt, hoặc bị khuất trong đám đông, biến nó thành công cụ lý tưởng cho các hệ thống giám sát thông minh mà không cần đối tượng phải tương tác trực tiếp với thiết bị.
+
+Bên cạnh lợi thế về khoảng cách, tính chất khó ngụy trang và khả năng thu thập thụ động cũng là những yếu tố then chốt tạo nên sức hấp dẫn của lĩnh vực này. Dáng đi của một người được định hình bởi cấu trúc cơ xương và thói quen vận động ăn sâu qua thời gian, do đó rất khó để một cá nhân có thể thay đổi hoặc làm giả dáng đi của mình một cách tự nhiên trong thời gian dài, khác hẳn với việc dễ dàng đeo mặt nạ hay găng tay để che giấu khuôn mặt và vân tay. Hơn nữa, với sự bùng nổ của hạ tầng camera quan sát hiện nay, dữ liệu dáng đi có sẵn ở khắp mọi nơi và có thể được thu thập liên tục 24/7 một cách thụ động, tạo điều kiện thuận lợi to lớn cho các ứng dụng thực tế trong điều tra tội phạm, an ninh công cộng và y tế.
+
+\section{Phát biểu bài toán}
+
+Bài toán nhận dạng dáng đi có thể được định nghĩa là một bài toán truy xuất người dựa trên dữ liệu video. Mục tiêu là khớp một chuỗi hình ảnh dáng đi đầu vào với một cơ sở dữ liệu các mẫu đã biết để xác định danh tính.
+\begin{itemize}
+    \item \textbf{Đầu vào:} Chuỗi các khung hình dáng đi được thu thập từ các nguồn như camera RGB, camera hồng ngoại, cảm biến chiều sâu hoặc LiDAR đã được nhị phân sau tách nền.
+    $$\mathbf{S_P} = \{ \mathbf{S_P}(1), \mathbf{S_P}(2), \dots, \mathbf{S_P}(M) \}$$ với $M$ là số lượng khung hình trong chuỗi.
+    \item \textbf{Đầu ra:} Danh tính của người trong video hoặc điểm số tương đồng cao nhất khi so khớp chuỗi đầu vào với các chuỗi mẫu đã lưu trong cơ sở dữ liệu ($\mathbf{S_G}$).
+\end{itemize}
+
+Mỗi chuỗi con thăm dò $\mathbf{S_{P_k}}$ được so khớp với chuỗi thư viện $\mathbf{S_G}$ thông qua phép tương quan chéo:
+
+\begin{equation} \label{eqn:general}
+    \text{Corr}(\mathbf{S_{P_k}}, \mathbf{S_G})(l) = \sum_{j=1}^{N_{Gait}} S(\mathbf{S_P}(k+j), \mathbf{S_G}(l+j)) 
+\end{equation}
+
+Tính toán độ tương đồng tổng thể giữa chuỗi thăm dò và chuỗi thư viện.
+
+\begin{equation} \label{eqn:generalcon}
+    \text{Sim}(\mathbf{S_P}, \mathbf{S_G}) = \text{Median}_k \left( \max_l \text{Corr}(\mathbf{S_{P_k}}, \mathbf{S_G})(l) \right) 
+\end{equation}
+
+
+\section{Thách thức của bài toán}
+
+Mặc dù đã đạt được những bước tiến lớn, nhận dạng dáng đi vẫn phải đối mặt với nhiều thách thức nghiêm trọng khi triển khai trong môi trường thực tế. Các yếu tố ngoại cảnh gây nhiễu, như sự thay đổi góc nhìn của camera, đây được xem là yếu tố gây nhiễu lớn nhất làm thay đổi hình dạng hình học của đối tượng trên khung hình. 
+
+Các loại trang phục khác nhau như áo khoác dày làm biến dạng hình dáng cơ thể, việc mang vác đồ vật, và sự thay đổi tốc độ đi bộ đều làm giảm đáng kể độ chính xác của hệ thống. 
+
+Đặc biệt, sự thay đổi về bề mặt đi bộ ví dụ từ cỏ sang bê tông và khoảng cách thời gian dài giữa các lần thu thập dữ liệu (trên 6 tháng) là những bài toán cực kỳ khó khăn do dáng đi của con người có xu hướng thay đổi tự nhiên theo thời gian hoặc điều kiện địa hình. 
+
+Bên cạnh đó, các vấn đề về quyền riêng tư và đạo đức khi thu thập dữ liệu từ xa \cite{shen2023comprehensivesurveydeepgait} mà không có sự đồng ý của đối tượng, cùng với áp lực về tài nguyên tính toán để xử lý video thời gian thực trên quy mô lớn, vẫn là những rào cản cần được giải quyết để công nghệ này có thể phổ biến rộng rãi.
+
+\section{Đóng góp - \textcolor{red}{Kiểm tra lại}} 
+
+Trong báo cáo này, mục tiêu chính là nghiên cứu và cải tiến mô hình nhận dạng dáng đi dựa trên kiến trúc phân cấp không gian - thời gian (HSTL). Những đóng góp chính bao gồm:
+
+\textbf{Về mặt lý thuyết:}
+
+\begin{itemize}
+    \item Đề xuất kiến trúc HSTL tối ưu bằng cách thay thế mô-đun trích xuất đặc trưng ARME bằng khối Pseudo-3D (P3D), giúp giảm đáng kể số lượng tham số và chi phí tính toán trong khi vẫn đảm bảo hiệu quả trích xuất đặc trưng không gian - thời gian
+    \item Cải tiến không gian đặc trưng với hàm mất mát Circle Loss thay thế cho Triplet Loss, giúp tăng cường khả năng phân biệt của mô hình đối với các mẫu khó và cải thiện tốc độ hội tụ.
+\end{itemize}
+
+\textbf{Về mặt thực tiễn:}
+
+\begin{itemize}
+    \item Xây dựng, huấn luyện và kiểm thử thành công mô hình cải tiến trên bộ dữ liệu chuẩn CASIA-B, chứng minh hiệu quả so với mô hình gốc.
+    \item Tạo ra một mô hình nhận dạng dáng đi có độ phức tạp tính toán thấp, đạt được sự cân bằng hiệu quả giữa độ chính xác và chi phí tài nguyên, phù hợp cho việc triển khai trên các hệ thống có cấu hình phần cứng hạn chế.
+\end{itemize}
+
+\section{Bố cục của khóa luận}
+
+Báo cáo khóa luận bao gồm năm chương: Chương \ref{Chapter1} trình bày bối cảnh, động lực nghiên cứu và phát biểu bài toán; Chương \ref{Chapter2} trình bày các công trình nghiên cứu liên quan; Chương \ref{Chapter3} trình bày chi tiết phương pháp đề xuất; Chương \ref{Chapter4} trình bày kết quả thực nghiệm; Chương \ref{Chapter5} trình bày kết luận và hướng phát triển.

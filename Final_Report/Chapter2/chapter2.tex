@@ -1,0 +1,242 @@
+\chapter{Các công trình liên quan}
+\label{Chapter2}
+\textcolor{blue}{Mục này đi sâu hơn vào các nghiên cứu/phương pháp cho chủ đề \textcolor{red}{Nhận dạng dáng đi}. Gợi ý:}
+\begin{itemize}
+  \item \textcolor{blue}{Phần lớn nội dung mục này dựa trên các bài tổng hợp/khảo sát.}
+  \item Liệt kê tất cả các phương pháp đến thời điểm hiện tại \textcolor{red}{2026}. Một số cách trình bày (chắc chắn được dùng trong các bài tổng hợp, nên tham khảo kĩ):
+        \begin{itemize}
+          \item Vẽ lược đồ thời gian công bố của các nghiên cứu.
+          \item Vẽ sơ đồ chia các nghiên cứu theo các nhánh tiếp cận chính.
+        \end{itemize}
+  \item Từng nhánh tiếp cận bài toán sẽ trình bày sâu hơn trong từng mục nhỏ:
+        \begin{itemize}
+          \item  Liệt kê theo trình tự thời gian
+          \item Trình ý tưởng/nguyên lý của từng nghiên cứu được đề cập.
+          \item Kết luận bằng điểm mạnh và hạn chế chung của nhóm các phương pháp.
+        \end{itemize}
+  \item \textcolor{red}{Lưu ý:} Khi trình bày đến nhánh tiếp cận chính (\textcolor{blue}{có chứa nghiên cứu được chọn (HSTL)}), nên trình bày nhiều hơn cả về điểm mạnh (ngầm ý đây là phương pháp được quan tâm) và điểm yếu (ngầm ý đóng góp của nghiên cứu này).
+  \item Đối với các nhánh tiếp cận hoặc nghiên cứu vượt trội nghiên cứu được chọn (\textcolor{blue}{HSTL}) về hiệu năng, hãy nói rõ hạn chế lớn của chúng. Quan trọng hơn hết, hãy trung thực về lý do không lựa chọn đào sâu, ví dụ, chi phí (huấn luyện, lưu trữ dữ liệu) lớn (\textcolor{blue}{gần như là điều hiển nhiên khi chi phí lớn sẽ cho hiệu năng lớn}), \textcolor{blue}{năng lực nghiên cứu hạn chế của nhóm}, \dots
+  \item Để người đọc dễ tiếp cận, nên chèn thêm các hình vẽ minh họa về dữ liệu của từng nhánh tiếp cận.
+  \item \textcolor{red}{Nội dung có sẵn khá lan man, không nên viết theo.}
+\end{itemize}
+
+\section{Giai đoạn 2020 - 2021}
+\label{sec:related_work_20_21}
+
+\subsection{GaitPart (CVPR 2020)}
+\begin{itemize}
+  \item \textbf{Ý tưởng cốt lõi:}
+        Mô hình hóa các phần cơ thể theo thời gian. Tác giả giới thiệu lớp \textit{Focal Convolution (FConv)}, chia bản đồ đặc trưng thành các phần ngang và thực hiện tích chập riêng biệt trên từng phần để nắm bắt chi tiết cục bộ tốt hơn so với các đặc trưng toàn cục.
+
+  \item \textbf{Điểm mạnh:}
+        Mô hình rất hiệu quả trong việc trích xuất các đặc trưng chi tiết của từng bộ phận cơ thể, đạt hiệu suất cao trên các tập dữ liệu trong phòng thí nghiệm(ví dụ : CASIA-B).
+
+  \item \textbf{Điểm yếu:}
+        Cơ chế chia cửa sổ cố định của FConv rất nhạy cảm với nhiễu. Trên các tập dữ liệu thực tế như Gait3D, chất lượng phân đoạn kém khiến FConv hoạt động không hiệu quả. Thực tế, việc thay thế FConv bằng các lớp tích chập thông thường giúp tăng độ chính xác Rank-1 lên đáng kể (+7.0\%) trên Gait3D.
+\end{itemize}
+
+\subsection{GaitGL (CVPR 2021)}
+\begin{itemize}
+  \item \textbf{Ý tưởng cốt lõi:}
+        Kết hợp biểu diễn Toàn cục và Cục bộ. Nhận thấy đặc trưng toàn cục thường bỏ qua chi tiết, còn đặc trưng cục bộ thiếu liên kết ngữ cảnh, GaitGL sử dụng hai nhánh song song. Nhánh cục bộ sử dụng tích chập 3D để trích xuất thông tin vùng.
+
+  \item \textbf{Điểm mạnh:}
+        Đạt kết quả rất cao trên các chuẩn đánh giá trong nhà (như CASIA-B, OU-MVLP) nhờ khả năng tổng hợp thông tin đa dạng.
+
+  \item \textbf{Điểm yếu:}
+        Tương tự GaitPart, thiết kế nhánh cục bộ phức tạp không mang lại lợi ích trên dữ liệu thực tế. Các thử nghiệm cho thấy việc loại bỏ hoàn toàn nhánh cục bộ giúp cải thiện hoặc giữ nguyên hiệu suất trên Gait3D, chứng tỏ mô hình này chưa đủ mạnh mẽ trước các yếu tố nhiễu môi trường.
+\end{itemize}
+
+\subsection{GaitGraph (ICIP 2021)}
+\begin{itemize}
+  \item \textbf{Ý tưởng cốt lõi:}
+        Sử dụng Mạng nơ-ron đồ thị (Graph Convolutional Network - GCN) để xử lý dữ liệu khung xương 2D. Các khớp xương được coi là nút và xương là cạnh trong đồ thị để học mô hình chuyển động.
+
+  \item \textbf{Điểm mạnh:}
+        Mô hình gọn nhẹ và về lý thuyết có khả năng kháng lại sự thay đổi trang phục tốt hơn do không sử dụng thông tin thị giác về quần áo/màu sắc.
+
+  \item \textbf{Điểm yếu:}
+        Do loại bỏ hoàn toàn thông tin hình dáng cơ thể (body shape), hiệu suất nhận diện thấp hơn đáng kể so với các phương pháp dựa trên ảnh bóng. Ví dụ, trên tập Gait3D, độ chính xác của GaitGraph thấp hơn rất nhiều so với các phương pháp appearance-based tiêu chuẩn.
+\end{itemize}
+
+\subsection{End-to-End SMPL (ACCV 2020)}
+\begin{itemize}
+  \item \textbf{Ý tưởng cốt lõi:}
+        Tinh chỉnh mạng khôi phục lưới người (Human Mesh Recovery) để trích xuất đặc trưng dáng đi từ mô hình 3D SMPL theo cơ chế end-to-end.
+
+  \item \textbf{Điểm mạnh:}
+        Tận dụng được các kiến thức tiên nghiệm về cấu trúc 3D của cơ thể người.
+
+  \item \textbf{Điểm yếu:}
+        Việc ước tính chính xác mô hình SMPL từ một camera đơn trong điều kiện tự nhiên là rất khó khăn. Hơn nữa, vector đặc trưng của SMPL thường quá thưa, không đủ để mô tả các đặc điểm cá nhân chi tiết cần thiết cho nhận diện danh tính chính xác.
+\end{itemize}
+
+\section{Giai đoạn 2022 - 2023}
+
+Trong giai đoạn từ năm 2022 đến 2023, nhận dạng dáng đi đã chứng kiến sự phát triển đa dạng về cả kỹ thuật trích xuất đặc trưng lẫn các phương thức biểu diễn dữ liệu mới. Để cung cấp cái nhìn tổng quan về tiến trình phát triển và mối quan hệ giữa các công trình nghiên cứu tiêu biểu, chúng tôi tiến hành hệ thống hóa các tài liệu khảo sát theo hai khía cạnh: trình tự thời gian công bố và hướng tiếp cận kỹ thuật.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/architecture/publication_timeline.jpg}
+  \caption{Lược đồ thời gian công bố các nghiên cứu tiêu biểu về nhận dạng dáng đi giai đoạn 2022–2023.}
+  \label{fig:publication_timeline}
+\end{figure}
+
+Cụ thể, Hình \ref{fig:publication_timeline} minh họa tiến trình phát triển của các nghiên cứu tiêu biểu, trải dài từ các phương pháp xử lý dựa trên lưới ba chiều và mô hình SMPL vào đầu năm 2022 cho đến sự xuất hiện của các kiến trúc học sâu phân cấp và các phương pháp xử lý đám mây điểm LiDAR vào năm 2023.
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/architecture/research_approaches.jpg}
+  \caption{Sơ đồ phân loại các nghiên cứu về nhận dạng dáng đi theo các nhánh tiếp cận chính trong giai đoạn 2022–2023.}
+  \label{fig:research_approaches}
+\end{figure}
+
+Bên cạnh đó, Hình \ref{fig:research_approaches} trình bày sơ đồ phân loại các nghiên cứu này thành hai nhánh tiếp cận chủ đạo. Nhánh thứ nhất tập trung vào học đầu–cuối và học đặc trưng nhằm tối ưu hóa khả năng biểu diễn trên dữ liệu video hoặc ảnh biên dạng. Nhánh thứ hai khai thác các biểu diễn ba chiều, tận dụng thông tin hình học không gian để nâng cao độ tin cậy của mô hình trong các điều kiện phức tạp.
+
+\subsection{Gait Recognition with Mask-based Regularization (ReverseMask)\cite{shen2022gaitrecognitionmaskbasedregularization}}
+
+Các phương pháp phổ biến trước thường chia cơ thể người thành các phần nhỏ theo chiều ngang. Tuy nhiên, cách chia cứng nhắc này làm mất liên kết thông tin tại các đường ranh giới giữa các phần.
+
+Dữ liệu dáng đi thường ít và hình ảnh dáng đi chứa ít thông tin. Các mạng nơ-ron sâu dễ bị ghi nhớ quá mức các đặc trưng cục bộ nổi trội như phần đầu hoặc chân mà bỏ qua cấu trúc tổng thể, dẫn đến khả năng tổng quát hóa kém.
+
+\textbf{Ý tưởng của ReverseMask:}
+Sử dụng cơ chế điều chuẩn dựa trên mặt nạ để tiêm nhiễu vào bản đồ đặc trưng. Thay vì chỉ xóa bỏ đặc trưng, phương pháp này tạo ra nhiễu bằng cách vừa xóa vừa thay đổi tỷ lệ đặc trưng, buộc mô hình phải học cả các chi tiết tinh tế và cấu trúc tổng thể.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/architecture/ReverseMask.png}
+  \caption{Khung kiến trúc của ReverseMask.}
+  \label{fig:ReverseMask}
+\end{figure}
+
+Hình \ref{fig:ReverseMask} chính là khung kiến trúc của ReverseMask. Phần trên là mô hình cơ sở đơn giản hóa, trong khi phần dưới gồm bốn khối có thể thay thế. TP, FC, HP và BN lần lượt biểu thị lớp gộp theo thời gian, lớp kết nối đầy đủ, lớp gộp theo phương ngang và lớp chuẩn hóa theo lô. Conv là lớp tích chập kết hợp với Leaky ReLU. RM là lớp ReverseMask được đề xuất nhằm đưa nhiễu vào bản đồ đặc trưng, và RMFE là lớp trích xuất đặc trưng chuyên biệt cho ReverseMask.
+
+\textbf{Điểm mạnh:}
+\begin{itemize}
+  \item Đạt hiệu suất vượt trội trên các bộ dữ liệu chuẩn CASIA-B, OU-MVLP, đặc biệt trong điều kiện thay đổi trang phục, nhờ khắc phục triệt để sự gián đoạn thông tin tại vùng biên của các mô hình chia phần truyền thống.
+  \item Thông qua kiến trúc Inception-like ba nhánh, mô hình vừa học được chi tiết tinh tế vừa nắm bắt cấu trúc tổng thể, giúp giảm thiểu hiện tượng quá khớp và tăng cường khả năng tổng quát hóa.
+  \item Có tính linh hoạt cao, dễ dàng tích hợp để cải thiện các mạng có sẵn và giúp quá trình huấn luyện ổn định hơn
+\end{itemize}
+
+\textbf{Hạn chế:}
+\begin{itemize}
+  \item Việc triển khai khối Inception-like với ba nhánh song song, đồng nghĩa với việc gia tăng số lượng tham số và khối lượng tính toán trong quá trình huấn luyện và suy diễn.
+  \item Hiệu quả của mô hình phụ thuộc vào các tham số như $p$ (tỉ lệ diện tích mặt nạ) và các hệ số nhiễu $\alpha, \beta$.
+  \item Chỉ hoạt động tốt với ảnh dạng bóng, ít thông tin. Đối với các loại dữ liệu khác như ảnh RGB giàu thông tin, thì phương pháp này cần điều chỉnh hoặc không hiệu quả bằng.
+\end{itemize}
+
+\subsection{Gait Recognition in the Wild with Dense 3D Representations and A Benchmark (SMPLGait)\cite{zheng2022gaitrecognitionwilddense}}
+
+Các phương pháp cũ chủ yếu dựa trên dữ liệu 2D như hình dáng, hình bóng hoặc khung xương 2D. Tuy nhiên, trong môi trường thực tế, việc chiếu cơ thể người 3D lên mặt phẳng 2D sẽ làm mất đi nhiều thông tin quan trọng như góc nhìn, hình dạng và động lực học
+
+\textbf{Ý tưởng của SMPLGait:}
+Sử dụng biểu diễn 3D dày đặc thông qua mô hình SMPL để khôi phục thông tin về hình dạng và góc nhìn trong không gian 3D. Kết hợp thông tin này để chuẩn hóa các đặc trưng bề ngoài từ các góc nhìn khác nhau về một không gian đặc trưng thống nhất, giúp nhận diện chính xác hơn bất kể góc quay camera.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/architecture/SMPL.png}
+  \caption{Khung kiến trúc của SMPLGait.}
+  \label{fig:SMPL}
+\end{figure}
+
+\textbf{Điểm mạnh:}
+\begin{itemize}
+  \item Nhờ vào các tham số góc nhìn 3D từ mô hình SMPL, SMPLGait có thể chuẩn hóa định hướng của cơ thể người trong các tình huống khớp nối đa góc nhìn.
+  \item SMPLGait vượt trội hơn hẳn các phương pháp 2D SOTA như GaitSet, GaitPart trên tập dữ liệu Gait3D đầy thách thức. Khả năng xử lý tốt các trường hợp bị che khuất và góc nhìn cực đoan cũng cao hơn nhờ thông tin hình học từ lưới 3D.
+\end{itemize}
+
+\textbf{Hạn chế:}
+\begin{itemize}
+  \item Mô hình hiện tại chủ yếu tập trung vào đặc trưng không gian. Các thông tin về vận động theo thời gian chưa được khai thác triệt để, mặc dù đây là yếu tố quan trọng trong nhận dạng dáng đi.
+  \item Hiệu quả của SMPLGait phụ thuộc nhiều vào mô hình khôi phục 3D. Nếu việc ước lượng tham số SMPL từ ảnh 2D bị sai do ảnh mờ, quá tối, hiệu suất nhận dạng sẽ giảm.
+  \item Độ phức tạp tính toán lớn do phải chạy thêm một mô hình khôi phục 3D song song với mạng nhận dạng.
+\end{itemize}
+
+\subsection{GaitEdge: Beyond Plain End-to-end Gait Recognition for Better Practicality \cite{liang2022gaitedgeplainendtoendgait}}
+
+Các phương pháp học đầu-cuối trước đây thường trích xuất đặc trưng trực tiếp từ ảnh RGB hoặc thông qua các mặt nạ phân đoạn dạng số thực. Mặc dù các phương pháp này đạt hiệu quả tốt trong cùng một miền dữ liệu, nhưng trên thực tế mô hình có xu hướng ghi nhớ quá mức các đặc trưng không liên quan trực tiếp đến dáng đi, chẳng hạn như màu sắc trang phục hoặc họa tiết bề mặt, thay vì học các đặc trưng động học của dáng đi. Điều này dẫn đến sự suy giảm đáng kể hiệu năng khi đánh giá trên các tập dữ liệu khác miền.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/architecture/GaitEdge.png}
+  \caption{Khung kiến trúc của GaitEdge.}
+  \label{fig:GaitEdge}
+\end{figure}
+
+\textbf{Ý tưởng của GaitEdge:}
+Phương pháp đề xuất tổng hợp một dạng bóng dáng nhân tạo, trong đó phần biên của cơ thể được biểu diễn dưới dạng giá trị số thực có thể huấn luyện nhằm bảo toàn thông tin hình dáng chi tiết, trong khi phần bên trong và vùng nền được ràng buộc về dạng nhị phân hoặc bị loại bỏ để hạn chế các nhiễu liên quan đến màu sắc và kết cấu bề mặt.
+
+
+\textbf{Điểm mạnh:}
+\begin{itemize}
+  \item GaitEdge đạt hiệu suất cao nhất trong các thí nghiệm đánh giá chéo giữa các tập dữ liệu khác nhau (ví dụ từ CASIA-B sang TTG-200), nhờ khả năng loại bỏ hiệu quả các nhiễu RGB vốn không ổn định giữa các môi trường
+  \item Bằng cách giới hạn quá trình huấn luyện chủ yếu tại vùng biên của bóng dáng, mô hình được buộc phải tập trung vào các đặc trưng dáng đi tinh vi, thay vì phụ thuộc vào các đặc trưng ngoại hình thô như màu sắc trang phục hoặc vật mang theo.
+  \item Mô-đun GaitAlign giúp hệ thống duy trì hoạt động ổn định trong các điều kiện thực tế, nơi việc phát hiện người không hoàn hảo, qua đó cải thiện đáng kể độ chính xác trung bình.
+\end{itemize}
+
+\textbf{Hạn chế:}
+\begin{itemize}
+  \item Trong huấn luyện và kiểm thử trên cùng một tập dữ liệu, GaitEdge có độ chính xác thấp hơn khoảng 2\% so với các mô hình học đầu-cuối thuần túy, do việc loại bỏ một phần thông tin nội tại của bóng dáng làm suy giảm một số đặc trưng hữu ích trong cùng điều kiện môi trường.
+  \item Hiệu suất tổng thể của phương pháp vẫn phụ thuộc vào chất lượng của mạng phân đoạn ban đầu, vốn chịu trách nhiệm cung cấp hình dáng ban đầu của đối tượng.
+  \item Khả năng tổng quát hóa khác miền nhạy cảm với kích thước vùng biên được sử dụng, trong đó việc mở rộng vùng cạnh quá mức có thể dẫn đến suy giảm hiệu suất.
+\end{itemize}
+
+
+
+\subsection{LidarGait: Benchmarking 3D Gait Recognition with Point Clouds\cite{shen2023lidargaitbenchmarking3dgait}}
+
+Các phương pháp nhận diện dáng đi truyền thống thường dựa vào hình ảnh RGB hoặc bóng đen 2D. Tuy nhiên, cách tiếp cận này gặp khó khăn lớn trong môi trường thực tế do thiếu thông tin cấu trúc 3D của cơ thể người và dễ bị nhiễu bởi ánh sáng yếu, quần áo tiệp màu nền, hoặc nền phức tạp.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/architecture/LidarGait.png}
+  \caption{Khung kiến trúc của LidarGait.}
+  \label{fig:LidarGait}
+\end{figure}
+
+\textbf{Ý tưởng của LidarGait:} Thay vì trích xuất đặc trưng trực tiếp từ tập điểm thưa thớt như các mạng PointNet thường làm cho bài toán phân loại vật thể, LidarGait chiếu đám mây điểm 3D thành các bản đồ độ sâu dưới dạng hình ảnh 2D. Sau đó, phương pháp này tận dụng các kiến trúc CNN tiêu chuẩn dành cho biểu diễn không gian hai chiều để trích xuất đặc trưng dáng đi.
+
+\textbf{Điểm mạnh:}
+\begin{itemize}
+  \item LidarGait vượt trội hơn camera RGB trong môi trường ngoài trời, đặc biệt là vào ban đêm hoặc điều kiện ánh sáng yếu, nơi mà các thuật toán phân đoạn hình ảnh thường thất bại.
+  \item Không bị ảnh hưởng bởi việc thay đổi quần áo hoặc màu sắc quần áo trùng với phông nền, vì LidarGait thu thập dữ liệu hình học chứ không phải màu sắc.
+  \item LidarGait duy trì hiệu suất nhận dạng rất ổn định ngay cả khi góc nhìn thay đổi mạnh, nhờ vào việc giữ được cấu trúc 3D thực của cơ thể người.
+\end{itemize}
+
+\textbf{Hạn chế:}
+\begin{itemize}
+  \item LidarGait gặp khó khăn khi đối tượng cầm ô, vì ô thường được giữ lại trong đám mây điểm và gây nhiễu cho việc tính toán cấu trúc cơ thể, trong khi các thuật toán camera thường xóa bỏ phần này trong quá trình phân đoạn.
+  \item Hiện tại LidarGait chủ yếu chỉ sử dụng một loại dữ liệu đầu vào là đám mây điểm 3D.
+  \item Mật độ của đám mây điểm phụ thuộc vào khoảng cách của đối tượng đến cảm biến, điều này vẫn có tác động nhất định đến hiệu suất nhận dạng.
+\end{itemize}
+
+
+\subsection{Hierarchical Spatio-Temporal Representation Learning (HSTL)\cite{hstl}}
+
+Các phương pháp nhận diện dáng đi hiện tại thường chia cắt hình ảnh cơ thể thành các phần cố định chẳng hạn như cắt ngang thành 8 hoặc 16 phần,... để trích xuất đặc trưng. Tuy nhiên, cách làm này bỏ qua mối quan hệ phân cấp tự nhiên của cơ thể người khi chuyển động. Ví dụ: chuyển động của bàn chân và cẳng chân có liên quan mật thiết với nhau, và chúng lại là một phần của chuyển động thân dưới.
+
+\textbf{Ý tưởng của HSTL:} Thay vì xem xét các bộ phận cơ thể một cách rời rạc, HSTL học các đặc trưng dáng đi theo cấu trúc phân cấp từ thô đến tinh. Cụ thể, mô hình khai thác mối quan hệ phụ thuộc giữa các bộ phận cơ thể như đầu, thân, chân và tay ở nhiều mức độ khác nhau, từ biểu diễn toàn bộ cơ thể cho đến các vùng chi tiết cục bộ.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=1\linewidth]{figures/architecture/HSTL.png}
+  \caption{Khung kiến trúc của HSTL.}
+  \label{fig:HSTL}
+\end{figure}
+
+Trong hình \ref{fig:HSTL} chính là khung kiến trúc của HSTL. Phương pháp này chủ yếu bao gồm ba mô-đun: ARME (bộ trích xuất chuyển động dựa trên vùng thích ứng), ASTP (gộp không gian–thời gian thích ứng) và FTA (tổng hợp theo thời gian ở mức khung hình). Trong giai đoạn tiền xử lý, một cấu trúc phân cấp của dáng đi được xây dựng nhằm định hướng thiết kế kiến trúc của HFSL. Khung mô hình sử dụng nhiều ARME để trích xuất đặc trưng dáng đi từ toàn bộ cơ thể đến các vùng riêng lẻ. Mô-đun ASTP thực hiện ánh xạ đặc trưng phân cấp cho đầu ra của từng mức ARME. Mô-đun FTA nén các đoạn cục bộ của mỗi chuỗi dáng đi nhằm giảm số lượng khung hình dư thừa. Các ký hiệu T, H và W lần lượt biểu thị các chiều của bản đồ đặc trưng. Ký hiệu © biểu thị phép nối.
+
+\textbf{Điểm mạnh:}
+\begin{itemize}
+  \item HSTL đạt kết quả tốt nhất trên các bộ dữ liệu quy mô lớn như CASIA-B, OUMVLP, GREW và Gait3D. Phương pháp này đặc biệt hiệu quả trong các điều kiện thách thức, chẳng hạn như thay đổi trang phục và mang vác. Ngoài ra, HSTL vẫn duy trì hiệu suất ổn định trong môi trường thực tế, nơi tồn tại nhiều nhiễu do sai lệch căn chỉnh cơ thể và sự xuất hiện của vật cản.
+  \item So với các phương pháp sử dụng mạng tích chập 3D có độ phức tạp cao như GaitGL và 3D Local, HSTL đạt được sự cân bằng tốt hơn giữa độ chính xác và chi phí tính toán. Kiến trúc phân cấp của HSTL giúp hạn chế các phép tích chập 3D dư thừa, từ đó giảm đáng kể độ phức tạp tính toán.
+  \item Mô-đun FTA giúp mô hình thích ứng tốt với sự thay đổi về tốc độ đi và sự dư thừa khung hình. Module ARME cho phép học các đặc trưng chuyển động riêng biệt cho từng vùng cơ thể thay vì gộp chung.
+  \item Cải thiện đáng kể độ chính xác nhận dạng đối với trẻ em (nhóm đối tượng thường có dữ liệu ít hơn người lớn).
+
+\end{itemize}
+
+\textbf{Hạn chế:}
+\begin{itemize}
+  \item Mặc dù đã được tối ưu so với các phương pháp trước đó, ARME vẫn dựa trên các phép tích chập 3D. Do phải đồng thời mô hình hóa cả không gian và thời gian, các toán tử này vẫn đòi hỏi chi phí tính toán quá lớn so với các mạng tích chập 2D.
+  \item Là một phương pháp dựa trên ngoại hình và sử dụng bóng dáng làm đầu vào, mô hình vẫn chịu ảnh hưởng khi quá trình phân đoạn ban đầu không chính xác, đặc biệt trong các điều kiện môi trường phức tạp.
+
+\end{itemize}
