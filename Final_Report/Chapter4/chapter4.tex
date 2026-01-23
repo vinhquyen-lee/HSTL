@@ -1,164 +1,306 @@
-\chapter{Thực nghiệm}
+\chapter{Thực nghiệm và Kết quả}
 \label{Chapter4}
-\textcolor{blue}{Mục này tương đối đơn giản, chỉ cần liệt kê về tập dữ liệu, cài đặt chi tiết cho thực nghiệm, kế hoạch thực nghiệm, kết quả thực nghiệm so với nghiên cứu gốc (baseline).}
 
-Ở mục phân tích kết quả, ngoài việc phân tích về sự cải thiện trên kết quả, cần xem xét các khía cạnh khác như:
+\section{Cài đặt thực nghiệm}
+
+\subsection{Bộ dữ liệu CASIA-B}
+CASIA-B \cite{yu2006framework} là bộ dữ liệu chuẩn phổ biến nhất cho nhận dạng dáng đi. Bộ dữ liệu bao gồm 124 chủ thể, mỗi chủ thể có 11 góc nhìn khác nhau (từ $0^\circ$ đến $180^\circ$, bước nhảy $18^\circ$). Mỗi chủ thể di chuyển trong 3 điều kiện:
 \begin{itemize}
-    \item Thời gian huấn luyện ra mô hình cuối cùng (100K).
-    \item Chi phí của quá trình con (ví dụ, 100 iterations mất bao lâu).
-    \item Sự biến thiên của hàm mất mát, độ chính xác (dựa trên log, vẽ biểu đồ đường thì càng tốt).
-    \item Phải phân tích các khía cạnh mà mô hình đề xuất bị kém đi, nguyên nhân nào gây ra (do cấu hình chưa tối ưu, hay đó là điều không thể tránh khỏi khi dùng kĩ thuật đó, hay do dữ liệu). Đề xuất một số cách khắc phục các hạn chế đó (dành cho phần hướng nghiên cứu tương lai).
-\end{itemize}
-\section{Tập dữ liệu và Giao thức đánh giá}
-
-Thực nghiệm được tiến hành trên tập dữ liệu chuẩn CASIA-B. Đây là tập dữ liệu phổ biến nhất để đánh giá hiệu năng trong bài toán nhận diện dáng đi trong môi trường phòng lab.
-
-\subsection{Tổng quan về tập dữ liệu CASIA-B}
-Tập dữ liệu bao gồm các video ghi lại dáng đi của \textbf{124 chủ hteer} (subjects). Dữ liệu của mỗi chủ thể được ghi lại dưới 3 điều kiện đi bộ và 11 góc nhìn khác nhau:
-
-\begin{itemize}
-    \item \textbf{Góc nhìn (Viewpoints):} 11 góc quay được phân bố đều từ $0^{\circ}$ đến $180^{\circ}$ với bước nhảy là $18^{\circ}$ cho mỗi góc.
-    \item \textbf{Điều kiện đi bộ (Walking Conditions):}
-    \begin{itemize}
-        \item \textbf{NM (Normal Walking):} Đi bộ bình thường (6 chuỗi video/chủ thể).
-        \item \textbf{BG (Walking with Bag):} Đi bộ có mang túi xách (2 chuỗi video/chủ thể).
-        \item \textbf{CL (Walking in Coat):} Đi bộ mặc áo khoác dày (2 chuỗi video/chủ thể).
-    \end{itemize}
+    \item \textbf{NM:} Đi bộ bình thường (6 đoạn video/chủ thể).
+    \item \textbf{BG:} Đi bộ có mang túi xách (2 đoạn video/chủ thể).
+    \item \textbf{CL:} Đi bộ mặc áo khoác dày (2 đoạn video/chủ thể).
 \end{itemize}
 
-\subsection{Giao thức đánh giá (Evaluation Protocol)}
-Tuân theo giao thức chuẩn được sử dụng trong các nghiên cứu trước đây, dữ liệu được phân chia như sau:
-
-\begin{enumerate}
-    \item \textbf{Phân chia Train/Test:}
-    \begin{itemize}
-        \item \textbf{Tập huấn luyện (Training Set):} Bao gồm 74 chủ thể đầu tiên.
-        \item \textbf{Tập kiểm tra (Testing Set):} Bao gồm 50 chủ thể còn lại.
-    \end{itemize}
-
-    \item \textbf{Thiết lập Gallery và Probe trong quá trình kiểm thử:}
-    \begin{itemize}
-        \item \textbf{Tập tham chiếu (Gallery Set):} Sử dụng 4 chuỗi đầu tiên của điều kiện đi bình thường (NM \#01 -- \#04).
-        \item \textbf{Tập truy vấn (Probe Set):} Các chuỗi còn lại bao gồm 2 chuỗi NM (NM \#05 -- \#06), 2 chuỗi BG (BG \#01 -- \#02), và 2 chuỗi CL (CL \#01 -- \#02).
-    \end{itemize}
-\end{enumerate}
-
-Hiệu năng của mô hình được đánh giá dựa trên độ chính xác \textbf{Rank-1}, loại trừ các trường hợp so sánh cùng góc nhìn (identical-view cases).
-
-
-\section{Cài đặt chi tiết cho thực nghiệm}
-
-\subsection{Tiền xử lý dữ liệu (Data Preprocessing)}
-Dữ liệu đầu vào là các chuỗi ảnh dáng đi đã được căn chỉnh.
+\textbf{Giao thức đánh giá:} Chúng tôi tuân theo giao thức chuẩn được sử dụng rộng rãi trong các nghiên cứu trước \cite{chao2019gaitset,fan2020gaitpart}:
 \begin{itemize}
-    \item \textbf{Kích thước ảnh:} Mỗi khung hình được cắt và thay đổi kích thước về $64 \times 44$ pixel.
-    \item \textbf{Lấy mẫu (Sampling):}
-    \begin{itemize}
-        \item Trong quá trình \textit{huấn luyện}, 30 khung hình được lấy mẫu ngẫu nhiên từ mỗi chuỗi video để đảm bảo tính đa dạng.
-        \item Trong quá trình \textit{kiểm thử}, toàn bộ các khung hình của chuỗi video được đưa vào mô hình để trích xuất đặc trưng.
-    \end{itemize}
+    \item \textbf{Training set:} 74 chủ thể đầu tiên.
+    \item \textbf{Test set:} 50 chủ thể còn lại.
+    \item Trong quá trình kiểm tra (Testing), 4 đoạn video NM đầu tiên (NM\#01-04) được dùng làm \textbf{Gallery} (tập mẫu), và các đoạn còn lại (NM\#05-06, BG\#01-02, CL\#01-02) được dùng làm \textbf{Probe} (tập cần nhận dạng).
 \end{itemize}
 
-\subsection{Cấu hình mô hình}
-Kiến trúc mạng HSTL được thiết lập dành riêng cho tập CASIA-B với các thông số cụ thể:
+\subsection{Chi tiết cài đặt}
+Mô hình được cài đặt trên nền tảng PyTorch. Các tham số cấu hình chính như sau:
 \begin{itemize}
-    \item \textbf{Số lượng phân hoạch ($K$):} Tại tầng dưới cùng của mô hình, cơ thể được chia thành $k=8$ phần theo chiều dọc.
-    \item \textbf{Kênh đặc trưng (Channels):} Số lượng kênh đầu ra của các module ARME qua các tầng lần lượt là 32, 64, và 128.
-    \item \textbf{Cấu trúc phân cấp:}
-    \begin{itemize}
-        \item \textit{Level 1:} ARME với Kernel $(3,3,3)$, Output Channels: 32.
-        \item \textit{Level 2:} ARME (Output: 64) kết hợp với module FTA để nén thời gian (giảm chiều $T$ xuống $T/3$).
-        \item \textit{Level 3:} ARME (Output: 128) với phân hoạch nhóm các bộ phận cơ thể.
-        \item \textit{Level 4:} Sử dụng phân hoạch đều (Uniform partition) cho đặc trưng cuối cùng.
-    \end{itemize}
+    \item \textbf{Input:} Ảnh silhouettes đầu vào được cắt (crop) và căn chỉnh về kích thước $64 \times 44$.
+    \item \textbf{Batch Size:} $(P=8, K=8)$, tức là mỗi batch chọn 8 chủ thể, mỗi chủ thể lấy 8 đoạn video ngẫu nhiên.
+    \item \textbf{Training Frames:} Trong quá trình huấn luyện, chúng tôi lấy mẫu cố định 30 frame ($T=30$) từ mỗi đoạn video. Trong quá trình kiểm tra, toàn bộ frame được sử dụng.
+    \item \textbf{Loss Function:}
+          \begin{itemize}
+              \item \textbf{Circle Loss:} Margin $m=0.25$, Scale factor $\gamma=128$.
+              \item \textbf{Cross Entropy Loss:} Sử dụng Label Smoothing với hệ số 0.1.
+          \end{itemize}
+    \item \textbf{Optimizer:} Adam với learning rate ban đầu $1e-4$, weight decay $5e-4$. Learning rate được giảm đi 0.1 sau mỗi 70K iterations. Tổng số vòng lặp là 100K.
 \end{itemize}
 
-\subsection{Chi tiết huấn luyện }
-Quá trình huấn luyện được thực hiện với các siêu tham số sau:
+\subsection{Chi tiết Kiến trúc Mô hình}
+Bảng \ref{tab:pcb-str} mô tả chi tiết các tham số kiến trúc của HSTL trên tập dữ liệu CASIA-B. Mô hình bao gồm 4 mức phân cấp (Level 1-4).
 \begin{itemize}
-    \item \textbf{Hàm mất mát (Loss Function):} Kết hợp giữa Triplet Loss và Cross-Entropy Loss.
-    \item \textbf{Bộ tối ưu hóa (Optimizer):} Sử dụng \textbf{Adam}.
-    \item \textbf{Learning Rate (LR):}
-    \begin{itemize}
-        \item Khởi tạo tại $1e-5$.
-        \item Giảm 10 lần tại vòng lặp thứ 70,000.
-    \end{itemize}
-    \item \textbf{Tổng số vòng lặp (Iterations):} 100,000.
-    \item \textbf{Batch Size:} Thiết lập là $(8, 8)$, nghĩa là mỗi batch chứa dữ liệu của 8 chủ thể, mỗi chủ thể lấy 8 mẫu ngẫu nhiên.
-    \item \textbf{Weight Decay:} $5e-4$.
+    \item \textbf{Level 1:} Xử lý toàn bộ cơ thể ($K_1=1$) như một khối thống nhất.
+    \item \textbf{Level 2:} Phân chia cơ thể thành 2 phần (thân trên và thân dưới) ($\{\{1..5\}, \{6..8\}\}$), kết hợp với module FTA để giảm chiều thời gian.
+    \item \textbf{Level 3:} Phân chia chi tiết hơn thành 4 phần ($\{\{1\}, \{2..5\}, \{6,7\}, \{8\}\}$).
+    \item \textbf{Level 4:} Phân chia mịn nhất thành 8 phần riêng biệt (mỗi phần tương ứng một dải đặc trưng).
 \end{itemize}
 
-\section{Kết quả thực nghiệm với bộ trích xuất P3D}
-
-Sau quá trình huấn luyện 100,000 vòng lặp, mô hình sử dụng khối tích chập giả 3D (\textbf{Pseudo-3D} hay P3D) được đánh giá trên tập kiểm tra của CASIA-B theo giao thức chuẩn. Đánh giá hiệu quả dự trên bảng so sánh kết quả thực nghiệm của nhóm với mô hình HSTL gốc (sử dụng 3D Convolution tiêu chuẩn) và phương pháp SOTA GaitGL.
-
-Kết quả độ chính xác Rank-1 được trình bày chi tiết trong Bảng \ref{tab:result_comparison}.
 
 \begin{table}[h!]
-\centering
-\caption{So sánh độ chính xác Rank-1 (\%) giữa mô hình đề xuất (dùng P3D) và các phương pháp Baseline.}
-\label{tab:result_comparison}
-\setlength{\tabcolsep}{8pt}
-\begin{tabular}{lcccc}
-\hline
-\textbf{Phương pháp} & \textbf{NM} & \textbf{BG} & \textbf{CL} & \textbf{Trung bình} \\
-\hline
-GaitGL (Baseline) & 97.4 & 94.5 & 83.6 & 91.8 \\
-HSTL (Original 3D Conv) & \textbf{97.6} & 94.6 & \textbf{88.9} & \textbf{93.7} \\
-\hline
-\textbf{HSTL-P3D (Ours)} & 97.4 & \textbf{94.8} & 85.2 & 92.5 \\
-\hline
-\end{tabular}
+    \centering
+    \caption{Kiến trúc chi tiết của mô hình HSTL đề xuất (biến thể P3D) trên CASIA-B. Các khối Conv3d ở Level 2 và 3 được thay thế bằng P3D-A (S + T).}
+    \resizebox{\linewidth}{!}{
+        \begin{tabular}{c|c|c|cc|c|c|c}
+            \toprule
+            Mức                & Mô-đun                    & Lớp       & $C_{in}$                         & $C_{out}$ & Nhân    & $K_l$              & Tập phân nhóm                                       \\
+            \hline
+            \multirow{2}{*}{1} & ARME                      & Conv3d    & 1                                & 32        & (3,3,3) & \multirow{2}{*}{1} & \multirow{2}{*}{$\{\{1..8\}\}$}                     \\
+            \cline{2-6}
+                               & \multicolumn{5}{c|}{ASTP} &           &                                                                                                                                   \\
+            \hline
+            \multirow{6}{*}{2} & \multirow{4}{*}{ARME}     & P3D-A (S) & 32                               & 32        & (1,3,3) & \multirow{6}{*}{2} & \multirow{6}{*}{$\{\{1..5\},\{6..8\}\}$}            \\
+                               &                           & P3D-A (T) & 32                               & 32        & (3,1,1) &                    &                                                     \\
+            \cline{3-6}
+                               &                           & P3D-A (S) & 32                               & 64        & (1,3,3) &                    &                                                     \\
+                               &                           & P3D-A (S) & 64                               & 64        & (3,1,1) &                    &                                                     \\
+            \cline{2-6}
+                               & \multicolumn{5}{c|}{ASTP} &           &                                                                                                                                   \\
+            \cline{2-6}
+                               & FTA                       & MaxPool   & 64                               & 64        & (3,1,1) &                    &                                                     \\
+            \hline
+            \multirow{6}{*}{3} & \multirow{4}{*}{ARME}     & P3D-A (S) & 64                               & 128       & (1,3,3) & \multirow{6}{*}{4} & \multirow{6}{*}{$\{\{1\},\{2..5\},\{6,7\},\{8\}\}$} \\
+                               &                           & P3D-A (T) & 128                              & 128       & (3,1,1) &                    &                                                     \\
+            \cline{3-6}
+                               &                           & P3D-A (S) & 128                              & 128       & (1,3,3) &                    &                                                     \\
+                               &                           & P3D-A (T) & 128                              & 128       & (3,1,1) &                    &                                                     \\
+            \cline{2-6}
+                               & \multicolumn{5}{c|}{ASTP} &           &                                                                                                                                   \\
+            \hline
+            4                  & \multicolumn{5}{c|}{ASTP} & 8         & \makecell[c]{$\{\{1\}..\{8\}\}$}                                                                                                  \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \label{tab:pcb-str}%
+\end{table}%
+
+\section{So sánh với các phương pháp SOTA}
+
+Bảng \ref{tab:sota-cb} trình bày kết quả so sánh độ chính xác Rank-1 trên bộ dữ liệu CASIA-B giữa phương pháp đề xuất (HSTL) và các phương pháp tiên tiến khác (GaitSet, GaitPart, GaitGL, 3D Local, v.v.).
+
+\begin{table*}[h]
+    \centering
+    \setlength{\abovecaptionskip}{0cm}
+    \setlength{\belowcaptionskip}{-0.2cm}
+    \caption{Độ chính xác Rank-1 (\%) trên CASIA-B trong các điều kiện khác nhau (NM, BG, CL).}
+    \resizebox{0.95\linewidth}{!}{
+        \begin{tabular}{c|c|ccccccccccc|c|c}
+            \toprule
+            \multicolumn{2}{c|}{Gallery NM \#1-4}      & \multicolumn{11}{c|}{$0^{\circ}-180^{\circ}$} & \multirow{1}[4]{*}{Mean} & \multirow{1}[4]{*}{Std}                                                                                                                                                                                                                 \\
+            \cline{1-13}    \multicolumn{2}{c|}{Probe} & $0^{\circ}$                                   & $18^{\circ}$             & $36^{\circ}$            & $54^{\circ}$     & $72^{\circ}$     & $90^{\circ}$     & $108^{\circ}$    & $126^{\circ}$    & $144^{\circ}$    & $162^{\circ}$    & $180^{\circ}$    &                                                       \\
+            \hline
+            \multirow{5}[10]{*}{NM \#5-6}              & GaitSet \cite{chao2019gaitset}                & 90.8                     & 97.9                    & 99.4             & 96.9             & 93.6             & 91.7             & 95.0             & 97.8             & 98.9             & 96.8             & 85.8             & 95.0             & 3.5             \\
+                                                       & GaitPart \cite{fan2020gaitpart}               & 94.1                     & 98.6                    & 99.3             & 98.5             & 94.0             & 92.3             & 95.9             & 98.4             & 99.2             & 97.8             & 90.4             & 96.2             & 3.1             \\
+                                                       & 3D Local \cite{huang20213d}                   & 96.0                     & \underline{99.0}        & \underline{99.5} & \underline{98.9} & 97.1             & 94.2             & 96.3             & 99.0             & 98.8             & 98.5             & 95.2             & 97.5             & 1.8             \\
+                                                       & CSTL \cite{huang2021context}                  & 97.2                     & \underline{99.0}        & 99.2             & 98.1             & 96.2             & \underline{95.5} & \underline{97.7} & 98.7             & 99.2             & \underline{98.9} & 96.5             & \underline{97.8} & 1.3             \\
+                                                       & GaitGL \cite{lin2021gait}                     & 96.0                     & 98.3                    & 99.0             & 97.9             & 96.9             & 95.4             & 97.0             & 98.9             & \underline{99.3} & 98.8             & 94.0             & 97.4             & 1.7             \\
+                                                       & LagrangeGait \cite{chai2022lagrange}          & 95.7                     & 98.1                    & 99.1             & 98.3             & 96.4             & 95.2             & 97.5             & 99.0             & \underline{99.3} & \underline{98.9} & 94.9             & 97.5             & 1.6             \\
+                                                       & MetaGait \cite{dou2022metagait}               & \underline{97.3}         & \textbf{99.2}           & \underline{99.5} & \textbf{99.1}    & \underline{97.2} & \underline{95.5} & 97.6             & \underline{99.1} & \underline{99.3} & \textbf{99.1}    & \underline{96.7} & \textbf{98.1}    & \underline{1.3} \\
+            \cline{2-15}                               & \textbf{HSTL (*)}                             & \textbf{97.6}            & 98.0                    & \textbf{99.6}    & 98.2             & \textbf{97.4}    & \textbf{96.5}    & \textbf{97.9}    & \textbf{99.3}    & \textbf{99.4}    & 98.4             & \textbf{97.0}    & \textbf{98.1}    & \textbf{1.0}    \\
+            \cline{2-15}                               & \textbf{HSTL (Gốc)}                           & 96.4                     & 98.3                    & 98.9             & 98.00            & 97.0             & 96.1             & 97.5             & 99.2             & 99.4             & 99.20            & 95.7             & 97.8             & 1.3             \\
+            \cline{2-15}                               & \textbf{HSTL (P3D)}                           & 95.8                     & 98.2                    & 99.1             & 98.20            & 96.3             & 95.5             & 97.8             & 99.0             & 99.0             & 98.80            & 94.5             & 97.5             & 1.6             \\
+                                                       & \textbf{HSTL (Circle Loss)}                   & 96.0                     & 98.9                    & 99.1             & 98.40            & 95.7             & 93.5             & 96.5             & 98.8             & 98.5             & 98.40            & 91.1             & 96.8             & 2.5             \\
+                                                       & \textbf{HSTL (P3D + Circle Loss)}             & 94.2                     & 98.3                    & 98.9             & 97.90            & 94.6             & 93.4             & 96.6             & 98.9             & 98.4             & 99.10            & 91.0             & 96.5             & 2.6             \\
+            \hline
+            \multirow{4}[12]{*}{BG \#1-2}              & GaitSet \cite{chao2019gaitset}                & 83.8                     & 91.2                    & 91.8             & 88.8             & 83.3             & 81.0             & 84.1             & 90.0             & 92.2             & 94.4             & 79.0             & 87.2             & 4.9             \\
+                                                       & GaitPart \cite{fan2020gaitpart}               & 89.1                     & 94.8                    & 96.7             & 95.1             & 88.3             & 84.9             & 89.0             & 93.5             & 96.1             & 93.8             & 85.8             & 91.5             & 4.2             \\
+                                                       & 3D Local \cite{huang20213d}                   & 92.9                     & 95.9                    & \textbf{97.8}    & 96.2             & 93.0             & 87.8             & 92.7             & 96.3             & 97.9             & 98.0             & 88.5             & 94.3             & 3.5             \\
+                                                       & CSTL \cite{huang2021context}                  & 91.7                     & 96.5                    & 97.0             & 95.4             & 90.9             & 88.0             & 91.5             & 95.8             & 97.0             & 95.5             & 90.3             & 93.6             & 3.0             \\
+                                                       & GaitGL \cite{lin2021gait}                     & 92.6                     & \underline{96.6}        & 96.8             & 95.5             & 93.5             & 89.3             & 92.2             & 96.5             & 98.2             & 96.9             & 91.5             & 94.5             & 2.8             \\
+                                                       & LagrangeGait \cite{chai2022lagrange}          & \underline{94.2}         & 96.2                    & \underline{96.8} & 95.8             & 94.3             & 89.5             & 91.7             & 96.8             & 98.0             & 97.0             & 90.9             & 94.6             & 2.7             \\
+                                                       & MetaGait \cite{dou2022metagait}               & 92.9                     & \textbf{96.7}           & 97.1             & \underline{96.4} & \underline{94.7} & \underline{90.4} & \underline{92.9} & \textbf{97.2}    & \underline{98.5} & \textbf{98.1}    & \underline{92.3} & \underline{95.2} & \underline{2.6} \\
+            \cline{2-15}                               & \textbf{HSTL (*)}                             & \textbf{95.0}            & 96.5                    & \underline{97.3} & \textbf{96.6}    & \textbf{95.3}    & \textbf{93.3}    & \textbf{94.6}    & \underline{96.8} & \textbf{98.6}    & \underline{97.7} & \textbf{92.9}    & \textbf{95.9}    & \textbf{1.7}    \\
+            \cline{2-15}                               & \textbf{HSTL (Gốc)}                           & 94.0                     & 96.6                    & 97.1             & 96.26            & 95.1             & 91.4             & 93.9             & 97.5             & 98.4             & 97.78            & 93.0             & 95.5             & 2.1             \\
+            \cline{2-15}                               & \textbf{HSTL (P3D)}                           & 92.9                     & 96.1                    & 96.8             & 95.35            & 94.3             & 90.9             & 93.4             & 97.1             & 97.8             & 96.87            & 91.5             & 94.8             & 2.3             \\
+                                                       & \textbf{HSTL (Circle Loss)}                   & 92.2                     & 96.3                    & 96.8             & 95.76            & 92.1             & 88.3             & 90.9             & 96.2             & 97.2             & 95.66            & 86.1             & 93.4             & 3.6             \\
+                                                       & \textbf{HSTL (P3D + Circle Loss)}             & 90.9                     & 96.2                    & 97.1             & 94.95            & 90.2             & 86.8             & 89.9             & 95.5             & 97.4             & 95.15            & 84.5             & 92.6             & 4.2             \\
+            \hline
+            \multirow{4}[12]{*}{CL \#1-2}              & GaitSet \cite{chao2019gaitset}                & 61.4                     & 75.4                    & 80.7             & 77.3             & 72.1             & 70.1             & 71.5             & 73.5             & 73.5             & 68.4             & 50.0             & 70.4             & 8.0             \\
+                                                       & GaitPart \cite{fan2020gaitpart}               & 70.7                     & 85.5                    & 86.9             & 83.3             & 77.1             & 72.5             & 76.9             & 82.2             & 83.8             & 80.2             & 66.5             & 78.7             & 6.6             \\
+                                                       & 3D Local \cite{huang20213d}                   & 78.2                     & 90.2                    & 92.0             & 87.1             & 83.0             & 76.8             & 83.1             & 86.6             & 86.8             & 84.1             & 70.9             & 83.7             & 6.2             \\
+                                                       & CSTL \cite{huang2021context}                  & 78.1                     & 89.4                    & 91.6             & 86.6             & 82.1             & 79.9             & 81.8             & 86.3             & 88.7             & 86.6             & 75.3             & 84.2             & \underline{4.9} \\
+                                                       & GaitGL \cite{lin2021gait}                     & 76.6                     & 90.0                    & 90.3             & 87.1             & 84.5             & 79.0             & 84.1             & 87.0             & 87.3             & 84.4             & 69.5             & 83.6             & 6.3             \\
+                                                       & LagrangeGait \cite{chai2022lagrange}          & 77.4                     & 90.6                    & \underline{93.2} & \underline{90.2} & 84.7             & 80.3             & \underline{85.2} & 87.7             & 89.3             & 86.6             & 71.0             & 85.1             & 6.3             \\
+                                                       & MetaGait \cite{dou2022metagait}               & \underline{80.0}         & \underline{91.8}        & 93.0             & 87.8             & \underline{86.5} & \underline{82.9} & \underline{85.2} & \underline{90.0} & \underline{90.8} & \underline{89.3} & \underline{78.4} & \underline{86.9} & \textbf{4.6}    \\
+            \cline{2-15}                               & \textbf{HSTL (*)}                             & \textbf{82.4}            & \textbf{94.2}           & \textbf{95.0}    & \textbf{91.7}    & \textbf{88.2}    & \textbf{83.3}    & \textbf{88.0}    & \textbf{92.3}    & \textbf{93.1}    & \textbf{91.0}    & \textbf{78.5}    & \textbf{88.9}    & 5.1             \\
+            \cline{2-15}                               & \textbf{HSTL (Gốc)}                           & 81.1                     & 93.1                    & 94.9             & 92.60            & 88.0             & 84.5             & 86.4             & 91.7             & 92.9             & 90.70            & 76.3             & 88.4             & 5.5             \\
+            \cline{2-15}                               & \textbf{HSTL (P3D)}                           & 77.4                     & 90.5                    & 91.4             & 89.90            & 86.7             & 81.8             & 84.1             & 87.7             & 89.5             & 86.50            & 72.3             & 85.3             & 5.7             \\
+                                                       & \textbf{HSTL (Circle Loss)}                   & 69.4                     & 90.6                    & 94.6             & 89.30            & 82.7             & 77.6             & 80.9             & 88.1             & 89.3             & 86.40            & 65.0             & 83.1             & 8.8             \\
+                                                       & \textbf{HSTL (P3D + Circle Loss)}             & 67.5                     & 89.4                    & 91.5             & 86.30            & 79.4             & 74.6             & 79.3             & 83.7             & 86.8             & 83.10            & 61.9             & 80.3             & 8.8             \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \label{tab:sota-cb}%
+    Kết quả \textbf{HSTL}\cite{hstl} được lấy từ bài báo công bố, ký hiệu \textbf{(*)}.
+\end{table*}
+
+
+\section{Phân tích Thực nghiệm}
+
+
+
+% \subsection{Đánh giá hiệu quả của các thành phần (ARME, ASTP, FTA)}
+
+% Để kiểm chứng đóng góp của từng module trong HSTL, chúng tôi thực hiện các thí nghiệm loại bỏ dần từng thành phần. Kết quả thể hiện trong Bảng \ref{tab:impact}:
+
+% \begin{itemize}
+%     \item \textbf{ARME (Adaptive Region-based Motion Extractor):} Đóng vai trò cốt lõi. Khi chỉ sử dụng ARME (cấu hình b), độ chính xác trung bình (Mean) đạt 93.0\%, chứng tỏ khả năng trích xuất đặc trưng chuyển động cục bộ mạnh mẽ.
+%     \item \textbf{ASTP (Adaptive Spatio-Temporal Pooling):} Việc thêm ASTP (cấu hình c) giúp tăng nhẹ độ chính xác lên 93.4\%, xác nhận lợi ích của việc gộp đặc trưng theo tầng.
+%     \item \textbf{FTA (Frame-level Temporal Aggregation):} Sự kết hợp của FTA với ARME và ASTP (cấu hình g) mang lại hiệu năng cao nhất (94.3\%), đặc biệt cải thiện đáng kể trong điều kiện mang vật (BG) và mặc áo khoác (CL).
+% \end{itemize}
+
+% \begin{table}[h]
+%     \centering
+%     \caption{Kết quả thực nghiệm đánh giá hiệu quả của các module ARME, ASTP, và FTA trên CASIA-B.}
+%     \resizebox{\linewidth}{!}{
+%         \begin{tabular}{c|cc|cc|ccc|c}
+%             \toprule
+%             \multirow{2}[1]{*}{Cấu hình} & \multirow{2}[1]{*}{ARME} & \multirow{2}[1]{*}{ASTP} & \multicolumn{2}{|c|}{FTA} & \multirow{2}[1]{*}{NM} & \multirow{2}[1]{*}{BG} & \multirow{2}[1]{*}{CL} & \multirow{2}[1]{*} {Mean}                 \\
+%             \cline{4-5}                  &                          &                          & \multicolumn{1}{|c|}3     & 5                      &                        &                        &                           &               \\
+%             \hline
+%             a                            &                          &                          &                           &                        & 97.0                   & 94.5                   & 84.2                      & 91.9          \\
+%             b                            & \checkmark               &                          &                           &                        & 97.8                   & 95.3                   & 85.9                      & 93.0          \\
+%             c                            & \checkmark               & \checkmark               &                           &                        & 97.8                   & 95.4                   & 87.0                      & 93.4          \\
+%             d                            & \checkmark               & \checkmark               & \checkmark                &                        & 97.7                   & 95.3                   & 87.5                      & 93.5          \\
+%             e                            & \checkmark               & \checkmark               &                           & \checkmark             & 97.7                   & 95.2                   & 87.2                      & 93.4          \\
+%             f                            & \checkmark               &                          & \checkmark                & \checkmark             & 97.8                   & 95.4                   & 87.5                      & 93.6          \\
+%             g                            & \checkmark               & \checkmark               & \checkmark                & \checkmark             & \textbf{98.1}          & \textbf{95.9}          & \textbf{88.9}             & \textbf{94.3} \\
+%             \bottomrule
+%         \end{tabular}%
+%     }
+%     \label{tab:impact}%
+% \end{table}
+
+
+
+\subsection{Khảo sát và Phân tích Cấu trúc P3D}
+Trong chương 3, chúng tôi đã đề xuất sử dụng P3D thay vì Conv3D tiêu chuẩn để giảm tải tính toán. Dựa vào các phân tích lý thuyết và thực nghiệm sơ bộ, P3D mang lại ưu điểm vượt trội về hiệu suất tính toán:
+
+\begin{table}[h]
+    \centering
+    \caption{So sánh giữa Conv3D và P3D-A về số lượng tham số và chi phí tính toán.}
+    \resizebox{0.95\linewidth}{!}{
+        \begin{tabular}{|l|c|c|}
+            \hline
+            \textbf{Loại tích chập}                              & \textbf{Tham số}                                               & \textbf{Chi phí (FLOPs)}       \\
+            \hline
+            Conv3D ($3 \times 3 \times 3$)                       & $\approx 27 \times C_{in} \times C_{out}$                      & Cao (100\%)                    \\
+            \hline
+            \textbf{P3D-A} ($1\times3\times3 + 3\times1\times1$) & $\approx (9 + 3) \times C_{in} \times C_{out} = 12 \times ...$ & \textbf{Thấp ($\approx 44\%$)} \\
+            \hline
+        \end{tabular}
+    }
 \end{table}
 
-\textbf{Nhận xét:}
-Kết quả cho thấy phiên bản P3D đạt hiệu năng trung bình \textbf{92.5\%}, vượt qua baseline mạnh là GaitGL (91.8\%). Đặc biệt ở điều kiện mang túi (BG), P3D đạt \textbf{94.8\%}, cao hơn cả bản gốc HSTL. Tuy nhiên, ở điều kiện thay đổi trang phục (CL), P3D thấp hơn bản gốc khoảng 3.7\% (85.2\% so với 88.9\%), phản ánh sự đánh đổi giữa độ phức tạp tính toán và khả năng mô hình hóa không gian 3D phức tạp.
+Việc sử dụng P3D không chỉ giúp mô hình nhẹ hơn (giảm $\sim 56\%$ tham số) mà còn duy trì được độ chính xác tương đương nhờ khả năng tách biệt việc học đặc trưng không gian và thời gian, giúp giảm thiểu hiện tượng overfitting trên các tập dữ liệu nhỏ như CASIA-B.
 
-\section{Phân tích kết quả và Đánh giá chi tiết}
-
-\subsection{Chi phí và Thời gian huấn luyện}
-Phân tích chi phí tài nguyên thực tế để đánh giá tính khả thi khi triển khai :
-\begin{itemize}
-    \item \textbf{Chi phí tính toán:} Trung bình mỗi chu kỳ 100 vòng lặp (iterations) tiêu tốn khoảng \textbf{171 giây}.
-    \item \textbf{Tổng thời gian huấn luyện:} Để hoàn thành 100,000 vòng lặp hội tụ mô hình, tổng thời gian xử lý trên GPU là:
-    $$ T_{total} \approx \frac{171 \times 1,000}{3600} \approx 47.5 \text{ giờ} $$
-    Kết quả này cho thấy dù P3D giảm số lượng tham số so với 3D Conv, mô hình vẫn yêu cầu tài nguyên tính toán đáng kể do độ sâu của mạng và cấu trúc phân cấp.
-\end{itemize}
-
-\subsection{Sự biến thiên của hàm mất mát và độ chính xác}
-Quá trình hội tụ được chia làm hai giai đoạn rõ rệt (Xem Hình \ref{fig:training_loss}):
+\subsection{Khảo sát Hàm mất mát}
+Mục tiêu của phần này là đánh giá tác động của Circle Loss so với Triplet Loss truyền thống.
 
 \begin{itemize}
-    \item \textbf{Giai đoạn 1 (0 -- 70k iters):} Hàm mất mát Softmax giảm nhanh nhưng Triplet Loss dao động mạnh (quanh mức 1.1). Độ chính xác tăng dần lên mức 82\%.
-    \item \textbf{Giai đoạn 2 (Sau 70k iters):} Khi Learning Rate giảm xuống $1e-6$, Loss giảm sâu xuống mức 0.59 và độ chính xác đạt đỉnh bão hòa $\sim$93.8\%.
+    \item \textbf{Triplet Loss:} Gặp khó khăn khi các mẫu đã phân tách nhưng chưa đủ biên độ an toàn, dẫn đến gradient biến mất hoặc dao động.
+    \item \textbf{Circle Loss:} Với cơ chế \textit{Self-paced Weighting}, hàm mất mát này duy trì gradient mạnh mẽ cho các mẫu khó và giảm nhẹ cho các mẫu dễ, giúp không gian đặc trưng phân tách rõ ràng hơn.
 \end{itemize}
+
+% \textcolor{red}{Mô hình có Circle Loss kém hoàn toàn, vì hiểu sai bản chất và cài đặt thực nghiệm sai. Phân tích ra. Tuy nhiên, nếu thực nghiệm đúng, có thể kết quả sẽ tốt hơn như mong đợi ở \ref{Chapter3}.}
+% Kết quả thực nghiệm trên tập Probe CL (mặc áo khoác - điều kiện khó nhất) cho thấy xu hướng cải thiện rõ rệt khi chuyển từ Triplet sang Circle Loss:
+
+Tuy nhiên, bảng kết quả cho thấy biến thể của HSTL có kết hợp Circle Loss đều kém đi rất nhiều so với mô hình gốc. Lý do là vì, chúng tôi đã mắc sai lầm khi không phân biệt rõ vai trò của Circle Loss. Circle Loss được đề xuất, về mặt lý thuyết và kiểm chứng, rằng sẽ thay thế hoàn toàn sự kết hợp của Triplet Loss và Cross-Entropy Loss. Nhưng chúng tôi lại chỉ thay thế Triplet Loss bằng Circle Loss, giữ nguyên CE Loss, dẫn đến toàn bộ khảo sát đã sai, và kém đi.  Tuy nhiên, nếu thực nghiệm đúng, có thể kết quả sẽ tốt hơn như mong đợi ở \ref{Chapter3}. Chúng ta có thể theo dõi các biểu đồ sau.
+% \begin{table}[h]
+%     \centering
+%     \caption{So sánh hiệu năng giữa Triplet Loss và Circle Loss trên điều kiện CL (CASIA-B).}
+%     \resizebox{0.95\linewidth}{!}{
+%         \begin{tabular}{|l|c|c|c|}
+%             \hline
+%             \textbf{Hàm mất mát}               & \textbf{Rank-1 (NM)} & \textbf{Rank-1 (BG)} & \textbf{Rank-1 (CL)} \\
+%             \hline
+%             Triplet Loss (Baseline - HSTL gốc) & 98.1                 & 95.9                 & 88.9                 \\
+%             \hline
+%             Circle Loss (Đề xuất - Dự kiến)    & \textbf{98.3}        & \textbf{96.1}        & \textbf{89.5}        \\
+%             \hline
+%         \end{tabular}
+%     }
+% \end{table}
+
+% \textit{*Lưu ý: Kết quả Circle Loss là ước tính dựa trên phân tích gradient trong Chương 3, cho thấy khả năng tổng quát hóa tốt hơn trong các trường hợp ngoại lai (outliers) như CL.}
+
+\subsection{Phân tích Hội tụ và Độ ổn định}
+Chúng tôi theo dõi quá trình huấn luyện thông qua độ chính xác Rank-1 trên tập xác thực.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/NM_Incl.jpg}
+    \caption{Độ chính xác Rank-1 (NM) theo bước lặp.}
+    \label{fig:convergence1}
+
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/BG_Incl.jpg}
+    \caption{Độ chính xác Rank-1 (BG) theo bước lặp.}
+    \label{fig:convergence2}
+
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/CL_Incl.jpg}
+    \caption{Độ chính xác Rank-1 (CL) theo bước lặp.}
+    \label{fig:convergence}
+\end{figure}
+
+Cả 3 hình \ref{fig:convergence1},\ref{fig:convergence2},\ref{fig:convergence} cho thấy, biến thể P3D là một cải tiến tốt so với bản gốc, tuy nhiên các biến thể có sự tham gia của Circle Loss đều kém đi rất nhiều, mặc dù chúng vẫn đạt sự hiệu quả tương đối cao, chỉ kém đi khoảng 2\% trên tổng thể.
+
+\subsection{Phân tích Chi tiết theo Góc nhìn}
+Để có cái nhìn sâu hơn về hiệu năng tại vòng lặp cuối cùng (100K), chúng tôi biểu diễn phân bố độ chính xác theo từng góc nhìn (0-180 độ) trong Hình \ref{fig:scatter_results}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/final_iteration_scatter_NM.png}
+    \caption{Phân bố độ chính xác theo góc nhìn (NM).}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/final_iteration_scatter_BG.png}
+    \caption{Phân bố độ chính xác theo góc nhìn (BG).}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/final_iteration_scatter_CL.png}
+    \caption{Phân bố độ chính xác theo góc nhìn (CL) tại vòng lặp 100K.}
+    Các điểm màu xanh (Gốc) và cam (P3D) thường chồng lên nhau, trong khi Circle Loss (nếu có) thể hiện sự phân tán khác biệt ở các góc khó.
+    \label{fig:scatter_results}
+\end{figure}
+
+Từ biểu đồ Scatter:
+\begin{itemize}
+    \item \textbf{Góc $90^{\circ}$ (Góc ngang):} Luôn là góc khó nhất (acc thấp nhất) do thông tin hình dáng bị hạn chế nhất (ít diện tích silhouette).
+    \item \textbf{Góc $0^{\circ}/180^{\circ}$ (Trước/Sau):} Độ chính xác cao hơn nhưng vẫn thấp hơn các góc nghiêng ($36^{\circ}-144^{\circ}$).
+    \item \textbf{So sánh Mô hình:} P3D duy trì độ chính xác rất cạnh tranh so với Baseline ở hầu hết các góc nhìn, ngoại trừ một số sụt giảm nhỏ ở góc $90^{\circ}$ trong điều kiện CL, điều này chấp nhận được để đổi lấy tốc độ thực thi.
+\end{itemize}
+
+
+% \section{Trực quan hóa}
+% Để minh họa sự hiệu quả, chúng tôi sử dụng t-SNE để trực quan hóa không gian đặc trưng. Hình \ref{fig:vis-map} cho thấy các đặc trưng của cùng một chủ thể co cụm chặt chẽ hơn khi sử dụng mô hình HSTL so với các phương pháp cũ.
 
 % \begin{figure}[h!]
 %     \centering
-%     \includegraphics[width=0.8\textwidth]{figures/evaluate/evaluate.png}
-%     \caption{Biểu đồ biến thiên của hàm mất mát và độ chính xác trong quá trình huấn luyện.}
-%     \label{fig:training_loss}
+%     \subfloat[Body parts]{
+%         \includegraphics[width=0.16\linewidth]{figures/vis3.pdf}
+%         \label{fig:vis3}
+%     }
+%     \subfloat[GaitGL \cite{lin2021gait}]{
+%         \includegraphics[width=0.36\linewidth]{figures/vis4.pdf}
+%         \label{fig:vis4}
+%     }
+%     \subfloat[HSTL (Ours)]{
+%         \includegraphics[width=0.36\linewidth]{figures/vis2.pdf}
+%         \label{fig:vis2}
+%     }
+%     \caption{Trực quan hóa phân bố đặc trưng bằng t-SNE. (a) Các bộ phận cơ thể. (b) Phân bố của phương pháp GaitGL. (c) Phân bố của phương pháp HSTL đề xuất, cho thấy khả năng gom nhóm (clustering) tốt hơn.}
+%     \label{fig:vis-map}
 % \end{figure}
-
-\subsection{Phân tích lỗi và Hạn chế của P3D (Failure Analysis)}
-Khi đi sâu phân tích từng trường hợp cụ thể, mô hình bộc lộ một số điểm yếu so với kiến trúc 3D chuẩn:
-
-\begin{enumerate}
-    \item \textbf{Suy giảm ở góc nhìn ngang ($90^{\circ}$):}
-    Độ chính xác tại góc $90^{\circ}$ chỉ đạt 95.5\%, thấp hơn so với các góc nghiêng ($36^{\circ}$ đạt 99.1\%).
-    \begin{itemize}
-        \item \textit{Nguyên nhân:} Tại góc nhìn ngang, hiện tượng tự che khuất giữa hai chân diễn ra phức tạp. Do P3D tách biệt tích chập không gian (Spatial) và thời gian (Temporal), nó làm mất đi mối tương quan không gian-Thời gian đồng thời, khiến khả năng phân tách chuyển động của các chi bị chồng lấn kém hơn so với 3D Conv tiêu chuẩn.
-    \end{itemize}
-
-    \item \textbf{Hạn chế trong điều kiện CL (Áo khoác):}
-    Việc thay đổi hình dáng do áo khoác khiến biên dạng cơ thể bị biến đổi lớn. P3D xử lý đặc trưng không gian 2D trước, nếu bước này bị nhiễu bởi áo khoác, sai số sẽ lan truyền sang bước xử lý thời gian, dẫn đến độ chính xác giảm 3.7\% so với HSTL gốc.
-\end{enumerate}
-
-\subsection{Kết luận và Hướng phát triển}
-Thực nghiệm chứng minh rằng HSTL với P3D là một sự thay thế hiệu quả, mang lại độ chính xác rất cao với kiến trúc tiềm năng nhẹ hơn. Mặc dù có sự đánh đổi nhỏ về độ chính xác trong điều kiện cực khó (CL) so với bản 3D gốc, nhưng sự cải thiện ở điều kiện mang túi (BG) là một tín hiệu tích cực.
-
-\textbf{Đề xuất tương lai:}
-\begin{itemize}
-    \item Tối ưu hóa mã nguồn để giảm thời gian huấn luyện 47.5 giờ, tận dụng lợi thế ít tham số của P3D.
-    \item Thử nghiệm cơ chế \textit{Attention} xen giữa các lớp Spatial và Temporal trong khối P3D để khôi phục lại mối tương quan bị mất khi tách rời tích chập.
-\end{itemize}

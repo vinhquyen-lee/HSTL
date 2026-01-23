@@ -1,0 +1,257 @@
+\begin{thebibliography}{10}\itemsep=-1pt
+
+\bibitem{chopra2005learning}
+S.~Chopra, R.~Hadsell, and Y.~LeCun.
+\newblock Learning a similarity metric discriminatively, with application to
+  face verification.
+\newblock {\em 2005 IEEE Computer Society Conference on Computer Vision and
+  Pattern Recognition (CVPR'05)}, 1:539--546 vol. 1, 2005.
+
+\bibitem{deng2019arcface}
+J.~Deng, J.~Guo, N.~Xue, and S.~Zafeiriou.
+\newblock Arcface: Additive angular margin loss for deep face recognition.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, 2019.
+
+\bibitem{Ge_2018_ECCVHTL}
+W.~Ge.
+\newblock Deep metric learning with hierarchical triplet loss.
+\newblock In {\em The European Conference on Computer Vision (ECCV)}, September
+  2018.
+
+\bibitem{guo2016ms}
+Y.~Guo, L.~Zhang, Y.~Hu, X.~He, and J.~Gao.
+\newblock Ms-celeb-1m: A dataset and benchmark for large-scale face
+  recognition.
+\newblock In {\em European Conference on Computer Vision}, 2016.
+
+\bibitem{hadsell2006dimensionality}
+R.~Hadsell, S.~Chopra, and Y.~LeCun.
+\newblock Dimensionality reduction by learning an invariant mapping.
+\newblock In {\em IEEE Computer Society Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, volume~2, pages 1735--1742. IEEE, 2006.
+
+\bibitem{he2016deep}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In {\em CVPR}, 2016.
+
+\bibitem{helanqing_dissection}
+L.~He, Z.~Wang, Y.~Li, and S.~Wang.
+\newblock Softmax dissection: Towards understanding intra- and inter-clas
+  objective for embedding learning.
+\newblock {\em CoRR}, abs/1908.01281, 2019.
+
+\bibitem{hermans2017defense}
+A.~Hermans, L.~Beyer, and B.~Leibe.
+\newblock In defense of the triplet loss for person re-identification.
+\newblock {\em arXiv preprint arXiv:1703.07737}, 2017.
+
+\bibitem{hoffer2015deep}
+E.~Hoffer and N.~Ailon.
+\newblock Deep metric learning using triplet network.
+\newblock In {\em International Workshop on Similarity-Based Pattern
+  Recognition}, pages 84--92. Springer, 2015.
+
+\bibitem{LFWTech}
+G.~B. Huang, M.~Ramesh, T.~Berg, and E.~Learned-Miller.
+\newblock Labeled faces in the wild: A database for studying face recognition
+  in unconstrained environments.
+\newblock Technical Report 07-49, University of Massachusetts, Amherst, October
+  2007.
+
+\bibitem{ioffe2015batch}
+S.~Ioffe and C.~Szegedy.
+\newblock Batch normalization: Accelerating deep network training by reducing
+  internal covariate shift.
+\newblock {\em arXiv preprint arXiv:1502.03167}, 2015.
+
+\bibitem{kemelmacher2016megaface}
+I.~Kemelmacher-Shlizerman, S.~M. Seitz, D.~Miller, and E.~Brossard.
+\newblock The megaface benchmark: 1 million faces for recognition at scale.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, pages 4873--4882, 2016.
+
+\bibitem{Kim_2018_ECCVABE}
+W.~Kim, B.~Goyal, K.~Chawla, J.~Lee, and K.~Kwon.
+\newblock Attention-based ensemble for deep metric learning.
+\newblock In {\em The European Conference on Computer Vision (ECCV)}, September
+  2018.
+
+\bibitem{krause20133d}
+J.~Krause, M.~Stark, J.~Deng, and L.~Fei-Fei.
+\newblock 3d object representations for fine-grained categorization.
+\newblock In {\em Proceedings of the IEEE International Conference on Computer
+  Vision Workshops}, pages 554--561, 2013.
+
+\bibitem{liu2017sphereface}
+W.~Liu, Y.~Wen, Z.~Yu, M.~Li, B.~Raj, and L.~Song.
+\newblock Sphereface: Deep hypersphere embedding for face recognition.
+\newblock In {\em Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pages 212--220, 2017.
+
+\bibitem{Liu2016LargeMarginSL}
+W.~Liu, Y.~Wen, Z.~Yu, and M.~Yang.
+\newblock Large-margin softmax loss for convolutional neural networks.
+\newblock In {\em ICML}, 2016.
+
+\bibitem{maze2018iarpa}
+B.~Maze, J.~Adams, J.~A. Duncan, N.~Kalka, T.~Miller, C.~Otto, A.~K. Jain,
+  W.~T. Niggel, J.~Anderson, J.~Cheney, et~al.
+\newblock Iarpa janus benchmark-c: Face dataset and protocol.
+\newblock In {\em 2018 International Conference on Biometrics (ICB)}, pages
+  158--165. IEEE, 2018.
+
+\bibitem{Song_2017_CVPRHDC}
+H.~Oh~Song, S.~Jegelka, V.~Rathod, and K.~Murphy.
+\newblock Deep metric learning via facility location.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR)}, July 2017.
+
+\bibitem{oh2016deep}
+H.~Oh~Song, Y.~Xiang, S.~Jegelka, and S.~Savarese.
+\newblock Deep metric learning via lifted structured feature embedding.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, pages 4004--4012, 2016.
+
+\bibitem{ABIER}
+M.~{Opitz}, G.~{Waltner}, H.~{Possegger}, and H.~{Bischof}.
+\newblock Deep metric learning with bier: Boosting independent embeddings
+  robustly.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  pages 1--1, 2018.
+
+\bibitem{ranjan2017l2}
+R.~Ranjan, C.~D. Castillo, and R.~Chellappa.
+\newblock L2-constrained softmax loss for discriminative face verification.
+\newblock {\em arXiv preprint arXiv:1703.09507}, 2017.
+
+\bibitem{schroff2015facenet}
+F.~Schroff, D.~Kalenichenko, and J.~Philbin.
+\newblock Facenet: A unified embedding for face recognition and clustering.
+\newblock In {\em Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pages 815--823, 2015.
+
+\bibitem{cfp-paper}
+S.~Sengupta, J.-C. Chen, C.~Castillo, V.~M. Patel, R.~Chellappa, and D.~W.
+  Jacobs.
+\newblock Frontal to profile face verification in the wild.
+\newblock In {\em 2016 IEEE Winter Conference on Applications of Computer
+  Vision (WACV)}, pages 1--9. IEEE, 2016.
+
+\bibitem{Sohn2016ImprovedDM}
+K.~Sohn.
+\newblock Improved deep metric learning with multi-class n-pair loss objective.
+\newblock In {\em NIPS}, 2016.
+
+\bibitem{sun2014deep}
+Y.~Sun, X.~Wang, and X.~Tang.
+\newblock Deep learning face representation from predicting 10,000 classes.
+\newblock In {\em Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pages 1891--1898, 2014.
+
+\bibitem{Sun_2018_ECCVPCB}
+Y.~Sun, L.~Zheng, Y.~Yang, Q.~Tian, and S.~Wang.
+\newblock Beyond part models: Person retrieval with refined part pooling (and a
+  strong convolutional baseline).
+\newblock In {\em The European Conference on Computer Vision (ECCV)}, September
+  2018.
+
+\bibitem{Ustinova2016LearningDE}
+E.~Ustinova and V.~S. Lempitsky.
+\newblock Learning deep embeddings with histogram loss.
+\newblock In {\em NIPS}, 2016.
+
+\bibitem{WahCUB_200_2011}
+C.~Wah, S.~Branson, P.~Welinder, P.~Perona, and S.~Belongie.
+\newblock {The Caltech-UCSD Birds-200-2011 Dataset}.
+\newblock Technical Report CNS-TR-2011-001, California Institute of Technology,
+  2011.
+
+\bibitem{wang2018additive}
+F.~Wang, J.~Cheng, W.~Liu, and H.~Liu.
+\newblock Additive margin softmax for face verification.
+\newblock {\em IEEE Signal Processing Letters}, 25(7):926--930, 2018.
+
+\bibitem{wang2017normface}
+F.~Wang, X.~Xiang, J.~Cheng, and A.~L. Yuille.
+\newblock Normface: L2 hypersphere embedding for face verification.
+\newblock In {\em Proceedings of the 25th ACM international conference on
+  Multimedia}, pages 1041--1049. ACM, 2017.
+
+\bibitem{Wang_2018MGN}
+G.~Wang, Y.~Yuan, X.~Chen, J.~Li, and X.~Zhou.
+\newblock Learning discriminative features with multiple granularities for
+  person re-identification.
+\newblock {\em 2018 ACM Multimedia Conference on Multimedia Conference - MM
+  ’18}, 2018.
+
+\bibitem{Wang_2018_CVPR}
+H.~Wang, Y.~Wang, Z.~Zhou, X.~Ji, D.~Gong, J.~Zhou, Z.~Li, and W.~Liu.
+\newblock Cosface: Large margin cosine loss for deep face recognition.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR)}, 2018.
+
+\bibitem{Wang2017DeepML}
+J.~J. Wang, F.~Zhou, S.~Wen, X.~Liu, and Y.~Lin.
+\newblock Deep metric learning with angular loss.
+\newblock {\em 2017 IEEE International Conference on Computer Vision (ICCV)},
+  pages 2612--2620, 2017.
+
+\bibitem{wang2019multi}
+X.~Wang, X.~Han, W.~Huang, D.~Dong, and M.~R. Scott.
+\newblock Multi-similarity loss with general pair weighting for deep metric
+  learning.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, pages 5022--5030, 2019.
+
+\bibitem{Wei_2018_CVPRMSMT17}
+L.~Wei, S.~Zhang, W.~Gao, and Q.~Tian.
+\newblock Person transfer gan to bridge domain gap for person
+  re-identification.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR)}, June 2018.
+
+\bibitem{wen2016discriminative}
+Y.~Wen, K.~Zhang, Z.~Li, and Y.~Qiao.
+\newblock A discriminative feature learning approach for deep face recognition.
+\newblock In {\em European conference on computer vision}, pages 499--515.
+  Springer, 2016.
+
+\bibitem{wolf2011face}
+L.~Wolf, T.~Hassner, and I.~Maoz.
+\newblock Face recognition in unconstrained videos with matched background
+  similarity.
+\newblock In {\em CVPR}, 2011.
+
+\bibitem{wu2017sampling}
+C.-Y. Wu, R.~Manmatha, A.~J. Smola, and P.~Krahenbuhl.
+\newblock Sampling matters in deep embedding learning.
+\newblock In {\em Proceedings of the IEEE International Conference on Computer
+  Vision}, pages 2840--2848, 2017.
+
+\bibitem{Zhang2018HeatedUpSE}
+X.~Zhang, F.~X. Yu, S.~Karaman, W.~Zhang, and S.-F. Chang.
+\newblock Heated-up softmax embedding.
+\newblock {\em ArXiv}, abs/1809.04157, 2018.
+
+\bibitem{Zhang2019AdaCosAS}
+X.~Zhang, R.~Zhao, Y.~Qiao, X.~Wang, and H.~Li.
+\newblock Adacos: Adaptively scaling cosine logits for effectively learning
+  deep face representations.
+\newblock In {\em CVPR}, 2019.
+
+\bibitem{Zheng_2015_ICCVmarket}
+L.~Zheng, L.~Shen, L.~Tian, S.~Wang, J.~Wang, and Q.~Tian.
+\newblock Scalable person re-identification: A benchmark.
+\newblock In {\em The IEEE International Conference on Computer Vision (ICCV)},
+  December 2015.
+
+\bibitem{Zheng_2019_CVPRJDGL}
+Z.~Zheng, X.~Yang, Z.~Yu, L.~Zheng, Y.~Yang, and J.~Kautz.
+\newblock Joint discriminative and generative learning for person
+  re-identification.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR)}, June 2019.
+
+\end{thebibliography}

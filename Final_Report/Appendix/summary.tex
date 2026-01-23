@@ -1,17 +1,21 @@
 \chapter*{Tóm tắt}
-\label{summary}
+\addcontentsline{toc}{chapter}{Tóm tắt}
 
-\textcolor{red}{Phần quy định chung khi trình bày báo cáo:}
-\begin{itemize}
-    \item Tất cả biểu thức toán phải được đánh số.
-    \item Tất cả hình vẽ, bảng biểu phải có chú thích, và đánh dấu để tham chiếu trong mục lục.
-    \item Hạn chế tối đa việc dùng tiếng anh,kể cả các thuật ngữ chuyên môn, có gắng dịch sang tiếng việt với từ ngữ dễ hiểu. Trong trường hợp quá khó để phiên dịch, được phép dùng tiếng anh, nhưng phải bổ sung ở bảng \ref{tab:vietanh} trong phần \textbf{Phụ lục}.
-    \item Các tài liệu đính kèm phải theo một chuẩn duy nhất, không tham khảo loạn xạ. Có nhiều cách để lấy định dạng chuẩn, cách đơn giản nhất là tìm bài báo đó trên trang \textbf{\href{https://arxiv.org/}{arxiv}}, tìm dòng \textbf{export BibTeX citation}, sao chép định dạng đó vào file \textbf{references.bib}.
-\end{itemize}
+Nhận dạng dáng đi là một trong những công nghệ sinh trắc học tiềm năng nhất hiện nay, cho phép xác định danh tính con người dựa trên thói quen di chuyển từ khoảng cách xa mà không cần sự hợp tác trực tiếp. Trong số các phương pháp tiên tiến, mô hình Học biểu diễn không-thời gian phân cấp  đã đạt được độ chính xác ấn tượng trên các tập dữ liệu chuẩn. Tuy nhiên, việc sử dụng các khối tích chập 3 chiều khiến mô hình trở nên nặng nề về chi phí tính toán và số lượng tham số, gây khó khăn cho việc triển khai trên các thiết bị biên có tài nguyên hạn chế.
 
-\textcolor{blue}{Viết theo mẫu bên dưới\\}
-Tô màu ảnh độ xám là quá trình ước lượng các giá trị màu RGB cho từng điểm trong ảnh độ xám, nhằm chuyển đổi chúng thành ảnh màu. Tô màu ảnh độ xám được chia thành hai nhóm lớn: tô màu tự động và tô màu bán tự động. Tuy nhiên, hầu hết các mô hình hiện tại chỉ tập trung vào một phương thức duy nhất, điều này hạn chế tính năng mà người dùng mong muốn.
+Trong khóa luận này, chúng tôi tập trung nghiên cứu tối ưu hóa kiến trúc HSTL nhằm đạt được sự cân bằng giữa hiệu suất và hiệu quả tính toán. Cụ thể, chúng tôi đề xuất hai hướng cải tiến chính:
 
-Trong nghiên cứu này, nhóm giới thiệu một mô hình tô màu ảnh độ xám kết hợp cả hai phương thức tự động và bán tự động (dựa trên lời nhắc văn bản) được phát triển dựa trên kiến trúc mô hình ControlNet. ControlNet là một kiến trúc mạng nơ-ron được thiết kế nhằm tích hợp các điều kiện điều khiển không gian vào các mô hình tạo sinh ảnh từ văn bản đã được huấn luyện trước.
+\begin{enumerate}
+    \item \textbf{Tối ưu hóa kiến trúc mạng:} Thay thế các khối tích chập 3D nặng nề bằng kiến trúc P3D kết hợp (không gian - thời gian). Phương pháp này nhằm giảm thiểu sự dư thừa tham số và chi phí tính toán.
+    \item \textbf{Cải tiến hàm mất mát:} Khảo sát việc ứng dụng hàm mất mát Circle Loss thay thế cho Triplet Loss truyền thống để cải thiện khả năng phân biệt đặc trưng, đặc biệt với các mẫu khó.
+\end{enumerate}
 
-Nhóm đã tiến hành huấn luyện mô hình trên bốn tập dữ liệu cho các mục đích khác nhau. Sau đó nhóm tiến hành thử nghiệm mô hình tô màu chính trên ba tập dữ liệu đánh giá khác nhau. Kết quả đánh giá cho thấy, mô hình của nhóm đã vượt qua hầu hết các phương pháp tô màu tiên tiến trước đó trên phương thức tô màu tự động về chỉ số Colorfulness. Cuối cùng, nhóm xây dựng thêm một giao diện đơn giản để người dùng có thể sử dụng và ứng dụng các mô hình vào các công việc có liên quan đến tô màu ảnh độ xám.
+Kết quả thực nghiệm trên bộ dữ liệu CASIA-B đã đem lại những kết luận quan trọng:
+
+Thứ nhất, việc ứng dụng P3D là một chiến lược hiệu quả. Biến thể HSTL-P3D giúp \textbf{giảm khoảng 50\% số lượng tham số} và \textbf{giảm 2.25 lần chi phí tính toán (FLOPs)} so với mô hình gốc, trong khi vẫn duy trì độ chính xác nhận dạng tương đương ở hầu hết các điều kiện thử nghiệm (NM, BG). Điều này mở ra triển vọng lớn cho việc ứng dụng mô hình trên các thiết bị thực tế.
+
+Thứ hai, đối với khảo sát về Circle Loss, kết quả thực nghiệm chưa đạt được kỳ vọng lý thuyết. Do những sai sót trong quá trình cài đặt thực nghiệm (cụ thể là sự kết hợp chưa phù hợp giữa Circle Loss và Cross-Entropy Loss), hiệu năng của các biến thể sử dụng hàm mất mát này bị suy giảm so với đường cơ sở. Chúng tôi đã phân tích thẳng thắn nguyên nhân của vấn đề này trong khóa luận và đề xuất phương án tái thực nghiệm trong tương lai.
+
+Tổng hợp lại, khóa luận đóng góp một giải pháp tối ưu hóa hiệu quả (P3D) cho bài toán nhận dạng dáng đi, đồng thời cung cấp những phân tích thực tiễn sâu sắc về vai trò và cách triển khai các hàm mất mát trong mô hình học sâu.
+
+% \textbf{Từ khóa:} Nhận dạng dáng đi, HSTL, Pseudo-3D, Tối ưu hóa mô hình, CASIA-B.
