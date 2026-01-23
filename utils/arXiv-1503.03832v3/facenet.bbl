@@ -1,0 +1,134 @@
+\begin{thebibliography}{10}\itemsep=-1pt
+
+\bibitem{Bengio2009Curriculum}
+Y.~Bengio, J.~Louradour, R.~Collobert, and J.~Weston.
+\newblock Curriculum learning.
+\newblock In {\em Proc. of ICML}, New York, NY, USA, 2009.
+
+\bibitem{chen2012}
+D.~Chen, X.~Cao, L.~Wang, F.~Wen, and J.~Sun.
+\newblock Bayesian face revisited: A joint formulation.
+\newblock In {\em Proc. ECCV}, 2012.
+
+\bibitem{joint_cascade_face_detection}
+D.~Chen, S.~Ren, Y.~Wei, X.~Cao, and J.~Sun.
+\newblock Joint cascade face detection and alignment.
+\newblock In {\em Proc. ECCV}, 2014.
+
+\bibitem{dean2012large}
+J.~Dean, G.~Corrado, R.~Monga, K.~Chen, M.~Devin, M.~Mao, M.~Ranzato,
+  A.~Senior, P.~Tucker, K.~Yang, Q.~V. Le, and A.~Y. Ng.
+\newblock Large scale distributed deep networks.
+\newblock In P.~Bartlett, F.~Pereira, C.~Burges, L.~Bottou, and K.~Weinberger,
+  editors, {\em NIPS}, pages 1232--1240. 2012.
+
+\bibitem{DuchiAdagrad}
+J.~Duchi, E.~Hazan, and Y.~Singer.
+\newblock Adaptive subgradient methods for online learning and stochastic
+  optimization.
+\newblock {\em J. Mach. Learn. Res.}, 12:2121--2159, July 2011.
+
+\bibitem{Goodfellow13maxoutnetworks}
+I.~J. Goodfellow, D.~Warde-farley, M.~Mirza, A.~Courville, and Y.~Bengio.
+\newblock Maxout networks.
+\newblock In {\em In ICML}, 2013.
+
+\bibitem{lfw}
+G.~B. Huang, M.~Ramesh, T.~Berg, and E.~Learned-Miller.
+\newblock Labeled faces in the wild: A database for studying face recognition
+  in unconstrained environments.
+\newblock Technical Report 07-49, University of Massachusetts, Amherst, October
+  2007.
+
+\bibitem{lecun1989backprop}
+Y.~LeCun, B.~Boser, J.~S. Denker, D.~Henderson, R.~E. Howard, W.~Hubbard, and
+  L.~D. Jackel.
+\newblock Backpropagation applied to handwritten zip code recognition.
+\newblock {\em Neural Computation}, 1(4):541--551, Dec. 1989.
+
+\bibitem{networkinnetwork}
+M.~Lin, Q.~Chen, and S.~Yan.
+\newblock Network in network.
+\newblock {\em CoRR}, abs/1312.4400, 2013.
+
+\bibitem{gaussianface}
+C.~Lu and X.~Tang.
+\newblock Surpassing human-level face verification performance on {LFW} with
+  gaussianface.
+\newblock {\em CoRR}, abs/1404.3840, 2014.
+
+\bibitem{backprop1986}
+D.~E. Rumelhart, G.~E. Hinton, and R.~J. Williams.
+\newblock Learning representations by back-propagating errors.
+\newblock {\em Nature}, 1986.
+
+\bibitem{Schultz2004}
+M.~Schultz and T.~Joachims.
+\newblock Learning a distance metric from relative comparisons.
+\newblock In S.~Thrun, L.~Saul, and B.~Sch\"{o}lkopf, editors, {\em NIPS},
+  pages 41--48. MIT Press, 2004.
+
+\bibitem{pie}
+T.~Sim, S.~Baker, and M.~Bsat.
+\newblock The {CMU} pose, illumination, and expression {(PIE)} database.
+\newblock In {\em In Proc. FG}, 2002.
+
+\bibitem{deepid2}
+Y.~Sun, X.~Wang, and X.~Tang.
+\newblock Deep learning face representation by joint
+  identification-verification.
+\newblock {\em CoRR}, abs/1406.4773, 2014.
+
+\bibitem{deepid2plus}
+Y.~Sun, X.~Wang, and X.~Tang.
+\newblock Deeply learned face representations are sparse, selective, and
+  robust.
+\newblock {\em CoRR}, abs/1412.1265, 2014.
+
+\bibitem{SzegedyILSVRC2014}
+C.~Szegedy, W.~Liu, Y.~Jia, P.~Sermanet, S.~Reed, D.~Anguelov, D.~Erhan,
+  V.~Vanhoucke, and A.~Rabinovich.
+\newblock Going deeper with convolutions.
+\newblock {\em CoRR}, abs/1409.4842, 2014.
+
+\bibitem{deepface}
+Y.~Taigman, M.~Yang, M.~Ranzato, and L.~Wolf.
+\newblock Deepface: Closing the gap to human-level performance in face
+  verification.
+\newblock In {\em IEEE Conf. on CVPR}, 2014.
+
+\bibitem{Wang2014}
+J.~Wang, Y.~Song, T.~Leung, C.~Rosenberg, J.~Wang, J.~Philbin, B.~Chen, and
+  Y.~Wu.
+\newblock Learning fine-grained image similarity with deep ranking.
+\newblock {\em CoRR}, abs/1404.4661, 2014.
+
+\bibitem{Weinberger06distancemetric}
+K.~Q. Weinberger, J.~Blitzer, and L.~K. Saul.
+\newblock Distance metric learning for large margin nearest neighbor
+  classification.
+\newblock In {\em NIPS}. MIT Press, 2006.
+
+\bibitem{Wilson.nn03.batch}
+D.~R. Wilson and T.~R. Martinez.
+\newblock The general inefficiency of batch training for gradient descent
+  learning.
+\newblock {\em Neural Networks}, 16(10):1429--1451, 2003.
+
+\bibitem{ytf}
+L.~Wolf, T.~Hassner, and I.~Maoz.
+\newblock Face recognition in unconstrained videos with matched background
+  similarity.
+\newblock In {\em IEEE Conf. on CVPR}, 2011.
+
+\bibitem{zeilerfergus}
+M.~D. Zeiler and R.~Fergus.
+\newblock Visualizing and understanding convolutional networks.
+\newblock {\em CoRR}, abs/1311.2901, 2013.
+
+\bibitem{zhenyao2014}
+Z.~Zhu, P.~Luo, X.~Wang, and X.~Tang.
+\newblock Recover canonical-view faces in the wild with deep neural networks.
+\newblock {\em CoRR}, abs/1404.3543, 2014.
+
+\end{thebibliography}

@@ -1,8 +1,41 @@
-\chapter{Kết luận}
+\chapter{Kết luận và Hướng phát triển}
 \label{Chapter5}
-
-Tổng kết lại đóng góp của nghiên cứu, các cải tiến, và hạn chế, kèm theo hướng nghiên tương lai (đã đề cập ở phần \textbf{Phân tích kết quả} của \ref{Chapter4}).
 
 \section{Kết luận}
 
-\section{Bàn luận}
+Trong khóa luận này, chúng tôi đã tập trung khảo sát các hạn chế của mô hình nhận dạng dáng đi HSTL gốc, cụ thể là chi phí tính toán cao của khối tích chập 3D và sự thiếu linh hoạt của hàm mất mát Triplet Loss. Các kết luận chính được rút ra từ phân tích lý thuyết và thực nghiệm tại Chương 4 bao gồm:
+
+\begin{enumerate}
+      \item \textbf{Tối ưu hóa kiến trúc với P3D:}
+            Chúng tôi đã chứng minh rằng việc thay thế các khối tích chập 3D bằng P3D-A (tích chập 2D không gian kết hợp 1D thời gian) là một chiến lược hiệu quả. Phân tích thực nghiệm cho thấy P3D giúp giảm khoảng \textbf{50\% số lượng tham số} và \textbf{2.25 lần chi phí tính toán (FLOPs)} so với Conv3D, trong khi vẫn duy trì độ chính xác nhận dạng tương đương. Cấu trúc P3D-A phù hợp tự nhiên với quá trình nhận thức dáng đi: nhận diện hình dáng trước, sau đó phân tích chuyển động.
+
+      \item \textbf{Nâng cao khả năng phân biệt với Circle Loss:}
+            %     Kết quả khảo sát hàm mất mát đã chỉ ra sự vượt trội của Circle Loss so với Triplet Loss. Nhờ cơ chế \textbf{tự điều chỉnh trọng số (self-paced weighting)} và định nghĩa biên hội tụ rõ ràng, Circle Loss giúp mô hình học được các đặc trưng phân biệt tốt hơn, đặc biệt trong các điều kiện khó như thay đổi trang phục (CL) và góc nhìn cực đoan.
+            Về mặt lý thuyết, một điều chắc chắn rằng hàm Circle Loss có thể cải thiện HSTL. Tuy nhiên, chúng tôi đã mắc sai lầm lớn trong việc nghiên cứu và cài đặt thực nghiệm, dẫn đến kết quả kém. Do đó, khảo sát này không dám khẳng định giải thuyết mà chúng tôi đã đề ra trước đó.
+            %     \item \textbf{Tổng hợp phương pháp hiệu quả:}
+            %           Sự kết hợp giữa kiến trúc mạng gọn nhẹ (HSTL-P3D) và hàm mất mát mạnh mẽ (Circle Loss) có thể tạo ra một hệ thống nhận dạng dáng đi cân bằng tốt giữa hiệu năng và chi phí tài nguyên, mở ra triển vọng ứng dụng thực tế trên các thiết bị có cấu hình hạn chế.
+\end{enumerate}
+
+\section{Hạn chế}
+
+Mặc dù đạt được những kết quả khả quan, nghiên cứu vẫn còn một số hạn chế:
+\begin{itemize}
+      \item \textbf{Dữ liệu phân đoạn:} Mô hình vẫn phụ thuộc hoàn toàn vào chất lượng của ảnh hình bóng đầu vào. Nếu quá trình tách nền (segmentation) thất bại (mất chân, mất tay), hiệu suất nhận dạng sẽ giảm mạnh.
+      \item \textbf{Tốc độ suy diễn thực tế:} Dù đã giảm FLOPs, nhưng việc suy diễn trên CPU vẫn còn chậm so với yêu cầu thời gian thực.
+      \item \textbf{Sự bất cẩn trong quy trình nghiên cứu khoa học:} Chính điều này dẫn thiếu kết quả tệ khi khảo sát Circle Loss.
+\end{itemize}
+
+\section{Hướng phát triển}
+
+Dựa trên các xu hướng nghiên cứu mới nhất năm 2024-2025, chúng tôi đề xuất các hướng phát triển tiếp theo:
+
+\begin{enumerate}
+      \item \textbf{Tái thực nghiệm với Cirle Loss}: Đây là điều chắc chắn chúng tôi sẽ làm để hoàn thiện nghiên cứu này theo kế hoạch đề ra.
+      \item \textbf{Tích hợp Kiến trúc Không gian Trạng thái (Mamba):}
+            Như đã thảo luận trong chương 2, mô hình \textbf{MambaGait} cho thấy khả năng xử lý chuỗi dài với chi phí tuyến tính. Việc thay thế bộ trích xuất thời gian bằng các khối Mamba có thể giúp mô hình nắm bắt thông tin dáng đi trong thời gian dài hơn hiệu quả hơn.
+
+      \item \textbf{Tăng cường dữ liệu với cấu trúc xương:}
+            Tích hợp thêm thông tin khung xương 2D/3D (như \textbf{DAGait}) để hướng dẫn quá trình căn chỉnh ảnh hoặc bổ sung thông tin khi ảnh bóng dáng bị nhiễu.
+      \item \textbf{Triển khai trên thiết bị biên:}
+            Thực hiện lượng tử hóa mô hình xuống dạng FP16 hoặc INT8 để triển khai trên các thiết bị nhúng như NVIDIA Jetson, tối ưu hóa cho ứng dụng giám sát thực tế.
+\end{enumerate}
