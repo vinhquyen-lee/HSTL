@@ -1,0 +1,145 @@
+% TODO: Tất cả mô-đun đều không trình bày nguyên lý, mục đích cốt lõi.
+\begin{frame}{Mô-đun trích xuất chuyển động theo vùng - ARME}
+    \begin{itemize}
+        \item \textbf{Mục đích:} Trích xuất đặc trưng chuyển động không gian-thời gian độc lập cho từng vùng cơ thể (đầu, thân, chân) thay vì xử lý toàn bộ cơ thể như một khối thống nhất.
+        \item \textbf{Nguyên lý:} Sử dụng các bộ lọc 3D Convolution riêng biệt (không chia sẻ trọng số) cho từng phân vùng ngang của đặc trưng đầu vào, cho phép học các mẫu chuyển động đặc thù của từng vùng.
+    \end{itemize}
+
+    \textbf{Đầu vào:} $X^{(l)} = \{X_{j}^{(l)}\}_{j=1}^{K_l}$.
+
+    \textbf{Biểu diễn toán học:}
+    \begin{equation}
+        Y^{(l)}_{\Psi}=\Psi^{(l)}(X^{(l)})=\left[f_{1}(X_{1}^{(l)}), f_{2}(X_{2}^{(l)}) ,\ldots, f_{K_l}(X_{K_l}^{(l)}) \right]
+    \end{equation}
+    trong đó $f_j$ là phép tích chập Conv3D riêng biệt cho vùng $j$:
+    % \begin{equation}
+    %     f_{j}(X_{j}^{(l)}) = x_t + T(S(x_t)) \quad \text{với } S: 1 \times K \times K, T: K \times 1 \times 1
+    % \end{equation}
+
+    % \textbf{Đặc điểm:} Không chia sẻ trọng số ($W_j \neq W_k$) $\to$ Học đặc trưng cục bộ chuyên biệt.
+\end{frame}
+
+\begin{frame}{Mô-đun gộp không gian-thời gian thích ứng - ASTP}
+    \begin{itemize}
+        \item \textbf{Mục đích:} Tổng hợp thông tin từ các mức độ chi tiết khác nhau của phân cấp cơ thể để tạo ra vector đặc trưng gọn nhẹ.
+        \item \textbf{Nguyên lý:} Kết hợp Max Pooling (theo thời gian) và GeM Pooling (theo không gian) trên từng vùng đặc trưng, sau đó biến đổi qua lớp Fully Connected để ánh xạ vào không gian định danh.
+    \end{itemize}
+
+    \textbf{Biểu thức ánh xạ đặc trưng:}
+    \begin{equation}
+        Y_{\Gamma,j}^{(l)} = \Gamma_j^{(l)}(X_j^{(l)}) = \text{GeM}_j \circ \text{FC} \circ \text{Max}(X_j^{(l)})
+    \end{equation}
+
+    \begin{itemize}
+        \item $\text{Max}(\cdot)$: Gộp cực đại theo chiều thời gian.
+        \item $\text{FC}(\cdot)$: Lớp kết nối đầy đủ.
+        \item $\text{GeM}_j(\cdot)$: Gộp trung bình tổng quát theo không gian:
+              $$ \text{GeM}(x) = \left( \frac{1}{|\Omega|} \sum_{u \in \Omega} x_u^p \right)^{1/p} $$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Mô-đun tổng hợp đặc trưng mức khung hình - FTA}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.95\linewidth]{mma.pdf}
+        \caption{Trực quan FTA.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Mô-đun tổng hợp đặc trưng mức khung hình - FTA}
+    \begin{itemize}
+        \item \textbf{Mục đích:} Giảm thiểu thông tin dư thừa do tốc độ bước đi hoặc tần số lấy mẫu, đồng thời nén chiều thời gian của chuỗi.
+        \item \textbf{Nguyên lý:} Sử dụng cơ chế Attention mềm (Soft-attention) để tự động lựa chọn và tổng hợp các khung hình quan trọng từ nhiều tỷ lệ thời gian khác nhau (Multi-scale temporal pooling).
+    \end{itemize}
+
+    \textbf{Tổng hợp đa tỉ lệ:}
+    \begin{equation}
+        \hat{U}_{j}^{(l)} = \text{Max}_{3 \times 1 \times 1}(X_{j}^{(l)}) + \text{Max}_{5 \times 1 \times 1}(X_{j}^{(l)})
+    \end{equation}
+
+    \textbf{Trọng số chú ý:}
+    \begin{equation}
+        \mathcal{W}_{j} = \text{Softmax}(\text{FC}(\text{GAP}(\hat{U}_j^{(l)})))
+    \end{equation}
+
+    \textbf{Đầu ra tổng hợp:}
+    \begin{equation}
+        Y_{\Omega,j}^{(l)} = \mathcal{W}_{j,1} \odot U_{j,1}^{(l)} + \mathcal{W}_{j,2} \odot U_{j,2}^{(l)}
+    \end{equation}
+\end{frame}
+% ======================================================================
+\begin{frame}{Kiến trúc chi tiết (CASIA-B)}
+    \begin{table}
+        \centering
+        \resizebox{0.9\linewidth}{!}{
+            \begin{tabular}{c|c|cc|c}
+                \toprule
+                Mức                & Mô-đun                & Lớp         & Nhân/Kích thước & Phân vùng $K_l$    \\
+                \midrule
+                1                  & ARME                  & Conv3d      & (3,3,3)         & 1                  \\
+                \midrule
+                \multirow{4}{*}{2} & \multirow{2}{*}{ARME} & P3D-A (S)   & (1,3,3)         & \multirow{4}{*}{2} \\
+                                   &                       & P3D-A (T)   & (3,1,1)         &                    \\
+                                   & FTA                   & MaxPool     & (3,1,1)         &                    \\
+                \midrule
+                \multirow{2}{*}{3} & ARME                  & P3D-A (S/T) & (1,3,3)/(3,1,1) & 4                  \\
+                \midrule
+                4                  & ASTP                  & -           & -               & 8                  \\
+                \bottomrule
+            \end{tabular}
+        }
+        \caption{Tóm tắt kiến trúc HSTL đề xuất với P3D.}
+    \end{table}
+\end{frame}
+
+
+
+% --- TRIPLET LOSS ---
+\begin{frame}{Triplet Loss: Công thức và Hạn chế}
+    \begin{equation}
+        \mathcal{L}_{triplet} = \frac{1}{N_{valid}} \sum_{i=1}^{N_{triplet}} \max(0, d(f(x^a_i), f(x^p_i)) - d(f(x^a_i), f(x^n_i)) + m)
+    \end{equation}
+    \textbf{Định nghĩa:}
+    \begin{itemize}
+        \item $d(x, y) = ||f(x)-f(y)||_2^2$: Khoảng cách Euclidean.
+        \item $x^a, x^p, x^n$: Anchor, Positive, Negative.
+        \item $m$: Margin (biên độ).
+    \end{itemize}
+    \textbf{Gradient (Hằng số):}
+    $$ \frac{\partial \mathcal{L}}{\partial d_p} = 1, \quad \frac{\partial \mathcal{L}}{\partial d_n} = -1 \quad (\text{khi loss} > 0) $$
+\end{frame}
+% --- CROSS ENTROPY LOSS ---
+\begin{frame}{Cross-Entropy Loss}
+    \begin{equation}
+        \mathcal{L}_{ce} = -\frac{1}{V \cdot N} \sum_{v=1}^{V} \sum_{j=1}^{N} \left[ (1-\epsilon) \sum_{k=1}^{C} y_{jk} \log p_{vjk} + \epsilon \cdot H(p_{vj}) \right]
+    \end{equation}
+    Kết hợp \textbf{Label Smoothing} ($\epsilon$) để giảm overfitting.
+    % \begin{itemize}
+    %     \item Kết hợp \textbf{Label Smoothing} ($\epsilon$) để giảm overfitting.
+    % \end{itemize}
+\end{frame}
+
+% --- CIRCLE LOSS ---
+\begin{frame}{Circle Loss}
+    \begin{equation}
+        \mathcal{L}_{circle} = \log\left[ 1 + \sum_{j} e^{\gamma \alpha_n^j (s_n^j - \Delta_n)} \cdot \sum_{i} e^{-\gamma \alpha_p^i (s_p^i - \Delta_p)} \right]
+    \end{equation}
+    \textbf{Định nghĩa:}
+    \begin{itemize}
+        \item $s_p = \cos(x^a, x^p), \quad s_n = \cos(x^a, x^n)$.
+        \item $\alpha_p = [O_p - s_p]_+, \quad \alpha_n = [s_n - O_n]_+$ (Trọng số tự điều chỉnh).
+    \end{itemize}
+    \textbf{Cơ chế Gradient (Linh hoạt):}
+    $$ \text{Mẫu khó (Hard)}: s_p \ll O_p \Rightarrow \alpha_p \uparrow \Rightarrow \text{Gradient} \uparrow $$
+    $$ \text{Mẫu dễ (Easy)}: s_p \approx O_p \Rightarrow \alpha_p \downarrow \Rightarrow \text{Gradient} \downarrow $$
+\end{frame}
+
+\begin{frame}{Circle Loss}
+    \begin{figure}[t!]
+        \centering
+        \includegraphics[width=0.8\linewidth]{circle_loss_intro.pdf}
+        \caption{So sánh cơ chế tối ưu: (a) Triplet Loss tối ưu cứng nhắc. (b) Circle Loss linh hoạt điều chỉnh gradient hướng tới đích hội tụ cụ thể.}
+        \label{fig:intro}
+    \end{figure}
+\end{frame}

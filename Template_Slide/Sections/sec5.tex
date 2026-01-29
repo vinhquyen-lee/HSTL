@@ -1,0 +1,91 @@
+% \section{Các công trình nghiên cứu liên quan}
+
+\begin{frame}{Những hướng tiếp cận chính}
+    % Có 3 hướng tiếp cận chính:
+    \begin{itemize}
+        \item Học trên cấu trúc cơ thể.
+        \item Học trên ngoại hình/hình dáng.
+        \item Học trên đa phương thức.
+    \end{itemize}
+
+\end{frame}
+
+% \begin{frame}{Học trên cấu trúc cơ thể}
+%     chèn ảnh minh họa kiểu dữ liệu, các tập thường dùng, các mô hình liên quan.
+%     \begin{itemize}
+%         \item Tập dữ liệu: OU-MVLP(Pose/Skeleton), Gait3D, GREW.
+%         \item Các phương pháp: GaitGraph, PoseGait, Gait-TR, GPGait, SkeletonGait.
+%     \end{itemize}
+% \end{frame}
+
+% TODO: hãy bổ sung tham chiếu/tham khảo cho từng tập dữ liệu, phương pháp được liệt kê. Phải tìm kiếm từ tác cả nguồn trong thư mục utils
+\begin{frame}{Học trên cấu trúc cơ thể}
+    \begin{itemize}
+        \item Đầu vào: Cấu trúc cơ thể được ước lượng (khung xương, mô hình cơ thể 3D.% (SMPL \cite{loper2015smpl}))
+        \item Nguyên lý: Tham số hóa dáng đi dưới dạng các vec-tơ tọa độ/đồ thị xương, loại bỏ hầu hết các thông tin về màu sắc hay kết cấu bề mặt.
+        \item Ưu điểm:
+              \begin{itemize}
+                  \item Đặc trưng \textit{"sạch"}, tức là không chứa thông tin gây nhiễu như trang phục hoặc phụ kiện.
+                  \item Độ hiệu quả bất biến với sự thay đổi về trang phục hay vật mang theo, do được huấn luyện dựa trên chuyển động của khớp xương.
+              \end{itemize}
+        \item Nhược điểm
+              \begin{itemize}
+                  \item Phụ thuộc nhiều và độ chính xác của thuật toán ước lượng tư thế.
+                  \item Độ hiệu quả kém với các tập dữ liệu thế giới thực, vì bỏ qua thông tin về dáng người thô.
+              \end{itemize}
+        % \item Tập dữ liệu: OU-MVLP (Pose) \cite{takemura2018multi}, Gait3D \cite{zheng2022gait}, GREW \cite{zhu2021gait}.
+        % \item Các phương pháp: GaitGraph \cite{teepe2021gaitgraph}, PoseGait \cite{liao2020model}, Gait-TR \cite{zhang2021gait}, GPGait \cite{fu2023gpgait}, SkeletonGait \cite{fan2024skeletongait}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Học trên ngoại hình/hình dáng}
+    \begin{itemize}
+        \item Đầu vào: chuỗi hình nhị phân của bóng/dáng người, hoặc ảnh RGB. Hình dáng được xem xét trong nhiều tình huống (ví dụ: trang phục bình thường, nhiều trang phục, mang túi xách...).
+        \item Nguyên lý: Học trực tiếp từ chuỗi dáng đi, bằng mạng học sâu, để trích xuất đặc trưng hình dáng (không gian) và chuyển động (thời gian).
+        \item Ưu điểm:
+              \begin{itemize}
+                  \item Tận dụng thông tin hình dáng cơ thể đa dạng, tăng khả năng phân biệt danh tính.
+                  \item Nhận được nhiều sự quan tâm, và đạt hiệu suất cao trên các tập dữ liệu chuẩn trong phòng thí nghiệm.
+              \end{itemize}
+        \item Nhược điểm:
+              \begin{itemize}
+                  \item Dễ bị ảnh hưởng bởi các yếu tố gây nhiễu trong thực tế (vật che khuất phức tạp, hậu cảnh, sự thay đổi ánh sáng, góc nhìn.)
+                  \item Hiệu suất giảm khoảng hơn 40\% trong môi trường thực tế, so với phòng thí nghiệm.
+              \end{itemize}
+        % \item Tập dữ liệu: CASIA-B \cite{yu2006framework}, OU-MVLP \cite{takemura2018multi}, Gait3D \cite{zheng2022gait}, GREW \cite{zhu2021gait}, CCPG.
+        % \item Phương pháp tiêu biểu: GaitSet \cite{chao2019gaitset}, GaitGL \cite{lin2021gait}, GaitBase, GaitPart \cite{fan2020gaitpart}, 3D Local \cite{huang20213d}.
+    \end{itemize}
+\end{frame}
+
+% \begin{frame}{Học trên ngoại hình/hình dáng}
+%     \begin{itemize}
+%         \item Tập dữ liệu: CASIA-B, OU-MVLP, Gait3D, GREW, CCPG
+%         \item Phương pháp tiêu biểu: GaitSet, GaitGL, DeepGaitV2, GaitBase, DANet, GaitSSB, QAGait.
+%     \end{itemize}
+% \end{frame}
+
+\begin{frame}{Học trên đa phương thức}
+    % Có 3 hướng tiếp cận chính:
+    \begin{itemize}
+        \item Nguyên lý: kết hợp cùng lúc nhiều đầu vào (hình bóng, khung xương,...) nhằm tạo ra đặc trưng dáng đi toàn vẹn hơn.
+        \item Ưu điểm
+              \begin{itemize}
+                  \item Tận dụng sự bổ trợ lẫn nhau giữa các loại dữ liệu (dữ liệu hình bóng cung cấp thông tin hình dáng và chuyển động; dữ liệu khung xương cung cấp cấu trúc chuyển động bất biến với nhiễu).
+                  \item Thường đạt độ chính xác cao hơn và ổn định hơn trong các tình huống khó khăn.
+              \end{itemize}
+        \item Nhược điểm
+              \begin{itemize}
+                  \item Độ phức tạp tính toán cao do xử lý nhiều luồng dữ liệu.
+                  \item Yêu cầu các luồng dữ liệu phải đồng bộ và có chất lượng cao từ nhiều nguồn cảm biến hoặc thuật toán tiền xử lý khác nhau.
+              \end{itemize}
+        % \item Tập dữ liệu: Gait3D \cite{zheng2022gait}, SUSTech1K, CCPG.
+        % \item Phương pháp tiêu biểu: SMPLGait \cite{zheng2022gait}, BiFusion \cite{hou2020bifusion}, ParsingGait \cite{zheng2023parsing}, SkeletonGait++ \cite{fan2022skeletongait}, GaitRef \cite{zhu2023gaitref}, HybridGait \cite{dong2024hybridgait}.
+    \end{itemize}
+\end{frame}
+
+% \begin{frame}{Học trên ngoại hình/hình dáng}
+%     \begin{itemize}
+%         \item Tập dữ liệu: CASIA-B, OU-MVLP, Gait3D, GREW, CCPG
+%         \item Phương pháp tiêu biểu: GaitSet, GaitGL, DeepGaitV2, GaitBase, DANet, GaitSSB, QAGait.
+%     \end{itemize}
+% \end{frame}

@@ -1,0 +1,135 @@
+\begin{frame}{Tập dữ liệu CASIA-B}
+    \begin{itemize}
+        \item \textbf{Quy mô:} 124 chủ thể, 11 góc nhìn ($0^{\circ}-180^{\circ}$).
+        \item \textbf{3 Điều kiện thử nghiệm:}
+              \begin{itemize}
+                  \item \textbf{NM (Normal):} Đi bộ bình thường (6 video/người).
+                  \item \textbf{BG (Bag):} Có mang túi (2 video/người).
+                  \item \textbf{CL (Cloth):} Đổi áo khoác (2 video/người).
+              \end{itemize}
+        \item \textbf{Phân chia:}
+              \begin{itemize}
+                  \item Tập huấn luyện: 74 chủ thể.
+                  \item Tập kiểm thử:  50 chủ thể.
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Cài đặt thực nghiệm}
+    \begin{table}
+        \centering
+        \begin{tabular}{ll}
+            \toprule
+            \textbf{Tham số} & \textbf{Giá trị}                       \\
+            \midrule
+            Ảnh đầu vào      & $64 \times 44$ pixels                  \\
+            Batch Size       & $8 \times 8$ (64 mẫu/batch)            \\
+            Số khung hình    & $T=30$ (Huấn luyện), Tất cả (Kiểm thử) \\
+            Optimizer        & Adam ($lr=1e-5$)                       \\
+            Số bước lặp      & 100,000                                \\
+            \bottomrule
+        \end{tabular}
+        \caption{Cấu hình chi tiết quá trình huấn luyện.}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Kết quả thực nghiệm}
+    \begin{itemize}
+        \item Điều kiện bình thường - NM.
+        \item Điều kiện mang theo túi xách - BG.
+        \item Điều kiện thay đổi trang phục - CL.
+              % --- NM RESULTS ---
+    \end{itemize}
+\end{frame}
+\begin{frame}{Điều kiện bình thường - NM.}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.75\linewidth]{final_iteration_scatter_NM.png}
+        \caption{Độ chính xác theo góc nhìn (NM) ở bước lặp cuối cùng (100K).}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Điều kiện bình thường - NM.}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.95\linewidth]{NM_Incl.jpg}
+        \caption{Độ chính xác Rank-1 trên điều kiện NM theo số vòng lặp.}
+    \end{figure}
+\end{frame}
+
+% --- BG RESULTS ---
+
+\begin{frame}{Điều kiện mang theo túi xách - BG.}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.75\linewidth]{final_iteration_scatter_BG.png}
+        \caption{Độ chính xác theo góc nhìn (BG)  ở bước lặp cuối cùng (100K).}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Điều kiện mang theo túi xách - BG.}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.95\linewidth]{BG_Incl.jpg}
+        \caption{Độ chính xác Rank-1 trên điều kiện BG theo số vòng lặp.}
+    \end{figure}
+\end{frame}
+
+% --- CL RESULTS ---
+\begin{frame}{Điều kiện thay đổi trang phục - CL.}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.75\linewidth]{final_iteration_scatter_CL.png}
+        \caption{Độ chính xác theo góc nhìn (CL) ở bước lặp cuối cùng (100K).}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Điều kiện thay đổi trang phục - CL.}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.95\linewidth]{CL_Incl.jpg}
+        \caption{Độ chính xác Rank-1 trên điều kiện CL theo số vòng lặp.}
+    \end{figure}
+\end{frame}
+
+% --- ANALYSIS ---
+\begin{frame}{Đánh giá P3D}
+    % \begin{block}{Ưu điểm của P3D (Thực nghiệm)}
+    \begin{itemize}
+        % \item \textbf{Hiệu quả tính toán:} Giảm $\approx 50\%$ tham số và 2.25x FLOPs so với Conv3D.
+        \item \textbf{Hiệu quả tính toán:} Giảm số lượng tham số.
+        \item \textbf{Độ chính xác:} Duy trì hiệu năng tương đương kết quả của mô hình gốc.
+              % \item \textbf{Ổn định:} Không bị overfitting trên tập dữ liệu nhỏ.
+    \end{itemize}
+    % \end{block}
+    % \begin{block}{Ưu điểm của P3D (Thực nghiệm)}
+    %     \begin{itemize}
+    %         % \item \textbf{Hiệu quả tính toán:} Giảm $\approx 50\%$ tham số và 2.25x FLOPs so với Conv3D.
+    %         \item \textbf{Hiệu quả tính toán:} Giảm số lượng tham số.
+    %         \item \textbf{Độ chính xác:} Duy trì hiệu năng tương đương kết quả của mô hình gốc.
+    %               % \item \textbf{Ổn định:} Không bị overfitting trên tập dữ liệu nhỏ.
+    %     \end{itemize}
+    % \end{block}
+\end{frame}
+
+\begin{frame}{Phân tích lỗi thực nghiệm Circle Loss}
+    % \begin{alertblock}{Sai lầm trong cài đặt thực nghiệm}
+    \begin{itemize}
+        \item \textbf{Kỳ vọng:} Thay thế tổ hợp (Triplet + CE) bằng Circle Loss.
+        \item \textbf{Thực tế đã làm:} Chỉ thay thế Triplet Loss bằng Circle Loss, vẫn giữ lại CE Loss.
+        \item \textbf{Hậu quả:} Sai nguyên lý hoạt động, dẫn đến hiệu năng giảm sút.
+    \end{itemize}
+\vspace{0.5cm}
+    % TODO: ở phần phân tích kết quả circle loss, viết lại hàm mất mát đúng, và sai
+    % \textit{(Lưu ý: Trong thực nghiệm, chúng tôi vẫn giữ thành phần CE Loss, dẫn đến việc chưa đánh giá đúng tiềm năng thay thế hoàn toàn của Circle Loss).}
+    \textbf{Kỳ vọng (Đúng):}
+    \begin{equation}
+        \mathcal{L} = \mathcal{L}_{circle}
+    \end{equation}
+
+    \textbf{Thực tế (Sai lầm):}
+    \begin{equation}
+        \mathcal{L} = \mathcal{L}_{circle} + \mathcal{L}_{ce}
+    \end{equation}
+    % \end{alertblock}
+\end{frame}
