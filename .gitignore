@@ -3,9 +3,9 @@
 /venv
 **/__pycache__
 /logs
-# /utils
+/utils
 /output
 /logs
 # /Final_Report
-/Template_Slide
+# /Template_Slide
 /debug
