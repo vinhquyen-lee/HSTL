@@ -1,0 +1,97 @@
+\begin{thebibliography}{10}
+
+\bibitem{chao2019gaitset}
+Hanqing Chao, Yiwei He, Junping Zhang, and Jianfeng Feng.
+\newblock Gaitset: Regarding gait as a set for cross-view gait recognition.
+\newblock In {\em AAAI}, pages 8126--8133, 2019.
+
+\bibitem{dong2024hybridgait}
+Yilan Dong et~al.
+\newblock Hybridgait: A benchmark for spatial-temporal cloth-changing gait recognition with hybrid explorations.
+\newblock {\em arXiv preprint arXiv:2401.00271}, 2024.
+
+\bibitem{fan2022skeletongait}
+Chao Fan, Jingzhe Ma, Dongyang Jin, Chuanfu Shen, and Shiqi Yu.
+\newblock Skeletongait: Gait recognition using skeleton maps.
+\newblock In {\em arXiv preprint arXiv:2209.11218}, 2022.
+
+\bibitem{fan2024skeletongait}
+Chao Fan, Jingzhe Ma, Dongyang Jin, Chuanfu Shen, and Shiqi Yu.
+\newblock Skeletongait: Gait recognition using skeleton maps.
+\newblock In {\em AAAI}, 2024.
+
+\bibitem{fan2020gaitpart}
+Chao Fan, Yunjie Peng, Chunshui Cao, Xu~Liu, Saihui Hou, Jiannan Chi, Yongzhen Huang, Qing Li, and Zhiqiang He.
+\newblock Gaitpart: Temporal part-based model for gait recognition.
+\newblock In {\em CVPR}, pages 14225--14233, 2020.
+
+\bibitem{fu2023gpgait}
+Yang Fu, Shiqi Meng, Saihui Hou, Xuecai Hu, and Yongzhen Huang.
+\newblock Gpgait: Generalized pose-based gait recognition.
+\newblock In {\em ICCV}, 2023.
+
+\bibitem{hou2020bifusion}
+Saihui Hou, Yang Zhang, Yongzhen Huang, and Zhiqiang He.
+\newblock Learning rich features for gait recognition by integrating skeletons and silhouettes.
+\newblock In {\em CVPR}, 2020.
+
+\bibitem{huang20213d}
+Zhen Huang, Dixiu Xue, Xu~Shen, Xinmei Tian, Houqiang Li, Jianqiang Huang, and Xian-Sheng Hua.
+\newblock 3d local convolutional neural networks for gait recognition.
+\newblock In {\em ICCV}, pages 14920--14929, 2021.
+
+\bibitem{liao2020model}
+Rijun Liao, Shiqi Yu, Weizheng Wang, and Xinyu Tang.
+\newblock Model-based gait recognition with 3d pose estimation.
+\newblock In {\em Proceedings of the Asian Conference on Computer Vision (ACCV)}, 2020.
+
+\bibitem{lin2021gait}
+Beibei Lin, Shunli Zhang, and Xin Yu.
+\newblock Gait recognition via effective global-local feature representation and local temporal aggregation.
+\newblock In {\em ICCV}, pages 14648--14656, 2021.
+
+\bibitem{loper2015smpl}
+Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael~J Black.
+\newblock Smpl: A skinned multi-person linear model.
+\newblock {\em ACM transactions on graphics (TOG)}, 34(6):1--16, 2015.
+
+\bibitem{takemura2018multi}
+Noriko Takemura, Yasushi Makihara, Daigo Muramatsu, Tomio Echigo, and Yasushi Yagi.
+\newblock Multi-view large population gait dataset and its performance evaluation for cross-view gait recognition.
+\newblock {\em IPSJ TCVA}, 10:1--14, 2018.
+
+\bibitem{teepe2021gaitgraph}
+Torben Teepe, Ali Khan, Johannes Gilg, Fabian Herzog, Stefan H{\"o}rmann, and Gerhard Rigoll.
+\newblock Gaitgraph: Graph convolutional network for 3d gait recognition.
+\newblock In {\em 2021 IEEE International Conference on Image Processing (ICIP)}, pages 959--963. IEEE, 2021.
+
+\bibitem{yu2006framework}
+Shiqi Yu, Daoliang Tan, and Tieniu Tan.
+\newblock A framework for evaluating the effect of view angle, clothing and carrying condition on gait recognition.
+\newblock In {\em ICPR}, pages 441--444, 2006.
+
+\bibitem{zhang2021gait}
+Cun Zhang, Xing-Peng Chen, Guo-Qiang Han, and Xiang-Jie Liu.
+\newblock Spatial transformer network on skeleton-based gait recognition.
+\newblock {\em arXiv preprint arXiv:2104.14250}, 2021.
+
+\bibitem{zheng2022gait}
+Jinkai Zheng, Xinchen Liu, Wu~Liu, Lingxiao He, Chenggang Yan, and Tao Mei.
+\newblock Gait recognition in the wild with dense 3d representations and a benchmark, 2022.
+
+\bibitem{zheng2023parsing}
+Jinkai Zheng, Xinchen Liu, Shuai Wang, Lihao Wang, Chenggang Yan, and Wu~Liu.
+\newblock Parsing is all you need for accurate gait recognition in the wild.
+\newblock {\em arXiv preprint arXiv:2308.13963}, 2023.
+
+\bibitem{zhu2023gaitref}
+Haidong Zhu, Wanrong Zheng, Zhaoheng Zheng, and Ram Nevatia.
+\newblock Gaitref: Gait recognition with refined sequential skeletons.
+\newblock In {\em arXiv preprint arXiv:2304.04874}, 2023.
+
+\bibitem{zhu2021gait}
+Zheng Zhu, Xianda Guo, Tian Yang, Junjie Huang, Jiankang Deng, Guan Huang, Dalong Du, Jiwen Lu, and Jie Zhou.
+\newblock Gait recognition in the wild: A benchmark.
+\newblock In {\em Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)}, 2021.
+
+\end{thebibliography}

@@ -1,0 +1,151 @@
+\documentclass{beamer}
+% Language and Encoding
+\usepackage[utf8]{inputenc}
+\usepackage[utf8]{vietnam}
+\uselanguage{vietnamese}
+\languagepath{vietnamese}
+% Beamer Theme and Color Customization
+\mode<presentation> {
+    \usetheme{CambridgeUS}
+    \usecolortheme{rose}
+    \setbeamercolor{frametitle}{fg=black}
+    \definecolor{CambridgeUSRed}{RGB}{163, 31, 52}
+    \setbeamercolor{block title}{bg=CambridgeUSRed!90, fg=white}
+    \setbeamercolor{block body}{bg=CambridgeUSRed!8, fg=black}
+}
+% Packages
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{media9}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usepackage{animate}
+\usepackage{mathtools}
+\usepackage{extarrows}
+\usepackage{systeme}
+\usepackage{commath}
+\usepackage{tasks}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{lipsum}
+\usepackage{pifont}
+\usepackage{float}
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage{appendixnumberbeamer}
+% Graphics Path - Pointing to local figures
+\graphicspath{{./figures/}{./Figures/}}
+% TikZ Libraries
+\usetikzlibrary{shapes.geometric, arrows}
+% Custom Translations
+\makeatletter
+\deftranslation[to=vietnamese]{Example}{Ví dụ}
+\deftranslation[to=vietnamese]{Theorem}{Định lý}
+\deftranslation[to=vietnamese]{Definition}{Định nghĩa}
+\makeatother
+% Beamer Templates
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{theorems}[numbered]
+% Math Operators
+\DeclareMathOperator*{\argmin}{\arg\min}
+\DeclareMathOperator*{\argmax}{\arg\max}
+% Custom Matrix Formatting
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+% Theorem Definitions
+\newtheorem{remark}[theorem]{Nhận xét}
+\newtheorem{tinhchat}[theorem]{Tính chất}
+% Table of Contents at Each Subsection
+\AtBeginSection[]{
+    \begin{frame}
+        \frametitle{Mục lục}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+%--------------------------------------------------------
+%	TITLE PAGE
+%--------------------------------------------------------
+\begin{document}
+\setbeamerfont{institute}{size=\large}
+\title[Báo cáo đồ án]{KHẢO SÁT NHỮNG KỸ THUẬT TƯƠNG TỰ TRONG NGHIÊN CỨU HỌC BIỂU DIỄN KHÔNG GIAN-THỜI GIAN PHÂN CẤP CHO BÀI TOÁN NHẬN DẠNG DÁNG ĐI}
+\author[Sinh Trắc học]{}
+% \institute[CNTT]{\textbf{Giảng viên hướng dẫn:}\\ PGS.TS. Lê Hoàng Thái \\ ThS. Dương Thái Bảo}
+\date[\today]{TP. Hồ Chí Minh, \today}
+\addtobeamertemplate{title page}{
+    \vspace*{0.2cm}
+    \begin{center}
+        TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN, ĐHQG-HCM\\[0.5em]
+        KHOA CÔNG NGHỆ THÔNG TIN
+    \end{center}
+}{}
+% Frame 1: Title only
+\begin{frame}[plain]
+    \maketitle
+\end{frame}
+% Frame 2: Student and Supervisor Info
+\begin{frame}
+    \frametitle{Thông tin thực hiện}
+    \begin{block}{Giảng viên hướng dẫn}
+        \begin{itemize}
+            \item PGS.TS. Lê Hoàng Thái
+            \item ThS. Dương Thái Bảo
+        \end{itemize}
+    \end{block}
+    \vspace{1cm}
+    \begin{block}{Sinh viên thực hiện}
+        \begin{itemize}
+            \item Phạm Thái Huy - 21120081
+            \item Nguyễn Đức Mạnh - 22120204
+            \item Lê Quang Vĩnh Quyền - 22120307
+        \end{itemize}
+    \end{block}
+\end{frame}
+\begin{frame}
+    \frametitle{Mục Lục}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+%-------------------------------------------------------
+%	PRESENTATION SLIDES
+%-------------------------------------------------------
+%=======================================================
+\section{Giới thiệu}
+\include{Sections/sec1}
+%----------------------------------------
+\section{Các công trình nghiên cứu liên quan}
+\include{Sections/sec5}
+%----------------------------------------
+\section{Nghiên cứu Học biểu diễn không gian-thời gian phân cấp - HSTL}
+\include{Sections/sec2}
+%----------------------------------------
+\section{Phương pháp đề xuất}
+\include{Sections/sec3}
+%----------------------------------------
+\section{Thực nghiệm và Đánh giá}
+\include{Sections/sec4}
+%----------------------------------------
+\section{Kết luận và Hướng phát triển}
+\include{Sections/sec6}
+%----------------------------------------
+\appendix
+\setbeamertemplate{footline}{}
+\setbeamertemplate{headline}{}
+
+% \section{Tài liệu tham khảo}
+% \begin{frame}[allowframebreaks]{Tài liệu tham khảo}
+%     \bibliographystyle{plain}
+%     \bibliography{references}
+% \end{frame}
+%----------------------------------------
+\section*{Phụ lục}
+\include{Sections/sec7}
+% ----------------------------------------
+\end{document}

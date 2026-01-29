@@ -1,0 +1,158 @@
+\begin{frame}{Các kĩ thuật tương đương}
+    \begin{itemize}
+        \item Mạng tích chập giả 3D (P3D) thay thế Mạng tích chập Conv3D.
+        \item Dùng Circle Loss cho toàn bộ quá trình học.
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    % \begin{equation}
+    %     Y^{M}=\Gamma^{(L)} \circ \Psi^{(L-1)} \circ \cdots \circ \Omega^{(2)} \circ \Psi^{(2)} \circ \Psi^{(1)}(S_{in})
+    % \end{equation}
+    % trong đó: $\Psi$ (ARME), $\Gamma$ (ASTP), $\Omega$ (FTA).
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.95\linewidth]{HSTL.png}
+        \caption{Trực quan kiến trúc mới của HSTL.}
+    \end{figure}
+\end{frame}
+% TODO: thêm đường phân cách ở giữa
+\begin{frame}{Conv3D và P3D}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Conv3D (Tiêu chuẩn)}
+        $$ W_{3D} \in \mathbb{R}^{k \times k \times k} $$
+        \begin{equation}
+            y = W_{3D} \ast x
+        \end{equation}
+        Chi phí: $\mathcal{O}(k^3)$
+        \column{0.5\textwidth}
+        \textbf{P3D-A (Đề xuất)}
+        $$ W_S \in \mathbb{R}^{1 \times k \times k}, \quad W_T \in \mathbb{R}^{k \times 1 \times 1} $$
+        \begin{equation}
+            x_{t+1} = x_t + W_T \ast (W_S \ast x_t)
+        \end{equation}
+        Chi phí: $\mathcal{O}(k^2+k)$
+    \end{columns}
+\end{frame}
+% --- P3D IMAGES ---
+\begin{frame}{Kiến trúc P3D-A}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.3\linewidth]{p3d_a.pdf}
+        \caption{Cấu trúc khối Pseudo-3D (biến thể A): $S \to T$.}
+    \end{figure}
+\end{frame}
+\begin{frame}{Đánh giá P3D so với Conv3D}
+    \begin{itemize}
+        \item Ưu điểm
+              \begin{itemize}
+                  \item \textbf{Nhẹ:} Giảm $\approx 55.6\%$ tham số.
+                  \item \textbf{Nhanh:} Giảm chi phí tính toán FLOPs (tỷ lệ 2.25).
+                  \item \textbf{Hiệu quả:} Tránh overfitting trên tập dữ liệu nhỏ.
+              \end{itemize}
+        \item Nhược điểm
+              \begin{itemize}
+                  \item Mất một phần tương quan phức tạp giữa không gian và thời gian do xử lý tuần tự (tuy nhiên P3D-A giảm thiểu điều này tốt).
+              \end{itemize}
+    \end{itemize}
+
+    %     \begin{block}{Ưu điểm của P3D}
+    %     \begin{itemize}
+    %         \item \textbf{Nhẹ:} Giảm $\approx 55.6\%$ tham số.
+    %         \item \textbf{Nhanh:} Giảm chi phí tính toán FLOPs (tỷ lệ 2.25).
+    %         \item \textbf{Hiệu quả:} Tránh overfitting trên tập dữ liệu nhỏ.
+    %     \end{itemize}
+    % \end{block}
+    % \begin{block}{Nhược điểm}
+    %     \begin{itemize}
+    %         \item Mất một phần tương quan phức tạp giữa không gian và thời gian do xử lý tuần tự (tuy nhiên P3D-A giảm thiểu điều này tốt).
+    %     \end{itemize}
+    % \end{block}
+\end{frame}
+% \begin{frame}{So sánh P3D-A, P3D-B, P3D-C}
+%     \begin{figure}
+%         \centering
+%         \begin{subfigure}{0.32\textwidth}
+%             \includegraphics[width=\linewidth]{p3d_a.pdf}
+%             \caption{P3D-A}
+%         \end{subfigure}
+%         \begin{subfigure}{0.32\textwidth}
+%             \includegraphics[width=\linewidth]{p3d_b.pdf}
+%             \caption{P3D-B}
+%         \end{subfigure}
+%         \begin{subfigure}{0.32\textwidth}
+%             \includegraphics[width=\linewidth]{p3d_c.pdf}
+%             \caption{P3D-C}
+%         \end{subfigure}
+%         \caption{Các biến thể của kiến trúc P3D.}
+%     \end{figure}
+% \end{frame}
+
+% --- TRIPLET LOSS ---
+\begin{frame}{Triplet Loss}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.7\linewidth]{triplet.png}
+        \caption{Cơ chế hoạt động của Triplet Loss.}
+    \end{figure}
+\end{frame}
+\begin{frame}{Triplet Loss}
+    \begin{equation}
+        \max(0, d(x^a, x^p) - d(x^a, x^n) + m)
+    \end{equation}
+    \textbf{Trong đó:}
+    \begin{itemize}
+        \item $d(x, y) = ||f(x)-f(y)||_2^2$: Khoảng cách Euclidean.
+        \item $x^a, x^p, x^n$: Điểm neo, điểm dương, điểm âm.
+        \item $m$: biên.
+    \end{itemize}
+    % \textbf{Gradient (Hằng số):}
+    % $$ \frac{\partial \mathcal{L}}{\partial d_p} = 1, \quad \frac{\partial \mathcal{L}}{\partial d_n} = -1 \quad (\text{khi loss} > 0) $$
+\end{frame}
+
+% --- CIRCLE LOSS ---
+\begin{frame}{Circle Loss}
+    \begin{equation}
+        \mathcal{L}_{circle} = \log\left[ 1 + \sum_{j} e^{\gamma \alpha_n^j (s_n^j - \Delta_n)} \cdot \sum_{i} e^{-\gamma \alpha_p^i (s_p^i - \Delta_p)} \right]
+    \end{equation}
+    \textbf{Trong đó:}
+    \begin{itemize}
+        \item $s_p = \cos(x^a, x^p), \quad s_n = \cos(x^a, x^n)$.
+    \end{itemize}
+\end{frame}
+
+% \begin{frame}{Triplet Loss và Circle Loss}
+%     \begin{figure}
+%         \centering
+%         \includegraphics[width=0.95\linewidth]{circle_loss_gradients.pdf}
+%         \caption{So sánh Gradient giữa Triplet (a) và Circle Loss (c).}
+%     \end{figure}
+% \end{frame}
+\begin{frame}{Triplet Loss và Circle Loss}
+    \begin{table}
+        \centering
+        \resizebox{\textwidth}{!}{
+            \begin{tabular}{lll}
+                \toprule
+                \textbf{Đặc điểm} & \textbf{Triplet Loss}            & \textbf{Circle Loss}               \\
+                \midrule
+                Đơn vị đo         & Khoảng cách Euclidean            & Độ tương đồng Cosine               \\
+                Mục tiêu          & Tương đối ($d_n - d_p > \alpha$) & Tuyệt đối ($s_p \to 1, s_n \to 0$) \\
+                Gradient          & Hằng số                          & Tự điều chỉnh (Lớn cho mẫu khó)    \\
+                % Mining            & Cần Hard Mining                  & Tự động (Self-paced)               \\
+                \bottomrule
+            \end{tabular}
+        }
+        \caption{So sánh Triplet Loss và Circle Loss.}
+    \end{table}
+\end{frame}
+\begin{frame}{Hàm mất mát tổng hợp}
+    \textbf{Phiên bản gốc:}
+    \begin{equation}
+        \mathcal{L} = \lambda_{triplet} \mathcal{L}_{triplet} + \lambda_{ce} \mathcal{L}_{ce}
+    \end{equation}
+    \textbf{Phiên bản đề xuất:}
+    \begin{equation}
+        \mathcal{L} = \mathcal{L}_{circle}
+    \end{equation}
+\end{frame}
